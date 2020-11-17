@@ -1,53 +1,53 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { ZoomSwitchService } from "services/zoomswitch.service";
 import { StorageService } from "services/storage.service";
-import { CoinSwitchService } from "services/coinswitch.service";
-import { ICoinsList, TCoinName } from "interfaces/coin";
-import { IPoolCoinsItem } from "interfaces/backend-query";
-import { BackendQueryApiService } from "api/backend-query.api";
-import { SubscribableComponent } from "ngx-subscribable";
-import { FetchPoolDataService } from "services/fetchdata.service";
 
 @Component({
-    selector: "app-coin-switcher",
-    templateUrl: "./coin-switcher.component.html",
-    styleUrls: ["./coin-switcher.component.less"],
+    selector: "app-zoom-switcher",
+    templateUrl: "./zoom-switcher.component.html",
+    styleUrls: ["./zoom-switcher.component.less"],
 })
-export class CoinSwitcherComponent implements OnInit {
+export class ZoomSwitcherComponent implements OnInit {
     @Output()
-    onChange = new EventEmitter<TCoinName>();
+    onChange = new EventEmitter<string>();
 
-    activeCoinName: TCoinName;
-    poolCoins: IPoolCoinsItem[];
-    coinsListReady: boolean;
+    activeZoom: string;
+    zooms: string[];
+    zoomListReady: boolean;
 
     constructor(
-        private coinSwitchService: CoinSwitchService,
-        private fetchPoolDataService: FetchPoolDataService,
+        private zoomSwitchService: ZoomSwitchService, //private fetchPoolDataService: FetchPoolDataService,
+        private storageService: StorageService,
     ) {}
 
     ngOnInit(): void {
-        this.coinsListReady = false;
-        this.fetchPoolDataService.getCoinsData.subscribe(data => {
-            if (Object.keys(data).length > 0) this.processCoins(data);
-        });
+        this.zoomListReady = false;
+        this.activeZoom = this.storageService.whatZoom;
+        this.zooms = this.storageService.whatZooms;
+        this.zoomListReady = true;
+        this.cangeZoom(this.activeZoom);
+        //this.coinsListReady = false;
+        //this.fetchPoolDataService.getCoinsData.subscribe(data => {
+        //if (Object.keys(data).length > 0) this.processCoins(data);
+        //});
     }
 
     ngOnDestroy(): void {
-        this.fetchPoolDataService.getCoinsData.unsubscribe();
+        //this.fetchPoolDataService.getCoinsData.unsubscribe();
     }
 
-    cangeCoin(newCoin: TCoinName) {
-        this.coinSwitchService.setCoin(newCoin);
-        this.onChange.emit(newCoin);
+    cangeZoom(newZoom: string) {
+        this.zoomSwitchService.setZoom(newZoom);
+        this.onChange.emit(newZoom);
     }
-
+    /*
     private processCoins(data) {
         const i = data.msg.length > 2 ? data.msg.length - 1 : 0;
         this.activeCoinName = data.msg[i].name;
         this.poolCoins = data.msg;
         this.coinsListReady = true;
         this.cangeCoin(this.activeCoinName);
-    }
+    } */
 }
 
 /*

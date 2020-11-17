@@ -1,11 +1,20 @@
 <app-target-login-badge></app-target-login-badge>
 
-<nz-radio-group nzButtonStyle="solid" [(ngModel)]="currentCoin" (ngModelChange)="onCurrentCoinChange($event)">
+
+<div class="coin-select-block">
+    <app-coin-switcher (newCoinEvent)="onCurrentCoinChange($event)"></app-coin-switcher>
+</div>
+<!--
+<nz-radio-group
+    nzButtonStyle="solid"
+    [(ngModel)]="currentCoin"
+    (ngModelChange)="onCurrentCoinChange($event)"
+> 
     <label *ngFor="let coin of coins" nz-radio-button [nzValue]="coin">
         {{ coin }}
     </label>
 </nz-radio-group>
-
+-->
 <nz-table nzBordered [nzTemplateMode]="true" [nzLoading]="!statsHistory">
     <thead>
         <tr>
@@ -43,3 +52,12 @@
         </tr>
     </tbody>
 </nz-table>
+
+<!--
+<nz-modal nzWidth="100%" [nzVisible]="userHistory.ready" [nzTitle]="userHistory?.name"
+    [nzFooter]="null" (nzOnCancel)="clearHistory()">
+    <app-coin-switcher (onChange)="onHistoryCurrentCoinChange($event)"></app-coin-switcher>
+    <app-chart-power [stats]="userHistory.stats" [chartName]="userHistory.coin"
+        [powerMultLog10]="userHistory.powerMultLog10"></app-chart-power>
+</nz-modal>
+-->

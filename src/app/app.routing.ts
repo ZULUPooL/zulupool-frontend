@@ -22,14 +22,19 @@ import { UsersComponent } from "pages/users/users.component";
 import { PayoutsComponent } from "pages/payouts/payouts.component";
 import { SettingsComponent } from "pages/settings/settings.component";
 import { CreateUserComponent } from "pages/createuser/createuser.component";
+import { LandingComponent } from "pages/landing/landing.component";
 
 const routes: Routes = [
     {
         path: "",
-        pathMatch: "full",
         // redirectTo: EAppRoutes.Monitoring,
         component: MainLayoutComponent,
         children: [
+            {
+                path: EAppRoutes.Landing,
+                pathMatch: "full",
+                component: LandingComponent,
+            },
             {
                 path: EAppRoutes.Home,
                 pathMatch: "full",
@@ -58,10 +63,6 @@ const routes: Routes = [
                 component: UserActivateComponent,
             },
         ],
-    },
-    {
-        path: EAppRoutes.Help,
-        component: HelpComponent,
     },
     {
         path: "",

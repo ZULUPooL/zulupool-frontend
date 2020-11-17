@@ -1,15 +1,28 @@
 <app-target-login-badge></app-target-login-badge>
 
+<div class="coin-select-block">
+    <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
+</div>
+<!--
 <div>
+
     <span class="coin-label">
         {{ "settings.coinLabel" | translate }}
     </span>
 
-    <nz-select class="coin-select" [(ngModel)]="selectedIndex" (ngModelChange)="changeCoin()">
-        <nz-option *ngFor="let item of settingsItems; index as i" [nzLabel]="item.name" [nzValue]="i"></nz-option>
+    <nz-select
+        class="coin-select"
+        [(ngModel)]="selectedIndex"
+        (ngModelChange)="changeCoin()"
+    >
+        <nz-option
+            *ngFor="let item of settingsItems; index as i"
+            [nzLabel]="item.name"
+            [nzValue]="i"
+        ></nz-option>
     </nz-select>
 </div>
-
+-->
 <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="form" (submit)="save()">
     <nz-form-item>
         <nz-form-label nzFor="address">

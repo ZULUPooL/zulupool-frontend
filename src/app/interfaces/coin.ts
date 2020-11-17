@@ -5,4 +5,3 @@ export interface ICoinsList {
     fullName: string;
     algorithm: string;
 }
-

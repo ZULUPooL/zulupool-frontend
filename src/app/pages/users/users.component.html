@@ -1,24 +1,50 @@
 <nz-table nzTemplateMode nzBordered [nzShowPagination]="false">
     <thead>
         <tr>
-            <th> {{ "common.login" | translate }} / {{ "common.name" | translate }}</th>
-            <th> {{ "common.email" | translate }}</th>
-            <th> {{ "common.registrationDate" | translate }}</th>
-            <th> {{ "common.dictionary.workers" | translate }}</th>
-            <th> {{ "common.dictionary.shareRate" | translate }}</th>
-            <th> {{ "common.dictionary.power" | translate }}</th>
-            <th> {{ "common.dictionary.lastSeen" | translate }}</th>
+            <th>
+                {{ "common.login" | translate }} /
+                {{ "common.name" | translate }}
+            </th>
+            <th>{{ "common.email" | translate }}</th>
+            <th>{{ "common.registrationDate" | translate }}</th>
+            <th>{{ "common.dictionary.workers" | translate }}</th>
+            <th>{{ "common.dictionary.shareRate" | translate }}</th>
+            <th>{{ "common.dictionary.power" | translate }}</th>
+            <th>{{ "common.dictionary.lastSeen" | translate }}</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let user of users" [class._selected]="user.name === targetLogin" (click)="onUserClick(user)">
+        <tr
+            *ngFor="let user of users"
+            [class._selected]="user.name === targetLogin"
+            (click)="onUserClick(user)"
+        >
             <td>{{ user.login }}/{{ user.name }}</td>
             <td>{{ user.email }}</td>
-            <td>{{ user.registrationDate  * 1000 | date: "HH:mm:ss dd MMM yyyy" | async }}</td>
+            <td>
+                {{
+                    user.registrationDate * 1000
+                        | date: "HH:mm:ss dd MMM yyyy"
+                        | async
+                }}
+            </td>
             <td>{{ user.workers }}</td>
-            <td>{{ user.shareRate | suffixify: ESuffix.ShareRate}}</td>
-            <td>{{ user.power | metricPrefixify: powerMultLog10 | toFixed | suffixify: ESuffix.Power }}</td>
-            <td>{{ user.lastShareTime   * 1000 | date: "HH:mm:ss dd MMM yyyy" | async }}</td>
+            <td>{{ user.shareRate | suffixify: ESuffix.ShareRate }}</td>
+            <td>
+                {{
+                    user.power
+                        | metricPrefixify: powerMultLog10
+                        | toFixed
+                        | suffixify: ESuffix.Power
+                }}
+            </td>
+            <td>
+                {{
+                    user.lastShareTime * 1000
+                        | date: "HH:mm:ss dd MMM yyyy"
+                        | async
+                }}
+            </td>
         </tr>
     </tbody>
 </nz-table>

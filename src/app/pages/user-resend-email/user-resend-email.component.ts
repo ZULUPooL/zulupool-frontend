@@ -56,7 +56,7 @@ export class UserResendEmailComponent {
         private translateService: TranslateService,
         private nzModalService: NzModalService,
         private uUserApiService: UserApiService,
-    ) { }
+    ) {}
 
     onSubmit(): void {
         this.submitting = true;

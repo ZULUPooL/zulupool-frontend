@@ -43,6 +43,27 @@ export class AuthComponent {
         },
     );
 
+    readonly lostPassForm = this.formService.createFormManager<
+        IAuthSignInParams
+    >(
+        {
+            login: {
+                validators: [Validators.required, Validators.maxLength(64)],
+            },
+            password: {
+                validators: [
+                    Validators.required,
+                    Validators.minLength(8),
+                    Validators.maxLength(64),
+                ],
+                errors: ["invalid_password", "user_not_active", "unknown"],
+            },
+        },
+        {
+            onSubmit: () => this.onSignIn(),
+        },
+    );
+
     readonly signUpForm = this.formService.createFormManager<IUserCreateParams>(
         {
             login: {
@@ -69,7 +90,7 @@ export class AuthComponent {
             },
         },
         {
-            onSubmit: () => this.onSignUp(),
+            onSubmit: () => this.onLostPassword(),
         },
     );
 
@@ -84,7 +105,7 @@ export class AuthComponent {
         private authApiService: AuthApiService,
         private appService: AppService,
         private storageService: StorageService,
-    ) { }
+    ) {}
 
     onSignIn(): void {
         this.submitting = true;
@@ -93,11 +114,11 @@ export class AuthComponent {
 
         this.authApiService.sigIn(params).subscribe(
             ({ sessionid }) => {
-                this.appService.authorize(sessionid).subscribe(
+                this.appService.authorize(sessionid, true).subscribe(
                     () => {
                         const target =
-                            (this.activatedRoute.snapshot.queryParams.to as string) ||
-                            routeToUrl(userRootRoute);
+                            (this.activatedRoute.snapshot.queryParams
+                                .to as string) || routeToUrl(userRootRoute);
 
                         this.storageService.currentUser = params.login;
                         this.router.navigate([target]);
@@ -140,4 +161,5 @@ export class AuthComponent {
             },
         );
     }
+    onLostPassword(): void {}
 }

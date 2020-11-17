@@ -5,6 +5,7 @@ import { BackendQueryApiService } from "api/backend-query.api";
 import { BackendManualApiService } from "api/backend-manual.api";
 import { IUserPayouts } from "interfaces/backend-query";
 import { IUserSettings } from "interfaces/user";
+import { TCoinName } from "interfaces/coin";
 
 @Component({
     selector: "app-payouts",
@@ -19,29 +20,52 @@ export class PayoutsComponent implements OnInit {
     isPayoutsLoading = false;
 
     isManualPayoutSending = false;
+    currentCoin: TCoinName;
+
+    private explorersLinksPref = {
+        BTC: "https://btc.com/",
+        BCH: "https://bch.btc.com/",
+        BSV: "https://whatsonchain.com/tx/",
+        "DGB.sha256": "https://chainz.cryptoid.info/dgb/tx.dws?",
+        FCH: "http://fch.world/tx/",
+        HTR: "https://explorer.hathor.network/transaction/",
+    };
 
     constructor(
         private userApiService: UserApiService,
         private backendQueryApiService: BackendQueryApiService,
         private backendManualApiService: BackendManualApiService,
-    ) { }
+    ) {}
 
     ngOnInit(): void {
-        this.userApiService.userGetSettings().subscribe(({ coins: settings }) => {
-            this.settings = settings;
+        this.userApiService
+            .userGetSettings()
+            .subscribe(({ coins: settings }) => {
+                this.settings = settings;
 
-            if (settings.length > 0) {
-                this.selectedIndex = 0;
+                if (settings.length > 0) {
+                    this.selectedIndex = 0;
 
-                this.onCurrentCoinChange();
-            }
-        });
+                    this.onCurrentCoinChange(this.settings[0].name);
+                }
+            });
     }
 
-    onCurrentCoinChange(): void {
-        this.isPayoutsLoading = true;
+    onCurrentCoinChange(coin: TCoinName): void {
+        this.currentCoin = coin;
 
-        const { name: coin } = this.settings[this.selectedIndex];
+        this.getUserStat(coin);
+        //this.backendQueryApiService
+        //.getUserStatsHistory({ coin })
+        //.subscribe(({ stats, powerMultLog10 }) => {
+        // this.setAcceptedDifficulty(stats);
+
+        //this.userStatsHistory = { stats, powerMultLog10 };
+        //});
+    }
+
+    getUserStat(coin: TCoinName): void {
+        this.isPayoutsLoading = true;
 
         this.backendQueryApiService.getUserPayouts({ coin }).subscribe(
             ({ payouts }) => {
@@ -68,5 +92,9 @@ export class PayoutsComponent implements OnInit {
                 this.isManualPayoutSending = false;
             },
         );
+    }
+    onTxClick(payouts: IUserPayouts): void {
+        const url = this.explorersLinksPref[this.currentCoin] + payouts.txid;
+        window.open(url, "_system");
     }
 }

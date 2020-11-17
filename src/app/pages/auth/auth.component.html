@@ -130,4 +130,45 @@
             </nz-form-item>
         </form>
     </nz-tab>
+    <nz-tab>
+        <a
+            nz-tab-link
+            [routerLink]="['.']"
+            [queryParams]="{ registration: null }"
+            queryParamsHandling="merge"
+        >
+            {{ "auth.tabs.lostPassword" | translate }}
+        </a>
+
+        <form
+            nz-form
+            nzLayout="vertical"
+            [formGroup]="signInForm.formData"
+            (submit)="lostPassForm.submit()"
+        >
+            <nz-form-item>
+                <nz-form-label nzFor="login">
+                    {{ "common.login" | translate }}
+                </nz-form-label>
+                <nz-form-control
+                    [nzValidateStatus]="signInForm.errors.login.status | async"
+                    [nzErrorTip]="signInForm.errors.login.error | async"
+                >
+                    <input formControlName="login" nz-input id="login" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <button
+                        type="submit"
+                        nz-button
+                        nzType="primary"
+                        [nzLoading]="submitting"
+                    >
+                        {{ "auth.signIn.form.changePasswordInitiateButton" | translate }}
+                    </button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-tab>
 </nz-tabset>

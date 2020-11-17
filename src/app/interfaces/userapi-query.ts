@@ -1,6 +1,6 @@
-import * as EApi from '../enums/api-enums';
-import { TCoinName } from './coin';
-import { IUserSettings, IUser } from './user'
+import * as EApi from "../enums/api-enums";
+import { TCoinName } from "./coin";
+import { IUserSettings, IUser } from "./user";
 
 /* export interface IUserChangePasswordParams { }
 export interface IUserChangePasswordResponse { }
@@ -41,7 +41,7 @@ export interface IUserGetSettingsParams {
 }
 export interface IUserGetSettingsResponse {
     status: EApi.statusCommonResp;
-    coins: IUserSettings[]
+    coins: IUserSettings[];
 }
 
 export interface IUserUpdateSettingsParams {
@@ -68,7 +68,6 @@ export interface IUserEnumerateAllResponse {
     users: IUser[];
 }
 
-
 export interface IUserCreateParams {
     login: string; // Unique user identifier (up to 64 characters)
     password: string; // Password (8-64 characters length)
@@ -86,5 +85,3 @@ export interface IUserCreateByAdminParams {
 export interface IUserCreateResponse {
     status: EApi.statusCommonResp | EApi.userCreateResp; // Request status.
 }
-
-

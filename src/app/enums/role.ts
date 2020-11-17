@@ -3,4 +3,5 @@ export enum ERole {
     Observer = "observer",
     ReadOnlyUser = "readonlyuser",
     User = "user",
+    PPDAUser = "ppdaUser",
 }

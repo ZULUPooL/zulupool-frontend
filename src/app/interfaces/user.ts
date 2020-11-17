@@ -24,9 +24,8 @@ export interface IUserInfo {
     power: number;
     lastShareTime: number;
     role: ERole;
-    type?:number;
+    type?: number;
 }
-
 
 export interface IUserSettings {
     name: TCoinName;

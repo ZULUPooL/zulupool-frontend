@@ -60,6 +60,16 @@
 
                     <nz-dropdown-menu #menu="nzDropdownMenu">
                         <ul nz-menu>
+                            <li
+                                nz-menu-item
+                                (click)="showChangePasswordModal()"
+                            >
+                                {{
+                                    "components.userLayout.menu.changePassword"
+                                        | translate
+                                }}
+                            </li>
+                            <li nz-menu-divider></li>
                             <li nz-menu-item (click)="logOut()">
                                 {{
                                     "components.userLayout.menu.logOut"
@@ -113,3 +123,40 @@
         </button>
     </div>
 </nz-drawer>
+
+<nz-modal
+    [(nzVisible)]="isChangePasswordModalShow"
+    [nzTitle]="
+        'components.userLayout.changePassword.passwordPlaceholder' | translate
+    "
+    [nzFooter]="null"
+    (nzOnCancel)="isChangePasswordModalShow = false"
+>
+    <form
+        nz-form
+        [formGroup]="changePasswordForm.formData"
+        (ngSubmit)="changePasswordForm.submit()"
+    >
+        <nz-form-item>
+            <nz-form-control
+                [nzValidateStatus]="
+                    changePasswordForm.errors.newPassword.status | async
+                "
+                [nzErrorTip]="
+                    changePasswordForm.errors.newPassword.error | async
+                "
+            >
+                <input nz-input type="password" formControlName="newPassword" />
+            </nz-form-control>
+        </nz-form-item>
+
+        <button
+            nz-button
+            nzType="primary"
+            [disabled]="changePasswordForm.formData.invalid"
+            [nzLoading]="isPasswordChanging"
+        >
+            {{ "common.save" | translate }}
+        </button>
+    </form>
+</nz-modal>

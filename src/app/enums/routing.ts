@@ -1,4 +1,5 @@
 export enum EAppRoutes {
+    Landing = "landing",
     Home = "",
     Auth = "auth",
     UserResendEmail = "resend-email",
@@ -9,11 +10,11 @@ export enum EAppRoutes {
     Help = "help",
     Payouts = "payouts",
     Settings = "settings",
-    CreateUser = "createuser",
+    CreateUser = "create-user",
 }
 
 export enum EActionsRoutes {
-    UserActivate = "useracivate",
+    UserActivate = "user-acivate",
 }
 
 export const userRootRoute = EAppRoutes.Monitoring;

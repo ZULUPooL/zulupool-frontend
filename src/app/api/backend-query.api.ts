@@ -11,6 +11,7 @@ import {
     IWorkerStatsItem,
     IUserStatsItem,
     IPoolCoinsItem,
+    IPoolStatsHistoryItem,
 } from "interfaces/backend-query";
 import { TCoinName } from "interfaces/coin";
 
@@ -18,7 +19,7 @@ import { TCoinName } from "interfaces/coin";
     providedIn: "root",
 })
 export class BackendQueryApiService {
-    constructor(private restService: RestService) { }
+    constructor(private restService: RestService) {}
 
     getUserBalance(
         params: IGetUserBalanceParams = {},
@@ -72,8 +73,13 @@ export class BackendQueryApiService {
         return this.restService.post("/backendQueryWorkerStatsHistory", params);
     }
 }
-
-
+/*
+export function GetUHistory(
+    params: IGetUserStatsHistoryParams,
+): Observable<IGetUserStatsHistoryResponse> {
+    return this.restService.post("/backendQueryUserStatsHistory", params);
+}
+*/
 export interface IGetUserBalanceParams {
     coin?: TCoinName;
 }
@@ -126,7 +132,7 @@ export interface IGetPoolStatsHistoryResponse {
     currentTime: number;
     powerUnit: string;
     powerMultLog10: number;
-    stats: IWorkerStatsItem[];
+    stats: IPoolStatsHistoryItem[];
 }
 
 export interface IGetUserStatsParams {

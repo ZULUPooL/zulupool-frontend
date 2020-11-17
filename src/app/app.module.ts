@@ -48,13 +48,14 @@ import {
     PlusCircleOutline,
     UserAddOutline,
     PullRequestOutline,
-    RestOutline
+    RestOutline,
 } from "@ant-design/icons-angular/icons";
 
 import { ChartsModule } from "ng2-charts";
 
 import { PageNotFoundComponent } from "pages/404/page-not-found.component";
 import { HomeComponent } from "pages/home/home.component";
+import { LandingComponent } from "pages/landing/landing.component";
 import { MonitoringComponent } from "pages/monitoring/monitoring.component";
 import { HistoryComponent } from "pages/history/history.component";
 import { AuthComponent } from "pages/auth/auth.component";
@@ -67,7 +68,8 @@ import { SettingsComponent } from "pages/settings/settings.component";
 
 import { CreateUserComponent } from "pages/createuser/createuser.component";
 import { CoinSwitcherComponent } from "components/coin-switcher/coin-switcher.component";
-import { CoinSwitchService } from "services/coinswitch.service";
+import { ZoomSwitcherComponent } from "components/zoom-switcher/zoom-switcher.component";
+//import { CoinsFetcherComponent } from "components/coins-fetcher/coin-fetcher.component";
 
 import { FooterComponent } from "components/footer/footer.component";
 import { MainLayoutComponent } from "components/main-layout/main-layout.component";
@@ -152,14 +154,13 @@ export function HttpLoaderFactory(http: HttpClient) {
             PlusCircleOutline,
             UserAddOutline,
             PullRequestOutline,
-            RestOutline
+            RestOutline,
         ]),
 
         ChartsModule,
     ],
 
     providers: [
-        { provide: CoinSwitchService },
         {
             provide: NZ_CONFIG,
             useValue: {
@@ -178,6 +179,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 
         PageNotFoundComponent,
         HomeComponent,
+        LandingComponent,
         MonitoringComponent,
         HistoryComponent,
         AuthComponent,
@@ -196,6 +198,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         EmptyContentComponent,
         TargetLoginBadgeComponent,
         CoinSwitcherComponent,
+        ZoomSwitcherComponent,
+        //CoinsFetcherComponent,
 
         ChartComponent,
         ChartPowerComponent,
@@ -211,4 +215,4 @@ export function HttpLoaderFactory(http: HttpClient) {
     ],
     bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

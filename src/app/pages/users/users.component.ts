@@ -7,7 +7,6 @@ import { Router } from "@angular/router";
 import { userRootRoute } from "enums/routing";
 import { ESuffix } from "pipes/suffixify.pipe";
 
-
 @Component({
     selector: "app-users-page",
     templateUrl: "./users.component.html",
@@ -25,12 +24,12 @@ export class UsersComponent implements OnInit {
         private router: Router,
         private userApiService: UserApiService,
         private storageService: StorageService,
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.userApiService.userEnumerateAll().subscribe(({ users }) => {
             users = users.filter(function (item) {
-                return item.login !== 'admin' && item.login !== 'observer'
+                return item.login !== "admin" && item.login !== "observer";
             });
             //            users.forEach(item => {
             //                item.lastShareTime = currentTime - item.lastShareTime;

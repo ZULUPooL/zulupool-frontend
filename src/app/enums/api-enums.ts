@@ -1,51 +1,51 @@
 export enum sortParamsForUserEnumerateAll {
-    byLogin = 'login',
-    byworkers = 'workersNum',
-    byPower = 'averagePower',
-    byShareRate = 'sharesPerSecond',
-    byLastSeen = 'lastShareTime'
+    byLogin = "login",
+    byworkers = "workersNum",
+    byPower = "averagePower",
+    byShareRate = "sharesPerSecond",
+    byLastSeen = "lastShareTime",
 }
 
 export enum statusCommonResp {
-    OK = 'ok',
-    badJS = 'invalid_json',
-    badID = 'unknown_id'
+    OK = "ok",
+    badJS = "invalid_json",
+    badID = "unknown_id",
 }
 export enum userChangePasswordResp {
-    badPWD = 'password_format_invalid'
+    badPWD = "password_format_invalid",
 }
 export enum userChangePasswordInitiateResp {
-    badLogin = 'login_format_invalid'
+    badLogin = "login_format_invalid",
 }
 export enum userCreateResp {
-    formatLoginERR = 'login_format_invalid',
-    formatPasswERR = 'password_format_invalid',
-    formatEmail = 'email_format_invalid',
-    formatName = 'name_format_invalid',
-    duplicateEmal = 'duplicate_email',
-    duplicateLogin = 'duplicate_login',
-    smtpServerError = 'smtp_client_create_error',
-    emailSendError = 'email_send_error'
-};
+    formatLoginERR = "login_format_invalid",
+    formatPasswERR = "password_format_invalid",
+    formatEmail = "email_format_invalid",
+    formatName = "name_format_invalid",
+    duplicateEmal = "duplicate_email",
+    duplicateLogin = "duplicate_login",
+    smtpServerError = "smtp_client_create_error",
+    emailSendError = "email_send_error",
+}
 export enum userResendEmailResp {
-    invalidPassword = 'invalid_password',
-    userAlreadyActive = 'user_already_active',
-    smtpServerError = 'smtp_client_create_error',
-    emailSendError = 'email_send_error',
-};
+    invalidPassword = "invalid_password",
+    userAlreadyActive = "user_already_active",
+    smtpServerError = "smtp_client_create_error",
+    emailSendError = "email_send_error",
+}
 export enum userActionResp {
-    unknownLogin = 'unknown_login',
-    userAlreadyActive = 'user_already_active',
-    unknownType = 'unknown_type'
-};
+    unknownLogin = "unknown_login",
+    userAlreadyActive = "user_already_active",
+    unknownType = "unknown_type",
+}
 export enum userLoginResp {
-    invalidPassword = 'invalid_password',
-    userNotActive = 'user_not_active'
+    invalidPassword = "invalid_password",
+    userNotActive = "user_not_active",
 }
 export enum userEnumerateAllResp {
-    unknownColumnName = 'unknown_column_name' // invalid sortBy value
+    unknownColumnName = "unknown_column_name", // invalid sortBy value
 }
-    /*
+/*
 export enum userLogout {
 'unknown_id'
 }

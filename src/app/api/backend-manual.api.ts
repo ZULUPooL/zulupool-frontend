@@ -10,7 +10,7 @@ import { TCoinName } from "interfaces/coin";
     providedIn: "root",
 })
 export class BackendManualApiService {
-    constructor(private restService: RestService) { }
+    constructor(private restService: RestService) {}
 
     forcePayout(params: IForcePayoutParams): Observable<boolean> {
         return this.restService

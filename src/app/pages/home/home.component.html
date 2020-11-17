@@ -3,70 +3,65 @@
         {{ "home.signUpButton" | translate }}
     </a>
 </div> -->
-<app-coin-switcher></app-coin-switcher>
 
 <div class="main">
     <div class="coins-block">
         <div class="coin-select-block">
-            <nz-radio-group nzButtonStyle="solid" [(ngModel)]="currentCoin"
-                (ngModelChange)="onCurrentCoinChange($event)">
-                <label *ngFor="let coin of coinsList" nz-radio-button [nzValue]="coin">
-                    {{ coin }}
-                </label>
-            </nz-radio-group>
+          <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
+        </div>
+        <div class="pool-info-table">
+            <nz-table style="width: 100%;" nzBordered nzSize="small" [nzTemplateMode]="true" [nzLoading]="isLiveStatLoading">
+                <thead>
+                    <tr>
+                        <th style="min-width: 80px;text-align: center;">{{ "common.coin" | translate }}</th>
+                        <th style="min-width: 80px;text-align: center;">{{ "common.dictionary.power" | translate }}</th>
+                        <th style="min-width: 40px;text-align: center;">{{ "common.dictionary.clients" | translate }}
+                        </th>
+                        <th style="min-width: 40px;text-align: center;">{{ "common.dictionary.workers" | translate }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: center;">{{ currentCoinName }}</td>
+                        <td style="text-align: center;">
+                            {{
+                                currentStats?.power
+                                    | metricPrefixify: currentStats?.powerMultLog10
+                                    | toFixed
+                                    | suffixify: ESuffix.Power
+                            }}
+                        </td>
+                        <td style="text-align: center;">{{ currentStats?.clients }}</td>
+                        <td style="text-align: center;">{{ currentStats?.workers }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+
         </div>
 
-        <nz-table style="width: 100%;" nzBordered nzSize="small" [nzTemplateMode]="true">
-            <tbody>
-                <tr>
-                    <td>{{ "common.coin" | translate }}</td>
-                    <td>{{ currentCoin }}</td>
-                </tr>
-                <tr>
-                    <td>{{ "common.dictionary.power" | translate }}</td>
-                    <td>
-                        {{
-                            currentStats?.power
-                                | metricPrefixify: currentPowerMultLog10
-                                | toFixed
-                                | suffixify: ESuffix.Power
-                        }}
-                    </td>
-                </tr>
-                <tr>
-                    <td>Clients</td>
-                    <td>{{ currentStats?.clients }}</td>
-                </tr>
-                <tr>
-                    <td>{{ "common.dictionary.workers" | translate }}</td>
-                    <td>{{ currentStats?.workers }}</td>
-                </tr>
-            </tbody>
-        </nz-table>
     </div>
 
-    <app-chart-power *ngIf="currentHistory" class="coin-chart" [stats]="currentHistory"
-        [powerMultLog10]="currentPowerMultLog10">
+    <app-chart-power *ngIf="powerChartData" class="coin-chart" [powerData]="powerChartData"
+        [powerMultLog10]="6">
     </app-chart-power>
 </div>
 
-<nz-table *ngIf="currentBlocks && currentCoin !== currentAlgo" class="found-blocks-table" nzBordered
-    [nzTemplateMode]="true" [nzLoading]="currentBlocksLoading">
+<nz-table *ngIf="currentBlocks && currentCoinName !== currentAlgo" class="found-blocks-table" nzBordered
+    [nzTemplateMode]="true" [nzLoading]="isBloksLoading">
     <thead>
         <tr>
-            <th *ngFor="let title of foundBlockKeys">
+            <th *ngFor="let title of foundBlockKeys" style="text-align: center;padding: 6px 6px 6px;">
                 {{ "home.foundBlocksTable.title." + title | translate }}
             </th>
         </tr>
-        <tr *ngIf="currentBlocks.length < 1">
-            {{ "common.nobolckfoundyet" | translate }} {{currentCoin}}
+        <tr *ngIf="currentBlocks.length == 0" style="text-align: center;">
+            {{ currentCoinName }} {{ "home.foundBlocksTable.content.noBlocks" | translate}}
         </tr>
-
     </thead>
     <tbody>
-
-        <tr *ngFor="let foundBlock of currentBlocks">
-            <td *ngFor="let key of foundBlockKeys">
+        <tr *ngFor="let foundBlock of currentBlocks" (click)="onBlockClick(foundBlock)">
+            <td *ngFor="let key of foundBlockKeys" style="text-align: center;padding: 5px 5px 5px;">
                 <ng-container *ngTemplateOutlet="
                         foundBlockDataTemplate;
                         context: {
@@ -79,51 +74,59 @@
     </tbody>
 </nz-table>
 
-<nz-table *ngFor="let foundBlock of currentBlocks" class="found-blocks-table-mobile _table-mobile"
-    [nzTemplateMode]="true">
+<nz-table *ngIf="currentBlocks && currentCoinName !== currentAlgo" class="found-blocks-table-mobile _table-mobile"
+    nzBordered [nzTemplateMode]="true" [nzLoading]="isBloksLoading">
+    <thead>
+        <tr>
+            <th *ngFor="let title of foundBlockKeysMobile" style="text-align: center;padding: 3px 2px 0px;">
+                {{ "home.foundBlocksTable.title." + title | translate }}
+            </th>
+        </tr>
+        <tr *ngIf="currentBlocks.length == 0" style="text-align: center;">
+            {{ currentCoinName }} {{ "home.foundBlocksTable.content.noBlocks" | translate}}
+        </tr>
+
+    </thead>
     <tbody>
-        <ng-container *ngFor="let key of foundBlockKeys">
-            <tr>
-                <th>
-                    {{ "home.foundBlocksTable.title." + key | translate }}
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    <ng-container *ngTemplateOutlet="
-                            foundBlockDataTemplate;
-                            context: {
-                                key: key,
-                                value: foundBlock[key]
-                            }
-                        "></ng-container>
-                </td>
-            </tr>
-        </ng-container>
+        <tr *ngFor="let foundBlock of currentBlocks" (click)="onBlockClick(foundBlock)">
+            <td *ngFor="let key of foundBlockKeysMobile" style="text-align: center;padding: 3px 2px 0px;">
+                <ng-container *ngTemplateOutlet="
+                foundBlockDataTemplateMobile;
+                        context: {
+                            key: key,
+                            value: foundBlock[key]
+                        }
+                    "></ng-container>
+            </td>
+        </tr>
     </tbody>
 </nz-table>
 
 <ng-template #foundBlockDataTemplate let-key="key" let-value="value">
     <ng-container [ngSwitch]="key">
-        <ng-container *ngSwitchCase="'hash'">
+        <!--        <ng-container *ngSwitchCase="'hash'">
             <span class="found-blocks-hash">
-                <a *ngIf="currentCoin =='BTC' "
-                    href="{{ explorersLinksPref.BTC }}{{ value }}{{ explorersLinksPref.BTC2 }}">{{ value }} </a>
-                <a *ngIf="currentCoin =='BSV' "
-                    href="{{ explorersLinksPref.BSV }}{{ value }}{{ explorersLinksPref.BSV2 }}">{{ value }} </a>
-                <a *ngIf="currentCoin =='BCH' "
-                    href="{{ explorersLinksPref.BCH }}{{ value }}{{ explorersLinksPref.BCH2 }}">{{ value }} </a>
-                <a *ngIf="currentCoin =='FCH' "
-                    href="{{ explorersLinksPref.FCH }}{{ value }}{{ explorersLinksPref.FCH2 }}">{{ value }} </a>
-                <a *ngIf="currentCoin =='HTR' "
-                    href="{{ explorersLinksPref.HTR }}{{ value }}{{ explorersLinksPref.HTR2 }}">{{ value }} </a>
-                <a *ngIf="currentCoin =='DGB.sha256' "
-                    href="{{ explorersLinksPref.DGB }}{{ value }}{{ explorersLinksPref.DGB2 }}">{{ value }} </a>
+                {{ value }}
             </span>
         </ng-container>
-
+    -->
         <ng-container *ngSwitchCase="'time'">
             {{ value * 1000 | date: "dd MMM HH:mm" | async }}
+        </ng-container>
+
+        <ng-container *ngSwitchDefault>
+            <span>
+                {{ value }}
+            </span>
+        </ng-container>
+    </ng-container>
+</ng-template>
+<ng-template #foundBlockDataTemplateMobile let-key="key" let-value="value">
+    <ng-container [ngSwitch]="key">
+        <ng-container *ngSwitchCase="'hash'">
+            <span class="found-blocks-hash">
+                {{ truncate(value) }}
+            </span>
         </ng-container>
 
         <ng-container *ngSwitchDefault>

@@ -3,60 +3,54 @@
 <div class="main">
     <div class="info">
         <div class="coin-select-block">
-            <nz-radio-group nzButtonStyle="solid" [(ngModel)]="currentCoin"
-                (ngModelChange)="onCurrentCoinChange($event)">
-                <label *ngFor="let coin of coins" nz-radio-button [nzValue]="coin">
+            <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
+        </div>
+
+        <!--
+        <div class="coin-select-block">
+            <nz-radio-group
+                nzButtonStyle="solid"
+                [(ngModel)]="currentCoin"
+                (ngModelChange)="onCurrentCoinChange($event)"
+            >
+                <label
+                    *ngFor="let coin of coins"
+                    nz-radio-button
+                    [nzValue]="coin"
+                >
                     {{ coin }}
                 </label>
             </nz-radio-group>
-        </div>
-        <nz-table *ngIf="currentCoin && currentCoin !=='sha256'" class="info-table" nzBordered [nzTemplateMode]="true"
-            [nzLoading]="tableData.isLoading">
-            <thead>
-                <tr>
-                    <th>
-                        {{ "monitoring.balance" | translate }}
-                        <button nz-button nzType="primary" [nzLoading]="isManualPayoutSending" (click)="manualPayout()">
-                            {{ "payouts.manualPayoutButton" | translate }}
-                        </button>
-
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        {{ balance }}
-                    </td>
-                </tr>
-            </tbody>
-        </nz-table>
-
+        </div> -->
         <div class="info-table">
             <nz-table nzBordered [nzTemplateMode]="true" [nzLoading]="tableData.isLoading">
                 <thead>
                     <tr>
-                        <th>
+                        <th style="padding: 3px 4px 0px; text-align: center;">
                             {{ "common.dictionary.workers" | translate }}
                         </th>
-                        <th>
+                        <th style="padding: 3px 4px 0px; text-align: center;">
                             {{ "common.dictionary.shareRate" | translate }}
                         </th>
-                        <th>
+                        <th style="padding: 3px 4px 0px; text-align: center;">
                             {{ "common.dictionary.power" | translate }}
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ userStatsItem?.workers }}</td>
-                        <td>
+                        <td style="padding: 1px 4px 0px; text-align: center;">
+                            {{ 
+                                userStatsItem?.workers 
+                            }}
+                        </td>
+                        <td style="padding: 1px 4px 0px; text-align: center;">
                             {{
                                 userStatsItem?.shareRate
                                     | suffixify: ESuffix.ShareRate
                             }}
                         </td>
-                        <td>
+                        <td style="padding: 1px 4px 0px; text-align: center;">
                             {{
                                 userStatsItem?.power
                                     | metricPrefixify
@@ -72,50 +66,37 @@
 
         <nz-table class="info-table-mobile _table-mobile" nzBordered [nzTemplateMode]="true"
             [nzLoading]="tableData.isLoading">
-            <tbody>
+            <thead>
                 <tr>
-                    <th>
-                        {{ "monitoring.balance" | translate }}
-                    </th>
-                </tr>
-                <tr>
-                    <td>
-                        <span style="font-size: 1.1em;">
-                            {{ balance }}
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
+                    <th style="padding: 3px 4px 0px; text-align: center;">
                         {{ "common.dictionary.workers" | translate }}
                     </th>
-                </tr>
-                <tr>
-                    <td>{{ userStatsItem?.workers }}</td>
-                </tr>
-                <tr>
-                    <th>
+                    <th style="padding: 3px 4px 0px; text-align: center;">
                         {{ "common.dictionary.shareRate" | translate }}
                     </th>
+                    <th style="padding: 3px 4px 0px; text-align: center;">
+                        {{ "common.dictionary.power" | translate }}
+                    </th>
                 </tr>
+            </thead>
+            <tbody>
                 <tr>
-                    <td>
+                    <td style="padding: 1px 4px 0px; text-align: center;">
+                        {{ 
+                            userStatsItem?.workers 
+                        }}
+                    </td>
+                    <td style="padding: 1px 4px 0px; text-align: center;">
                         {{
                             userStatsItem?.shareRate
                                 | suffixify: ESuffix.ShareRate
                         }}
                     </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ "common.dictionary.power" | translate }}
-                    </th>
-                </tr>
-                <tr>
-                    <td>
+                    <td style="padding: 1px 4px 0px; text-align: center;">
                         {{
                             userStatsItem?.power
-                                | metricPrefixify: userStatsItemZeroUnitsOffset
+                                | metricPrefixify
+                                    : userStatsItemZeroUnitsOffset
                                 | toFixed
                                 | suffixify: ESuffix.Power
                         }}
@@ -123,11 +104,71 @@
                 </tr>
             </tbody>
         </nz-table>
+        <!--class="info-table"-->
+        <nz-table *ngIf="currentCoinName && currentCoinName !== 'sha256'" nzBordered [nzTemplateMode]="true"
+            [nzLoading]="tableData.isLoading">
+            <thead>
+
+                <tr>
+                    <th style="padding: 3px 4px 0px; text-align: center;">
+                        {{ "monitoring.balance" | translate }}
+                    </th>
+                    <th style="padding: 3px 4px 0px; text-align: center;">
+                        {{ "monitoring.requested" | translate }}
+                    </th>
+                    <th style="padding: 3px 4px 0px; text-align: center;">
+                        {{ "monitoring.paid" | translate }}
+                    </th>
+                </tr>
+
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 3px 4px 0px; text-align: center;">
+                        {{ currentBalance.balance }}
+                    </td>
+                    <td style="padding: 3px 4px 0px; text-align: center;">
+                        {{ currentBalance.requested }}
+                    </td>
+                    <td style="padding: 3px 4px 0px; text-align: center;">
+                        {{ currentBalance.paid }}
+                    </td>
+                </tr>
+                <tr style="padding: 3px 4px 0px; text-align: center;">
+                    <button nz-button nzType="primary" [nzLoading]="isManualPayoutSending" (click)="manualPayout()">
+                        {{ "payouts.manualPayoutButton" | translate }}
+                    </button>
+                </tr>
+        </tbody>
+        </nz-table>
+       <!-- <nz-table *ngIf="currentCoin && currentCoin !== 'sha256'" class="info-table-mobile _table-mobile" nzBordered [nzTemplateMode]="true"
+            [nzLoading]="tableData.isLoading">
+            <thead>
+                <tr  style="padding: 3px 4px 0px; text-align: center;">
+                        {{ "monitoring.balance" | translate }}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 3px 4px 0px; text-align: center;">
+                        {{ balance }}
+                    </td>
+                    <td>
+                        <button nz-button nzType="primary" [nzLoading]="isManualPayoutSending" (click)="manualPayout()">
+                            {{ "payouts.manualPayoutButton" | translate }}
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    -->
     </div>
-    <app-chart-power class="chart" [stats]="userStatsHistory.stats" [powerMultLog10]="userStatsHistory.powerMultLog10">
-    </app-chart-power>
+
+<!--
+    <app-chart-power  class="chart" [stats]="userStatsHistory.stats" [powerMultLog10]="userStatsHistory.powerMultLog10" [chartName]="userStatsHistory.coin">
+    </app-chart-power> -->
 </div>
-<br>
+<br />
 <nz-table class="workers-table" nzBordered [nzTemplateMode]="true" [nzLoading]="tableData.isLoading">
     <thead>
         <tr>
@@ -209,9 +250,10 @@
         </p>
     </div>
 </div>
-
-<nz-modal nzWidth="80%" [nzVisible]="userWorkersStatsHistory" [nzTitle]="null" [nzFooter]="null"
-    (nzOnCancel)="userWorkersStatsHistory = null">
-    <app-chart-power *ngIf="userWorkersStatsHistory" [stats]="userWorkersStatsHistory.stats"
+<!--
+<nz-modal nzWidth="100%" [nzVisible]="userWorkersStatsHistory.ready" [nzTitle]="userWorkersStatsHistory?.name"
+    [nzFooter]="null" (nzOnCancel)="clearWorker()">
+    <app-coin-switcher (onChange)="onWorkerCurrentCoinChange($event)"></app-coin-switcher>
+    <app-chart-power [stats]="userWorkersStatsHistory.stats" [chartName]="userWorkersStatsHistory.coin"
         [powerMultLog10]="userWorkersStatsHistory.powerMultLog10"></app-chart-power>
-</nz-modal>
+</nz-modal>  -->

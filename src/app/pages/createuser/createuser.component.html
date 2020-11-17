@@ -1,4 +1,10 @@
-<form class="createuser-form" nz-form nzLayout="vertical" [formGroup]="form" (submit)="addUser()">
+<form
+    class="createuser-form"
+    nz-form
+    nzLayout="vertical"
+    [formGroup]="form"
+    (submit)="addUser()"
+>
     <nz-form-item>
         <nz-form-label nzFor="login">
             {{ "common.login" | translate }}

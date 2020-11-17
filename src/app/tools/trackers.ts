@@ -4,7 +4,7 @@ export function trackById(_, item: { id: number }): number {
 
 export function patchTrackIds(list: any[]): any[] {
     if (list?.forEach) {
-        list.forEach((item) => {
+        list.forEach(item => {
             if (item && !item.id) {
                 item.id = `${Date.now()}_${Math.random()}`;
             }

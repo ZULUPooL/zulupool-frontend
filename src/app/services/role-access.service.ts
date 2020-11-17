@@ -20,6 +20,18 @@ export class RoleAccessService {
                         return user?.role === ERole.SuperUser;
                     }),
                 );
+            case ERole.ReadOnlyUser:
+                return this.appService.user.pipe(
+                    map(user => {
+                        return user?.role === ERole.ReadOnlyUser;
+                    }),
+                );
+            case ERole.PPDAUser:
+                return this.appService.user.pipe(
+                    map(user => {
+                        return user?.role === ERole.PPDAUser;
+                    }),
+                );
             default:
                 return of(true);
         }

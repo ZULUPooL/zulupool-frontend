@@ -3,7 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { EAppRoutes } from "enums/routing";
 import { BackendQueryApiService } from "api/backend-query.api";
 import { TCoinName } from "interfaces/coin";
-import { IWorkerStatsItem } from "interfaces/backend-query";
+import { IWorkerStatsHistoryItem } from "interfaces/backend-query";
 import { AppService } from "services/app.service";
 import { ESuffix } from "pipes/suffixify.pipe";
 import { ETime } from "enums/time";
@@ -20,13 +20,13 @@ export class HistoryComponent implements OnInit {
     coins: TCoinName[];
     currentCoin: TCoinName;
 
-    statsHistory: IWorkerStatsItem[];
+    statsHistory: IWorkerStatsHistoryItem[];
     powerMultLog10: number;
 
     constructor(
         private backendQueryApiService: BackendQueryApiService,
         private appService: AppService,
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.getCoinsList();
@@ -44,22 +44,23 @@ export class HistoryComponent implements OnInit {
     }
 
     private getCoinsList(): void {
-        this.backendQueryApiService
-            .getPoolCoins()
-            .subscribe(({ coins }) => {
-                if (coins.length >= 2) {
-                    coins.push({ name: coins[0].algorithm, fullName: coins[0].algorithm, algorithm: coins[0].algorithm })
-                }
-                this.coins = coins.map(item => item.name);
-                if (this.coins.length > 0) {
-                    const coin = this.coins.includes(coins[0].algorithm)
-                        ? coins[0].algorithm
-                        : this.coins[0];
-                    this.onCurrentCoinChange(coin);
-                }
-            });
+        this.backendQueryApiService.getPoolCoins().subscribe(({ coins }) => {
+            if (coins.length >= 2) {
+                coins.push({
+                    name: coins[0].algorithm,
+                    fullName: coins[0].algorithm,
+                    algorithm: coins[0].algorithm,
+                });
+            }
+            this.coins = coins.map(item => item.name);
+            if (this.coins.length > 0) {
+                const coin = this.coins.includes(coins[0].algorithm)
+                    ? coins[0].algorithm
+                    : this.coins[0];
+                this.onCurrentCoinChange(coin);
+            }
+        });
     }
-
 
     public onCurrentCoinChange(coin: TCoinName): void {
         this.currentCoin = coin;
