@@ -238,13 +238,13 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
             if (el !== coin) {
                 this.storageService.coinsObj[el].isMain = false;
                 this.storageService.coinsObj[el].isNeedRefresh = false;
+                this.storageService.coinsObj[el].history.chart.label = [];
+                this.storageService.coinsObj[el].history.chart.data = [];
+                this.storageService.coinsObj[el].history.data = [];
             } else {
                 this.storageService.coinsObj[el].isMain = true;
                 this.storageService.coinsObj[el].isNeedRefresh = true;
             }
-            this.storageService.coinsObj[el].history.chart.label = [];
-            this.storageService.coinsObj[el].history.chart.data = [];
-            this.storageService.coinsObj[el].history.data = [];
         });
         this.storageService.mainCoin = coin;
         this.storageService.currCoin = coin;
@@ -285,6 +285,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
             this.clearRefresh(coin);
             this.setupMainCoin(coin);
             this.getLiveInfo(coin);
+            this.setMainCoinTimer(coin);
         }, timer * 1000);
     }
 
@@ -297,7 +298,9 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         }
     }
 
-    private periodicFetch(timer: number = DefaultParams.DATAUPDATETIMER) {
+    private periodicFetch(
+        timer: number = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].refreshTimer,
+    ) {
         clearTimeout(this.fetcherTimeoutId);
         this.fetcherTimeoutId = setTimeout(() => {
             this.fetchData();

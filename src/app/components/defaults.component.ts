@@ -16,7 +16,7 @@ import {
 export class DefaultParams {
     static readonly ADMINNAME: string = 'admin';
     static readonly GAZERNAME: string = 'observer';
-    static readonly BASECOINSWITCHTIMER: number = 80;
+    static readonly BASECOINSWITCHTIMER: number = 300;
     static readonly DATAUPDATETIMER: number = 20;
     static readonly LIVESTATCACHE: number = 15;
     static readonly HISTORYSTATCACHE: number = 50;
@@ -81,7 +81,7 @@ export class DefaultParams {
     //static readonly zoom: string = "15M";
     //static readonly zoomList: string[] = ["1M","5M","30M","H1","H4","D","W",];
     static readonly ZOOM: IZoom = {
-        pool: '1M',
+        pool: '15M',
         user: '1M',
         worker: '5M',
         history: 'D',
@@ -96,56 +96,74 @@ export class DefaultParams {
         '1M': {
             groupByInterval: 1 * 60,
             statsWindow: 80,
-            maxStatsWindow: 100,
-            refreshTimer: 15,
+            maxStatsWindow: 90,
+            refreshTimer: 20,
+            labelText: 'HH:mm',
+            lastLabelText: 'HH:mm:ss',
         },
         '5M': {
             groupByInterval: 5 * 60,
             statsWindow: 80,
-            maxStatsWindow: 100,
+            maxStatsWindow: 90,
             refreshTimer: 60,
+            labelText: 'HH:mm',
+            lastLabelText: 'HH:mm:ss',
         },
         '10M': {
             groupByInterval: 10 * 60,
             statsWindow: 80,
-            maxStatsWindow: 100,
-            refreshTimer: 3 * 60,
+            maxStatsWindow: 90,
+            refreshTimer: 60,
+            labelText: 'HH:mm',
+            lastLabelText: 'HH:mm:ss',
         },
         '15M': {
             groupByInterval: 15 * 60,
             statsWindow: 80,
-            maxStatsWindow: 100,
-            refreshTimer: 5 * 60,
+            maxStatsWindow: 90,
+            refreshTimer: 60,
+            labelText: 'HH:mm',
+            lastLabelText: 'HH:mm:ss',
         },
         '30M': {
             groupByInterval: 30 * 60,
             statsWindow: 80,
-            maxStatsWindow: 100,
-            refreshTimer: 10 * 60,
+            maxStatsWindow: 90,
+            refreshTimer: 60,
+            labelText: 'HH:mm',
+            lastLabelText: 'HH:mm:ss',
         },
         H1: {
             groupByInterval: 60 * 60,
             statsWindow: 80,
-            maxStatsWindow: 100,
-            refreshTimer: 3 * 60,
+            maxStatsWindow: 90,
+            refreshTimer: 60,
+            labelText: 'dd HH:mm',
+            lastLabelText: 'HH:mm:ss',
         },
         H4: {
             groupByInterval: 4 * 60 * 60,
             statsWindow: 80,
-            maxStatsWindow: 100,
-            refreshTimer: 3 * 60,
+            maxStatsWindow: 90,
+            refreshTimer: 60,
+            labelText: 'dd HH:mm',
+            lastLabelText: 'HH:mm:ss',
         },
         D: {
             groupByInterval: 24 * 60 * 60,
             statsWindow: 80,
-            maxStatsWindow: 100,
-            refreshTimer: 20,
+            maxStatsWindow: 90,
+            refreshTimer: 60,
+            labelText: 'dd HH:mm',
+            lastLabelText: 'HH:mm:ss',
         },
         W: {
             groupByInterval: 7 * 24 * 60 * 60,
             statsWindow: 80,
-            maxStatsWindow: 100,
-            refreshTimer: 3 * 60,
+            maxStatsWindow: 90,
+            refreshTimer: 60,
+            labelText: 'dd HH:mm',
+            lastLabelText: 'HH:mm:ss',
         },
     };
 }

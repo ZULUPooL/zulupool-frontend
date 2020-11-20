@@ -1,4 +1,4 @@
-import { EPowerUnit } from "enums/power-unit";
+import { EPowerUnit } from 'enums/power-unit';
 
 export interface ICoinItem {
     name: string;
@@ -23,6 +23,8 @@ export interface IZoomSettings {
         statsWindow: number;
         maxStatsWindow: number;
         refreshTimer: number;
+        labelText: string;
+        lastLabelText: string;
     };
 }
 

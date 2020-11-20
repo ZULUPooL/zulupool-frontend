@@ -15,7 +15,7 @@ import { StorageService } from 'services/storage.service';
 
 //import { IPoolStatsHistoryItem } from 'interfaces/backend-query';
 
-//import { DefaultParams } from 'components/defaults.component';
+import { DefaultParams } from 'components/defaults.component';
 
 @Component({
     selector: 'app-chart',
@@ -51,7 +51,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     ];
     private colorsDark: IColorsList[] = [
         { r: 43, g: 144, b: 143 },
-        { r: 23, g: 124, b: 220 },
+        // { r: 23, g: 124, b: 220 },
         { r: 241, g: 251, b: 43 },
         { r: 247, g: 31, b: 239 },
         { r: 47, g: 219, b: 23 },
@@ -174,6 +174,8 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     }
 
     private updateChart(coin: string, dsI: number): void {
+        const labelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].labelText;
+        const lastLabelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].lastLabelText;
         const langService = this.langService,
             mainCoin = this.storageService.mainCoin,
             coinObj = this.storageService.coinsObj[coin],
@@ -247,8 +249,6 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
         // chartDataI в этом месте должен указывать либо на 0 (ещё не было истории) либо на последний элемент графика
         goNext = newDataI < newHistoryData.length;
         while (goNext) {
-            //здесь только добавляются новые данные
-            //let chartData: { time: number; data: number },
             let newData: { time: number; data: number };
             //chartData = { time: chartHistoryData[chartDataI], data: currHistoryData[chartDataI] };
             newData = { time: newHistoryData[newDataI].time, data: newHistoryData[newDataI].power };
@@ -280,14 +280,37 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             tmp++;
             if (tmp > 3000) throw new Error('Something is wrong');
         }
+        goNext =
+            this.chart.labels.length >
+            DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
 
+        //отрезаем, начало, если слишком длинный график
+        while (goNext) {
+            this.chart.labels.shift();
+            this.chart.datasets.forEach(el => {
+                el.data.shift();
+            });
+            this.storageService.coinsList.forEach(coin => {
+                if (this.storageService.coinsObj[coin].history.data.length > 0)
+                    this.storageService.coinsObj[coin].history.data.shift();
+                if (this.storageService.coinsObj[coin].history.chart.data.length > 0)
+                    this.storageService.coinsObj[coin].history.chart.data.shift();
+                if (this.storageService.coinsObj[coin].history.chart.label.length > 0)
+                    this.storageService.coinsObj[coin].history.chart.label.shift();
+            });
+            goNext =
+                this.chart.labels.length >
+                DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
+        }
         function getStr(time: number, lastItem: boolean): string {
-            let str = lastItem ? 'HH:mm:ss' : 'HH:mm';
+            let str = lastItem ? lastLabelText : labelText;
             return formatDate(new Date(time * 1000), str, langService.getCurrentLang());
         }
     }
 
     private createChart(): void {
+        const labelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].labelText;
+        const lastLabelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].lastLabelText;
         const store = this.storageService.coinsObj,
             thisLangService = this.langService;
 
@@ -355,7 +378,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             };
         }
         function getStr(time: number, lastItem: boolean): string {
-            let str = lastItem ? 'HH:mm:ss' : 'HH:mm';
+            let str = lastItem ? lastLabelText : labelText;
             return formatDate(new Date(time * 1000), str, thisLangService.getCurrentLang());
         }
     }
