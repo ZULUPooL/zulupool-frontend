@@ -1,0 +1,151 @@
+import {
+    IZoomList,
+    IZoom,
+    IExplorerLink,
+    IHistoryItem2,
+    IZoomSettings,
+    ILiveStatWorker,
+    IFetchResponce,
+    ILocalTimeDelta,
+} from 'interfaces/common';
+//import { Injectable } from "@angular/core";
+
+//@Injectable({
+//providedIn: "root",
+//})
+export class DefaultParams {
+    static readonly ADMINNAME: string = 'admin';
+    static readonly GAZERNAME: string = 'observer';
+    static readonly BASECOINSWITCHTIMER: number = 80;
+    static readonly DATAUPDATETIMER: number = 20;
+    static readonly LIVESTATCACHE: number = 15;
+    static readonly HISTORYSTATCACHE: number = 50;
+    static readonly MAXHISTORYITEMS: number = 500;
+    static readonly MULTIPLYHISTORYDATAFORCHART: number = 3;
+    static readonly FETCHRESPONCE: IFetchResponce = { status: false, coin: '' };
+    static readonly DEFAULTTYPE = 'pool';
+    static readonly REQTYPE = {
+        POOL: 'pool',
+        USER: 'user',
+        WORKER: 'worker',
+    };
+    static readonly LOCALTIMEDELTA: ILocalTimeDelta = {
+        delta: 0,
+        isUpdated: false,
+    };
+    static readonly NULLSTATHISTORYITEM: IHistoryItem2 = {
+        name: '',
+        time: 0,
+        shareRate: 0,
+        shareWork: 0,
+        power: 0,
+    };
+    static readonly NULLSTATLIVEITEM: ILiveStatWorker = {
+        lastShareTime: 0,
+        name: '',
+        power: 0,
+        shareRate: 0,
+        shareWork: 0,
+    };
+    static readonly BLOCKSLINKS: IExplorerLink = {
+        BTC: 'https://btc.com/',
+        BCH: 'https://bch.btc.com/',
+        BCHN: 'https://bch.btc.com/',
+        BCHA: 'https://bch.btc.com/',
+        BSV: 'https://whatsonchain.com/block/',
+        DGB: 'https://chainz.cryptoid.info/dgb/block.dws?',
+        FCH: 'http://fch.world/block/',
+        HTR: 'https://explorer.hathor.network/transaction/',
+    };
+    static readonly TXLINKS: IExplorerLink = {
+        BTC: 'https://btc.com/',
+        BCH: 'https://bch.btc.com/',
+        BCHN: 'https://bch.btc.com/',
+        BCHA: 'https://bch.btc.com/',
+        BSV: 'https://whatsonchain.com/tx/',
+        DGB: 'https://chainz.cryptoid.info/dgb/tx.dws?',
+        FCH: 'http://fch.world/tx/',
+        HTR: 'https://explorer.hathor.network/transaction/',
+    };
+    static readonly ADDRLINKS: IExplorerLink = {
+        BTC: 'https://btc.com/',
+        BCH: 'https://bch.btc.com/',
+        BCHN: 'https://bch.btc.com/',
+        BCHA: 'https://bch.btc.com/',
+        BSV: 'https://whatsonchain.com/address/',
+        DGB: 'https://chainz.cryptoid.info/dgb/address.dws?',
+        FCH: 'http://fch.world/address/',
+        HTR: 'https://explorer.hathor.network/address/',
+    };
+
+    //static readonly zoom: string = "15M";
+    //static readonly zoomList: string[] = ["1M","5M","30M","H1","H4","D","W",];
+    static readonly ZOOM: IZoom = {
+        pool: '1M',
+        user: '1M',
+        worker: '5M',
+        history: 'D',
+    };
+    static readonly ZOOMSLIST: IZoomList = {
+        pool: ['1M', '15M', 'H1', 'H4', 'D'],
+        user: ['1M', '5M', '10M', '15M', '30M', 'H1', 'H4', 'D'],
+        worker: ['5M', '30M', 'H1', 'H4', 'D'],
+        history: ['D', 'W', 'M'],
+    };
+    static readonly ZOOMPARAMS: IZoomSettings = {
+        '1M': {
+            groupByInterval: 1 * 60,
+            statsWindow: 80,
+            maxStatsWindow: 100,
+            refreshTimer: 15,
+        },
+        '5M': {
+            groupByInterval: 5 * 60,
+            statsWindow: 80,
+            maxStatsWindow: 100,
+            refreshTimer: 60,
+        },
+        '10M': {
+            groupByInterval: 10 * 60,
+            statsWindow: 80,
+            maxStatsWindow: 100,
+            refreshTimer: 3 * 60,
+        },
+        '15M': {
+            groupByInterval: 15 * 60,
+            statsWindow: 80,
+            maxStatsWindow: 100,
+            refreshTimer: 5 * 60,
+        },
+        '30M': {
+            groupByInterval: 30 * 60,
+            statsWindow: 80,
+            maxStatsWindow: 100,
+            refreshTimer: 10 * 60,
+        },
+        H1: {
+            groupByInterval: 60 * 60,
+            statsWindow: 80,
+            maxStatsWindow: 100,
+            refreshTimer: 3 * 60,
+        },
+        H4: {
+            groupByInterval: 4 * 60 * 60,
+            statsWindow: 80,
+            maxStatsWindow: 100,
+            refreshTimer: 3 * 60,
+        },
+        D: {
+            groupByInterval: 24 * 60 * 60,
+            statsWindow: 80,
+            maxStatsWindow: 100,
+            refreshTimer: 20,
+        },
+        W: {
+            groupByInterval: 7 * 24 * 60 * 60,
+            statsWindow: 80,
+            maxStatsWindow: 100,
+            refreshTimer: 3 * 60,
+        },
+    };
+}

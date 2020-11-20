@@ -1,11 +1,11 @@
 <nz-radio-group
     nzTemplateMode="true"
     nzButtonStyle="solid"
-    [(ngModel)]="activeCoinName"
+    [(ngModel)]="coin"
     (ngModelChange)="cangeCoin($event)"
 >
-    <label *ngFor="let item of poolCoins" nz-radio-button [nzValue]="item.name">
-        {{ item.name }}
+    <label *ngFor="let item of coins" nz-radio-button [nzValue]="item">
+        {{ item }}
     </label>
 </nz-radio-group>
 <!--    nzLoading="coinsListLoading"-->

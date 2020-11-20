@@ -14,15 +14,16 @@ import { IPoolStatsHistoryItem } from "interfaces/backend-query";
 })
 export class ChartPowerComponent implements OnChanges {
     @Input()
-    powerData: IChartData;
+    mainCoin: string;
+    //powerData: IChartData;
     /*powerData: {
         actualData: IPoolStatsHistoryItem[];
         prevData: IPoolStatsHistoryItem[];
         powerMultLog10: number;
         chartName: string;
     };*/
-
-    chartData: IChartData;
+    mainCoinName: string;
+    //chartData: IChartData;
     /*
     labels: Label[];
     data: number[];
@@ -31,7 +32,12 @@ export class ChartPowerComponent implements OnChanges {
     constructor() {} // private storageService: StorageService, //private langService: LangService,
 
     ngOnChanges(): void {
-        this.chartData = this.powerData;
+        if (
+            this.mainCoin !== undefined &&
+            this.mainCoin !== null &&
+            this.mainCoin !== ""
+        )
+            this.mainCoinName = this.mainCoin;
     }
     //    onZoomChange(zoom: string) {}
     /*

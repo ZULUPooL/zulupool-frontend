@@ -1,4 +1,6 @@
-import { Injectable } from "@angular/core";
+import { DefaultParams } from 'components/defaults.component';
+
+import { Injectable } from '@angular/core';
 import {
     IPoolCoinsItem,
     IPoolStatsItem,
@@ -11,46 +13,129 @@ import {
     IFoundBlock,
     IPoolStatsHistoryItem,
     ICinfo,
-} from "interfaces/backend-query";
+} from 'interfaces/backend-query';
 
-@Injectable({ providedIn: "root" })
+import {
+    ICoinsData,
+    IZoomSettings,
+    ILiveStatPool,
+    IHistoryItem2,
+    IBlockItem,
+    ICoinItem,
+    IZoomParams,
+    ILiveStat,
+    IBlocks,
+} from 'interfaces/common';
+
+@Injectable({ providedIn: 'root' })
 export class StorageService {
     constructor() {}
 
+    private localTimeD = DefaultParams.LOCALTIMEDELTA;
+    private coin: string = '';
+    private coinMain: string = '';
+    private type: string = DefaultParams.DEFAULTTYPE;
+    private coinList: string[] = [];
+    private coinListTS: number = 0;
+    private coinsData: ICoinsData = {};
+    private currentZoom = DefaultParams.ZOOM[this.type];
+
+    private zoomListOld = DefaultParams.ZOOMSLIST[this.type];
+    private zoomParamsOld = DefaultParams.ZOOMPARAMS;
+
+    //private defaulZoom = DefaultParams.ZOOM;
+    //private zoomList = DefaultParams.ZOOMSLIST;
+    private zoomParams = DefaultParams.ZOOMPARAMS;
+
+    get locatTimeDelta(): { delta: number; isUpdated: boolean } {
+        return this.localTimeD;
+    }
+    set locatTimeDelta(data: { delta: number; isUpdated: boolean }) {
+        if (data) this.localTimeD = data;
+        else this.localTimeD = DefaultParams.LOCALTIMEDELTA;
+    }
+
+    get coinsListTs(): number {
+        return this.coinListTS;
+    }
+    set coinsListTs(ts: number) {
+        if (ts) this.coinListTS = ts;
+        else this.coinListTS = 0;
+    }
+    get mainCoin(): string {
+        return this.coinMain;
+    }
+    set mainCoin(coin: string) {
+        if (coin) this.coinMain = coin;
+        else this.coinMain = '';
+    }
+    get currCoin(): string {
+        return this.coin;
+    }
+    set currCoin(coin: string) {
+        if (coin) this.coin = coin;
+        else this.coin = '';
+    }
+    get currType(): string {
+        return this.type;
+    }
+    set currType(type: string) {
+        if (type) this.type = type;
+        else this.type = DefaultParams.DEFAULTTYPE;
+    }
+    get currZoom(): string {
+        return this.currentZoom;
+    }
+    set currZoom(zoom: string) {
+        if (zoom) this.currentZoom = zoom;
+        else this.currentZoom = DefaultParams.ZOOM[this.type];
+    }
+    get currZoomGroupByInterval(): number {
+        return this.zoomParams[this.currentZoom].groupByInterval;
+    }
+    get currZoomTimeFrom(): number {
+        const delta = this.localTimeD.delta;
+        const currentTime =
+            delta + parseInt(((new Date().setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(0));
+        const statsWindow = this.zoomParams[this.currentZoom].statsWindow;
+        const groupByInterval = this.zoomParams[this.currentZoom].groupByInterval;
+        return currentTime - statsWindow * groupByInterval;
+    }
+
+    get coinsList(): string[] {
+        return this.coinList;
+    }
+    set coinsList(coins: string[]) {
+        if (coins) this.coinList = coins;
+        else this.coinList = [];
+    }
+    get coinsObj(): ICoinsData {
+        return this.coinsData;
+    }
+    set coinsObj(data: ICoinsData) {
+        if (data) this.coinsData = data;
+        else this.coinsData = {} as ICoinsData;
+    }
+
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
+    ///////////////////TODO//////////////////////////////////////TODO///////////////////
     private allCoins = [] as IPoolCoinsItem[];
     private currentCoin = {};
     private baseCoin = {} as IPoolCoinsItem;
     private chartsLoaded = {};
     private zoomLoading = {};
     private chartsData = {};
-    private currentZoom = "15M";
-    private zoomList = ["1M", "5M", "15M", "H1", "H4", "D1"];
-    private zoomParams = {
-        "1M": {
-            groupByInterval: 1 * 60,
-            statsWindow: 100,
-        },
-        "5M": {
-            groupByInterval: 5 * 60,
-            statsWindow: 100,
-        },
-        "15M": {
-            groupByInterval: 15 * 60,
-            statsWindow: 100,
-        },
-        H1: {
-            groupByInterval: 60 * 60,
-            statsWindow: 100,
-        },
-        H4: {
-            groupByInterval: 4 * 60 * 60,
-            statsWindow: 100,
-        },
-        D1: {
-            groupByInterval: 24 * 60 * 60,
-            statsWindow: 100,
-        },
-    };
 
     get chartData(): {
         [coin: string]: {
@@ -99,11 +184,11 @@ export class StorageService {
     }
 
     get whatZoomParams(): {} {
-        return this.zoomParams;
+        return this.zoomParamsOld;
     }
     set whatZoomParams(params: {}) {
-        if (params) this.zoomParams = params as any;
-        else this.zoomParams = {} as any;
+        if (params) this.zoomParamsOld = params as any;
+        else this.zoomParamsOld = {} as any;
     }
     get whatZoom(): string {
         return this.currentZoom;
@@ -113,10 +198,10 @@ export class StorageService {
         else this.currentCoin = {};
     }
     get whatZooms(): string[] {
-        return this.zoomList;
+        return this.zoomListOld;
     }
     set whatZooms(zoom: string[]) {
-        if (zoom) this.zoomList = zoom;
+        if (zoom) this.zoomListOld = zoom;
         else this.currentCoin = {};
     }
     get whatCoin(): {} {
@@ -144,22 +229,21 @@ export class StorageService {
     }
 
     get sessionId(): string | null {
-        return window.localStorage.getItem("sessionId") || null;
+        return window.localStorage.getItem('sessionId') || null;
     }
 
     set sessionId(sessionId: string | null) {
-        if (sessionId) window.localStorage.setItem("sessionId", sessionId);
-        else window.localStorage.removeItem("sessionId");
+        if (sessionId) window.localStorage.setItem('sessionId', sessionId);
+        else window.localStorage.removeItem('sessionId');
     }
 
     get targetLogin(): string | null {
-        return window.localStorage.getItem("targetLogin") || null;
+        return window.localStorage.getItem('targetLogin') || null;
     }
 
     set targetLogin(targetLogin: string | null) {
-        if (targetLogin)
-            window.localStorage.setItem("targetLogin", targetLogin);
-        else window.localStorage.removeItem("targetLogin");
+        if (targetLogin) window.localStorage.setItem('targetLogin', targetLogin);
+        else window.localStorage.removeItem('targetLogin');
     } /*
     get poolCoins2(): { [coin: string]: IPoolCoinsData } {
         return JSON.parse(window.localStorage.getItem("coins")) || false;
@@ -171,12 +255,11 @@ export class StorageService {
 */
 
     get poolCoins(): IPoolCoinsItem[] | null {
-        return JSON.parse(window.localStorage.getItem("poolCoins")) || null;
+        return JSON.parse(window.localStorage.getItem('poolCoins')) || null;
     }
     set poolCoins(poolCoins: IPoolCoinsItem[] | null) {
-        if (poolCoins)
-            window.localStorage.setItem("poolCoins", JSON.stringify(poolCoins));
-        else window.localStorage.removeItem("poolCoins");
+        if (poolCoins) window.localStorage.setItem('poolCoins', JSON.stringify(poolCoins));
+        else window.localStorage.removeItem('poolCoins');
     }
     /*
     get coinsCacheTime(): number | null {
@@ -189,90 +272,68 @@ export class StorageService {
     }
 */
     get poolCoinsliveStat(): IPoolStatsItem | null {
-        return (
-            JSON.parse(window.localStorage.getItem("poolCoinsliveStat")) || null
-        );
+        return JSON.parse(window.localStorage.getItem('poolCoinsliveStat')) || null;
     }
     set poolCoinsliveStat(poolCoinsliveStat: IPoolStatsItem | null) {
         if (poolCoinsliveStat)
-            window.localStorage.setItem(
-                "poolCoinsliveStat",
-                JSON.stringify(poolCoinsliveStat),
-            );
-        else window.localStorage.removeItem("poolCoinsliveStat");
+            window.localStorage.setItem('poolCoinsliveStat', JSON.stringify(poolCoinsliveStat));
+        else window.localStorage.removeItem('poolCoinsliveStat');
     }
     get poolCoinsliveStat2(): { [coin: string]: IPoolStatsData } | null {
-        return JSON.parse(window.localStorage.getItem("cLiveStat")) || null;
+        return JSON.parse(window.localStorage.getItem('cLiveStat')) || null;
     }
     set poolCoinsliveStat2(data: { [coin: string]: IPoolStatsData }) {
-        if (data)
-            window.localStorage.setItem("cLiveStat", JSON.stringify(data));
-        else window.localStorage.removeItem("cLiveStat");
+        if (data) window.localStorage.setItem('cLiveStat', JSON.stringify(data));
+        else window.localStorage.removeItem('cLiveStat');
     }
 
     get currentCoinInfo(): IPoolCoinsItem {
-        return (
-            JSON.parse(window.localStorage.getItem("currentCoinInfo")) ||
-            ({} as IPoolCoinsItem)
-        );
+        return JSON.parse(window.localStorage.getItem('currentCoinInfo')) || ({} as IPoolCoinsItem);
     }
     set currentCoinInfo(currentCoinInfo: IPoolCoinsItem | null) {
         if (currentCoinInfo)
-            window.localStorage.setItem(
-                "currentCoinInfo",
-                JSON.stringify(currentCoinInfo),
-            );
-        else window.localStorage.removeItem("currentCoinInfo");
+            window.localStorage.setItem('currentCoinInfo', JSON.stringify(currentCoinInfo));
+        else window.localStorage.removeItem('currentCoinInfo');
     }
 
     get currentCoinInfoWorker(): IPoolCoinsItem {
         return (
-            JSON.parse(window.localStorage.getItem("currentCoinInfoWorker")) ||
+            JSON.parse(window.localStorage.getItem('currentCoinInfoWorker')) ||
             ({} as IPoolCoinsItem)
         );
     }
     set currentCoinInfoWorker(currentCoinInfoWorker: IPoolCoinsItem | null) {
         if (currentCoinInfoWorker)
             window.localStorage.setItem(
-                "currentCoinInfoWorker",
+                'currentCoinInfoWorker',
                 JSON.stringify(currentCoinInfoWorker),
             );
-        else window.localStorage.removeItem("currentCoinInfoWorker");
+        else window.localStorage.removeItem('currentCoinInfoWorker');
     }
 
     get currentUser(): string | null {
-        return window.localStorage.getItem("currentUser") || null;
+        return window.localStorage.getItem('currentUser') || null;
     }
     set currentUser(currentUser: string | null) {
-        if (currentUser)
-            window.localStorage.setItem("currentUser", currentUser);
-        else window.localStorage.removeItem("currentUser");
+        if (currentUser) window.localStorage.setItem('currentUser', currentUser);
+        else window.localStorage.removeItem('currentUser');
     }
     get chartsTimeFrom(): number | null {
-        return parseInt(window.localStorage.getItem("chartsTimeFrom")) || null;
+        return parseInt(window.localStorage.getItem('chartsTimeFrom')) || null;
     }
     set chartsTimeFrom(chartsTimeFrom: number | null) {
         if (chartsTimeFrom)
-            window.localStorage.setItem(
-                "chartsTimeFrom",
-                chartsTimeFrom.toString(),
-            );
-        else window.localStorage.removeItem("chartsTimeFrom");
+            window.localStorage.setItem('chartsTimeFrom', chartsTimeFrom.toString());
+        else window.localStorage.removeItem('chartsTimeFrom');
     }
 
     get chartsWorkerTimeFrom(): number | null {
-        return (
-            parseInt(window.localStorage.getItem("chartsWorkerTimeFrom")) ||
-            null
-        );
+        return parseInt(window.localStorage.getItem('chartsWorkerTimeFrom')) || null;
     }
     set chartsWorkerTimeFrom(chartsWorkerTimeFrom: number | null) {
         if (chartsWorkerTimeFrom)
-            window.localStorage.setItem(
-                "chartsWorkerTimeFrom",
-                chartsWorkerTimeFrom.toString(),
-            );
-        else window.localStorage.removeItem("chartsWorkerTimeFrom");
+            window.localStorage.setItem('chartsWorkerTimeFrom', chartsWorkerTimeFrom.toString());
+        else window.localStorage.removeItem('chartsWorkerTimeFrom');
     }
     /*
     get chartsDataLoaded(): { [coin: string]: boolean | false } {
@@ -294,7 +355,7 @@ export class StorageService {
         type?: string;
         workerId?: string;
     } | null {
-        return JSON.parse(window.localStorage.getItem("chBData")) || null;
+        return JSON.parse(window.localStorage.getItem('chBData')) || null;
     }
     set charts1BaseData(
         chartsBaseData: {
@@ -307,22 +368,15 @@ export class StorageService {
             workerId?: string;
         } | null,
     ) {
-        if (chartsBaseData)
-            window.localStorage.setItem(
-                "chBData",
-                JSON.stringify(chartsBaseData),
-            );
-        else window.localStorage.removeItem("chBData");
+        if (chartsBaseData) window.localStorage.setItem('chBData', JSON.stringify(chartsBaseData));
+        else window.localStorage.removeItem('chBData');
     }
 
     get chartsWorkerBaseData(): {
         title: string;
         data: [];
     } | null {
-        return (
-            JSON.parse(window.localStorage.getItem("chartsWorkerBaseData")) ||
-            {}
-        );
+        return JSON.parse(window.localStorage.getItem('chartsWorkerBaseData')) || {};
     }
     set chartsWorkerBaseData(
         chartsWorkerBaseData: {
@@ -332,45 +386,35 @@ export class StorageService {
     ) {
         if (chartsWorkerBaseData)
             window.localStorage.setItem(
-                "chartsWorkerBaseData",
+                'chartsWorkerBaseData',
                 JSON.stringify(chartsWorkerBaseData),
             );
-        else window.localStorage.removeItem("chartsWorkerBaseData");
+        else window.localStorage.removeItem('chartsWorkerBaseData');
     }
 
     get currentUserliveStat(): IUserStats | null {
-        return (
-            JSON.parse(window.localStorage.getItem("currentUserliveStat")) ||
-            null
-        );
+        return JSON.parse(window.localStorage.getItem('currentUserliveStat')) || null;
     }
     set currentUserliveStat(currentUserliveStat: IUserStats | null) {
         if (currentUserliveStat)
-            window.localStorage.setItem(
-                "currentUserliveStat",
-                JSON.stringify(currentUserliveStat),
-            );
-        else window.localStorage.removeItem("currentUserliveStat");
+            window.localStorage.setItem('currentUserliveStat', JSON.stringify(currentUserliveStat));
+        else window.localStorage.removeItem('currentUserliveStat');
     }
 
     get currentWorkerName(): string | null {
-        return window.localStorage.getItem("currentWorkerName") || null;
+        return window.localStorage.getItem('currentWorkerName') || null;
     }
     set currentWorkerName(currentWorkerName: string | null) {
-        if (currentWorkerName)
-            window.localStorage.setItem("currentWorkerName", currentWorkerName);
-        else window.localStorage.removeItem("currentWorkerName");
+        if (currentWorkerName) window.localStorage.setItem('currentWorkerName', currentWorkerName);
+        else window.localStorage.removeItem('currentWorkerName');
     }
     get needWorkerInint(): boolean | null {
-        return window.localStorage.getItem("needWorkerInint") == "true" || null;
+        return window.localStorage.getItem('needWorkerInint') == 'true' || null;
     }
     set needWorkerInint(needWorkerInint: boolean | null) {
         if (needWorkerInint)
-            window.localStorage.setItem(
-                "needWorkerInint",
-                needWorkerInint.toString(),
-            );
-        else window.localStorage.removeItem("needWorkerInint");
+            window.localStorage.setItem('needWorkerInint', needWorkerInint.toString());
+        else window.localStorage.removeItem('needWorkerInint');
     }
 
     /*    get currentWorkerliveStat(): IWorkerStatsItem[] | null {
@@ -391,26 +435,19 @@ export class StorageService {
     }
 */
     get userSettings(): {} | null {
-        return JSON.parse(window.localStorage.getItem("userSettings")) || null;
+        return JSON.parse(window.localStorage.getItem('userSettings')) || null;
     }
     set userSettings(userSettings: {} | null) {
-        if (userSettings)
-            window.localStorage.setItem(
-                "userSettings",
-                JSON.stringify(userSettings),
-            );
-        else window.localStorage.removeItem("userSettings");
+        if (userSettings) window.localStorage.setItem('userSettings', JSON.stringify(userSettings));
+        else window.localStorage.removeItem('userSettings');
     }
 
     get userCredentials(): {} | null {
-        return window.localStorage.getItem("userCredentials") || null;
+        return window.localStorage.getItem('userCredentials') || null;
     }
     set userCredentials(userCredentials: {} | null) {
         if (userCredentials)
-            window.localStorage.setItem(
-                "userCredentials",
-                JSON.stringify(userCredentials),
-            );
-        else window.localStorage.removeItem("userCredentials");
+            window.localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
+        else window.localStorage.removeItem('userCredentials');
     }
 }

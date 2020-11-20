@@ -1,11 +1,12 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
-import { ZoomSwitchService } from "services/zoomswitch.service";
-import { StorageService } from "services/storage.service";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ZoomSwitchService } from 'services/zoomswitch.service';
+import { StorageService } from 'services/storage.service';
+import { FetchPoolDataService } from 'services/fetchdata.service';
 
 @Component({
-    selector: "app-zoom-switcher",
-    templateUrl: "./zoom-switcher.component.html",
-    styleUrls: ["./zoom-switcher.component.less"],
+    selector: 'app-zoom-switcher',
+    templateUrl: './zoom-switcher.component.html',
+    styleUrls: ['./zoom-switcher.component.less'],
 })
 export class ZoomSwitcherComponent implements OnInit {
     @Output()
@@ -18,6 +19,7 @@ export class ZoomSwitcherComponent implements OnInit {
     constructor(
         private zoomSwitchService: ZoomSwitchService, //private fetchPoolDataService: FetchPoolDataService,
         private storageService: StorageService,
+        private fetchPoolDataService: FetchPoolDataService,
     ) {}
 
     ngOnInit(): void {
@@ -26,6 +28,7 @@ export class ZoomSwitcherComponent implements OnInit {
         this.zooms = this.storageService.whatZooms;
         this.zoomListReady = true;
         this.cangeZoom(this.activeZoom);
+
         //this.coinsListReady = false;
         //this.fetchPoolDataService.getCoinsData.subscribe(data => {
         //if (Object.keys(data).length > 0) this.processCoins(data);

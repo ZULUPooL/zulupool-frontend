@@ -16,24 +16,32 @@ export class CoinSwitcherComponent implements OnInit {
     @Output()
     onChange = new EventEmitter<TCoinName>();
 
-    activeCoinName: TCoinName;
-    poolCoins: IPoolCoinsItem[];
-    coinsListReady: boolean;
+    //    activeCoinName: TCoinName;
+    //    poolCoins: IPoolCoinsItem[];
+    coin: string;
+    coins: string[];
+
+    ready: boolean;
 
     constructor(
         private coinSwitchService: CoinSwitchService,
+        private storageService: StorageService,
         private fetchPoolDataService: FetchPoolDataService,
     ) {}
 
     ngOnInit(): void {
-        this.coinsListReady = false;
-        this.fetchPoolDataService.getCoinsData.subscribe(data => {
-            if (Object.keys(data).length > 0) this.processCoins(data);
+        this.ready = false;
+        this.fetchPoolDataService.apiGetListOfCoins.subscribe(result => {
+            if (result) this.processCoins();
         });
+
+        //this.fetchPoolDataService.getCoinsData.subscribe(data => {
+        //if (Object.keys(data).length > 0) this.processCoins(data);
+        //});
     }
 
     ngOnDestroy(): void {
-        this.fetchPoolDataService.getCoinsData.unsubscribe();
+        this.fetchPoolDataService.apiGetListOfCoins.unsubscribe();
     }
 
     cangeCoin(newCoin: TCoinName) {
@@ -41,12 +49,12 @@ export class CoinSwitcherComponent implements OnInit {
         this.onChange.emit(newCoin);
     }
 
-    private processCoins(data) {
-        const i = data.msg.length > 2 ? data.msg.length - 1 : 0;
-        this.activeCoinName = data.msg[i].name;
-        this.poolCoins = data.msg;
-        this.coinsListReady = true;
-        this.cangeCoin(this.activeCoinName);
+    private processCoins() {
+        this.coins = this.storageService.coinsList;
+        const i = this.coins.length > 2 ? this.coins.length - 1 : 0;
+        this.coin = this.coins[i];
+        this.ready = true;
+        this.cangeCoin(this.coin);
     }
 }
 

@@ -66,6 +66,7 @@ import { UsersComponent } from "pages/users/users.component";
 import { PayoutsComponent } from "pages/payouts/payouts.component";
 import { SettingsComponent } from "pages/settings/settings.component";
 
+//import { DefaultParams } from "components/defaults.component";
 import { CreateUserComponent } from "pages/createuser/createuser.component";
 import { CoinSwitcherComponent } from "components/coin-switcher/coin-switcher.component";
 import { ZoomSwitcherComponent } from "components/zoom-switcher/zoom-switcher.component";
@@ -190,6 +191,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         PayoutsComponent,
         SettingsComponent,
         CreateUserComponent,
+        //DefaultParams,
 
         FooterComponent,
         MainLayoutComponent,

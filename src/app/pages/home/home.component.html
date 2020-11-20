@@ -10,7 +10,7 @@
           <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
         </div>
         <div class="pool-info-table">
-            <nz-table style="width: 100%;" nzBordered nzSize="small" [nzTemplateMode]="true" [nzLoading]="isLiveStatLoading">
+            <nz-table style="width: 100%;" nzBordered nzSize="small" [nzTemplateMode]="true" [nzLoading]="isLiveLoading">
                 <thead>
                     <tr>
                         <th style="min-width: 80px;text-align: center;">{{ "common.coin" | translate }}</th>
@@ -23,17 +23,17 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="text-align: center;">{{ currentCoinName }}</td>
+                        <td style="text-align: center;">{{ activeCoinName }}</td>
                         <td style="text-align: center;">
                             {{
-                                currentStats?.power
-                                    | metricPrefixify: currentStats?.powerMultLog10
+                                liveStats?.power
+                                    | metricPrefixify: liveStats?.powerMultLog10
                                     | toFixed
                                     | suffixify: ESuffix.Power
                             }}
                         </td>
-                        <td style="text-align: center;">{{ currentStats?.clients }}</td>
-                        <td style="text-align: center;">{{ currentStats?.workers }}</td>
+                        <td style="text-align: center;">{{ liveStats?.clients }}</td>
+                        <td style="text-align: center;">{{ liveStats?.workers }}</td>
                     </tr>
                 </tbody>
             </nz-table>
@@ -42,25 +42,24 @@
 
     </div>
 
-    <app-chart-power *ngIf="powerChartData" class="coin-chart" [powerData]="powerChartData"
-        [powerMultLog10]="6">
+    <app-chart-power class="coin-chart" [mainCoin]="mainCoinName">
     </app-chart-power>
 </div>
 
-<nz-table *ngIf="currentBlocks && currentCoinName !== currentAlgo" class="found-blocks-table" nzBordered
-    [nzTemplateMode]="true" [nzLoading]="isBloksLoading">
+<nz-table *ngIf="haveBlocksData" class="found-blocks-table" nzBordered
+    [nzTemplateMode]="true" [nzLoading]="isLoadingBlocks">
     <thead>
         <tr>
             <th *ngFor="let title of foundBlockKeys" style="text-align: center;padding: 6px 6px 6px;">
                 {{ "home.foundBlocksTable.title." + title | translate }}
             </th>
         </tr>
-        <tr *ngIf="currentBlocks.length == 0" style="text-align: center;">
-            {{ currentCoinName }} {{ "home.foundBlocksTable.content.noBlocks" | translate}}
+        <tr *ngIf="blocks.length == 0" style="text-align: center;">
+            {{ coinName }} {{ "home.foundBlocksTable.content.noBlocks" | translate}}
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let foundBlock of currentBlocks" (click)="onBlockClick(foundBlock)">
+        <tr *ngFor="let foundBlock of blocks" (click)="onBlockClick(foundBlock)">
             <td *ngFor="let key of foundBlockKeys" style="text-align: center;padding: 5px 5px 5px;">
                 <ng-container *ngTemplateOutlet="
                         foundBlockDataTemplate;
@@ -74,8 +73,8 @@
     </tbody>
 </nz-table>
 
-<nz-table *ngIf="currentBlocks && currentCoinName !== currentAlgo" class="found-blocks-table-mobile _table-mobile"
-    nzBordered [nzTemplateMode]="true" [nzLoading]="isBloksLoading">
+<nz-table *ngIf="haveBlocksData" class="found-blocks-table-mobile _table-mobile"
+    nzBordered [nzTemplateMode]="true" [nzLoading]="isLoadingBlocks">
     <thead>
         <tr>
             <th *ngFor="let title of foundBlockKeysMobile" style="text-align: center;padding: 3px 2px 0px;">
@@ -83,12 +82,12 @@
             </th>
         </tr>
         <tr *ngIf="currentBlocks.length == 0" style="text-align: center;">
-            {{ currentCoinName }} {{ "home.foundBlocksTable.content.noBlocks" | translate}}
+            {{ CoinName }} {{ "home.foundBlocksTable.content.noBlocks" | translate}}
         </tr>
 
     </thead>
     <tbody>
-        <tr *ngFor="let foundBlock of currentBlocks" (click)="onBlockClick(foundBlock)">
+        <tr *ngFor="let foundBlock of blocks" (click)="onBlockClick(foundBlock)">
             <td *ngFor="let key of foundBlockKeysMobile" style="text-align: center;padding: 3px 2px 0px;">
                 <ng-container *ngTemplateOutlet="
                 foundBlockDataTemplateMobile;

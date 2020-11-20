@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { DefaultParams } from "components/defaults.component";
 
 import { UserApiService } from "api/user.api";
 import { IUser } from "interfaces/user";
@@ -29,7 +30,10 @@ export class UsersComponent implements OnInit {
     ngOnInit(): void {
         this.userApiService.userEnumerateAll().subscribe(({ users }) => {
             users = users.filter(function (item) {
-                return item.login !== "admin" && item.login !== "observer";
+                return (
+                    item.login !== DefaultParams.ADMINNAME &&
+                    item.login !== DefaultParams.GAZERNAME
+                );
             });
             //            users.forEach(item => {
             //                item.lastShareTime = currentTime - item.lastShareTime;
