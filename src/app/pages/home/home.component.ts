@@ -79,8 +79,8 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     isLiveLoading: boolean;
     liveStats: ILiveStatPool;
 
-    isHistoryLoading: boolean;
-    historyStats: IHistoryItem2[];
+    //isHistoryLoading: boolean;
+    //historyStats: IHistoryItem2[];
 
     haveBlocksData: boolean;
     isBlocksLoading: boolean;
@@ -159,21 +159,15 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
 
     ngOnInit(): void {
         this.reset();
-        this.storageService.currType = DefaultParams.REQTYPE.POOL;
-        this.isLiveLoading = true;
-        //this.isStarting = true;
+        this.start();
         this.subs();
         this.periodicFetch();
         this.fetchPoolDataService.coins();
     }
-
     ngOnDestroy(): void {
         clearTimeout(this.fetcherTimeoutId);
         clearTimeout(this.mainCoinApplyTimeoutId);
         this.subscriptions.forEach(el => el.unsubscribe);
-        //this.storageService.chartsBaseData = null;
-        //this.unsetFetch();
-        //this.reset();
     }
 
     onBlockClick(block: IBlockItem): void {
@@ -192,14 +186,13 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     }
     onCurrentCoinChange(coin: string): void {
         if (coin === null || coin === '') return;
-        //this.clearChart = false;
         this.storageService.coinsObj[coin].isNeedRefresh = true;
         this.setMainCoinTimer(coin);
         this.coinName = coin;
         this.storageService.currCoin = coin;
+        this.haveBlocksData = !this.storageService.coinsObj[coin].isAlgo;
         this.getLiveInfo(coin);
-        this.getBloksInfo(coin);
-        if (this.storageService.coinsObj[coin].isMain) this.clearRefresh(coin);
+        //if (this.storageService.coinsObj[coin].isMain) this.clearRefresh(coin);
     }
 
     truncate(fullStr) {
@@ -218,37 +211,42 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
             const store = this.storageService.coinsObj[coin];
             if (!store.isAlgo) {
                 this.isBlocksLoading = true;
+                this.haveBlocksData = true;
                 this.getBloksInfo(coin);
             }
             this.liveStats = store.live.data as any;
-            this.isLiveLoading = false;
         }
+        this.isLiveLoading = false;
         this.getHistoryInfo(coin);
     }
     private processBlocks(coin: string) {
         if (this.activeCoinName !== coin) return;
         const store = this.storageService.coinsObj[coin];
         if (store.isAlgo) return;
+        //this.haveBlocksData;
         this.blocks = store.blocks.data as any;
         this.isBlocksLoading = false;
     }
 
     private setupMainCoin(coin: string) {
-        this.storageService.coinsList.forEach(el => {
-            if (el !== coin) {
-                this.storageService.coinsObj[el].isMain = false;
-                this.storageService.coinsObj[el].isNeedRefresh = false;
-                this.storageService.coinsObj[el].history.chart.label = [];
-                this.storageService.coinsObj[el].history.chart.data = [];
-                this.storageService.coinsObj[el].history.data = [];
-            } else {
-                this.storageService.coinsObj[el].isMain = true;
-                this.storageService.coinsObj[el].isNeedRefresh = true;
-            }
-        });
-        this.storageService.mainCoin = coin;
-        this.storageService.currCoin = coin;
-        this.mainCoinName = coin;
+        if (this.storageService.mainCoin !== coin) {
+            this.storageService.coinsList.forEach(el => {
+                if (el !== coin) {
+                    this.storageService.coinsObj[el].isMain = false;
+                    this.storageService.coinsObj[el].isNeedRefresh = false;
+                    this.storageService.coinsObj[el].history.chart.label = [];
+                    this.storageService.coinsObj[el].history.chart.data = [];
+                    this.storageService.coinsObj[el].history.data = [];
+                } else {
+                    this.storageService.coinsObj[el].isMain = true;
+                    this.storageService.coinsObj[el].isNeedRefresh = true;
+                }
+            });
+            this.storageService.mainCoin = coin;
+            this.storageService.currCoin = coin;
+            this.mainCoinName = coin;
+            this.getLiveInfo(coin);
+        }
     }
     private getLiveInfo(coin: string) {
         const info = this.storageService.coinsObj[coin];
@@ -282,11 +280,15 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     private setMainCoinTimer(coin: string, timer: number = DefaultParams.BASECOINSWITCHTIMER) {
         clearTimeout(this.mainCoinApplyTimeoutId);
         this.mainCoinApplyTimeoutId = setTimeout(() => {
-            this.clearRefresh(coin);
             this.setupMainCoin(coin);
-            this.getLiveInfo(coin);
-            this.setMainCoinTimer(coin);
         }, timer * 1000);
+    }
+
+    private start() {
+        this.storageService.currType = DefaultParams.REQTYPE.POOL;
+        this.isLiveLoading = true;
+        this.haveBlocksData = false;
+        this.blocks = [];
     }
 
     private clearRefresh(coin: string) {

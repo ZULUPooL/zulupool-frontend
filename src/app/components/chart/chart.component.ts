@@ -99,7 +99,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     private processHistory(coin: string) {
         if (this.lastMain === '') this.lastMain = this.storageService.mainCoin;
         if (this.lastMain !== this.storageService.mainCoin) {
-            this.isNeedRefresh;
+            this.isNeedRefresh = true;
             this.lastMain = this.storageService.mainCoin;
         }
         this.coin = coin;
@@ -342,6 +342,27 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             this.chart.datasets[0].data.push(el.power);
             chartLabelsTS.push(el.time);
             chartDataStore.push(el.power);
+        }
+
+        let goNext =
+            this.chart.labels.length >
+            DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
+        while (goNext) {
+            this.chart.labels.shift();
+            this.chart.datasets.forEach(el => {
+                el.data.shift();
+            });
+            this.storageService.coinsList.forEach(coin => {
+                if (this.storageService.coinsObj[coin].history.data.length > 0)
+                    this.storageService.coinsObj[coin].history.data.shift();
+                if (this.storageService.coinsObj[coin].history.chart.data.length > 0)
+                    this.storageService.coinsObj[coin].history.chart.data.shift();
+                if (this.storageService.coinsObj[coin].history.chart.label.length > 0)
+                    this.storageService.coinsObj[coin].history.chart.label.shift();
+            });
+            goNext =
+                this.chart.labels.length >
+                DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
         }
 
         function setDataSetsIndexesAndCleardata(coin: string, coins: string[]) {

@@ -448,7 +448,7 @@ export class FetchPoolDataService {
                 }
 
                 let histData = fixHistory(historyResponce);
-                histData = compareHistory(histData);
+                //histData = compareHistory(histData);
                 calcChartsData(histData);
 
                 coinObj.history.data = histData.stats;
@@ -463,6 +463,7 @@ export class FetchPoolDataService {
                     coin: params.coin,
                 });
             }
+            /*
             function compareHistory(data: IHistoryResp): IHistoryResp {
                 if (coinObj.history.data.length > 2) {
                     let newStat: IHistoryItem2[] = [],
@@ -479,6 +480,11 @@ export class FetchPoolDataService {
                             j++;
                         } else if (j !== 0 && j === data.stats.length) {
                             i = coinObj.history.data.length;
+                        } else if (
+                            j === 0 &&
+                            el.time === data.stats[j].time - apiReq.groupByInterval
+                        ) {
+                            newStat.unshift(el);
                         } else {
                             throw new Error('Something is wrong');
                         }
@@ -488,7 +494,7 @@ export class FetchPoolDataService {
                     }
                 }
                 return data;
-            }
+            }*/
             function fixHistory(data: IHistoryResp): IHistoryResp {
                 const grInterval = apiReq.groupByInterval;
                 let time = data.currentTime,

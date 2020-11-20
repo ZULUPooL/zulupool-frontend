@@ -95,8 +95,8 @@ export class DefaultParams {
     static readonly ZOOMPARAMS: IZoomSettings = {
         '1M': {
             groupByInterval: 1 * 60,
-            statsWindow: 80,
-            maxStatsWindow: 90,
+            statsWindow: 40,
+            maxStatsWindow: 30,
             refreshTimer: 20,
             labelText: 'HH:mm',
             lastLabelText: 'HH:mm:ss',
