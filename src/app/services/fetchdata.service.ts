@@ -426,7 +426,6 @@ export class FetchPoolDataService {
                             processErr();
                         },
                     );
-                //return;
             }
             function processResponce(historyResponce: IHistoryResp) {
                 if (!storage.locatTimeDelta.isUpdated) {
@@ -438,7 +437,7 @@ export class FetchPoolDataService {
                 }
 
                 let histData = fixHistory(historyResponce);
-                //histData = compareHistory(histData);
+
                 calcChartsData(histData);
 
                 coinObj.history.data = histData.stats;
@@ -454,51 +453,12 @@ export class FetchPoolDataService {
                     type: params.type,
                 });
             }
-            /*
-            function compareHistory(data: IHistoryResp): IHistoryResp {
-                if (coinObj.history.data.length > 2) {
-                    let newStat: IHistoryItem2[] = [],
-                        j = 0;
-                    for (let i = 0; i < coinObj.history.data.length; i++) {
-                        const el = coinObj.history.data[i];
-                        if (j === 0 && el.time < data.stats[j].time) {
-                            newStat.push(el);
-                        } else if (j === 0 && el.time === data.stats[j].time) {
-                            newStat.push(data.stats[j]);
-                            j++;
-                        } else if (j !== 0 && j < data.stats.length) {
-                            newStat.push(data.stats[j]);
-                            j++;
-                        } else if (j !== 0 && j === data.stats.length) {
-                            i = coinObj.history.data.length;
-                        } else if (
-                            j === 0 &&
-                            el.time === data.stats[j].time - apiReq.groupByInterval
-                        ) {
-                            newStat.unshift(el);
-                        } else {
-                            throw new Error('Something is wrong');
-                        }
-                    }
-                    for (j; j < data.stats.length; j++) {
-                        newStat.push(data.stats[j]);
-                    }
-                }
-                return data;
-            }*/
+
             function fixHistory(data: IHistoryResp): IHistoryResp {
                 const grInterval = apiReq.groupByInterval;
                 let time = data.currentTime,
                     timeFrom = apiReq.timeFrom;
 
-                //let expectedItems = Math.round((time - timeFrom) / grInterval);
-                /*                let expectedItems =
-                    parseInt(
-                        ((time - timeFrom) / grInterval)
-                            .toString()
-                            .split(".")[0],
-                    ) + 1;
-*/
                 if (data.stats.length === 0) {
                     let nullStat = DefaultParams.NULLSTATHISTORYITEM;
                     nullStat.time = timeFrom;
@@ -555,29 +515,6 @@ export class FetchPoolDataService {
                     data.stats[data.stats.length - 1].time = time;
                     data.stats[data.stats.length - 1].power = coinObj.live.data.power;
                 }
-
-                /*
-                while (data.stats.length < expectedItems) {
-                    if (data.stats[0].time > timeFrom) {
-                        nullStat.time = data.stats[0].time - grInterval;
-                        data.stats.unshift(nullStat);
-                    }
-                    const l = data.stats.length - 1;
-                    if (data.stats[l].time < time) {
-                        nullStat.time = data.stats[l].time + grInterval;
-                        data.stats.push(nullStat);
-                    }
-                    if (count > maxIterations)
-                        throw new Error("Something is wrong");
-                    else count++;
-                }*/
-                /*const l = data.stats.length - 1;
-                data.stats[l].time = mainCoinObj.live.data.lastShareTime;
-                if (mainCoinObj.info.name !== params.coin)
-                    data.stats[l].time = time;
-                data.stats[l].power = coinObj.live.data.power;
-                //debugger;*/
-
                 return data;
             }
             function calcChartsData(data: IHistoryResp): void {
