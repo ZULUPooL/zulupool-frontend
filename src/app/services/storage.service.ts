@@ -18,7 +18,7 @@ import {
 import {
     ICoinsData,
     IZoomSettings,
-    ILiveStatPool,
+    ILiveStatCommon,
     IHistoryItem2,
     IBlockItem,
     ICoinItem,

@@ -1,16 +1,16 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
-import { StorageService } from "services/storage.service";
-import { CoinSwitchService } from "services/coinswitch.service";
-import { ICoinsList, TCoinName } from "interfaces/coin";
-import { IPoolCoinsItem } from "interfaces/backend-query";
-import { BackendQueryApiService } from "api/backend-query.api";
-import { SubscribableComponent } from "ngx-subscribable";
-import { FetchPoolDataService } from "services/fetchdata.service";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { StorageService } from 'services/storage.service';
+import { CoinSwitchService } from 'services/coinswitch.service';
+import { ICoinsList, TCoinName } from 'interfaces/coin';
+import { IPoolCoinsItem } from 'interfaces/backend-query';
+import { BackendQueryApiService } from 'api/backend-query.api';
+import { SubscribableComponent } from 'ngx-subscribable';
+import { FetchPoolDataService } from 'services/fetchdata.service';
 
 @Component({
-    selector: "app-coin-switcher",
-    templateUrl: "./coin-switcher.component.html",
-    styleUrls: ["./coin-switcher.component.less"],
+    selector: 'app-coin-switcher',
+    templateUrl: './coin-switcher.component.html',
+    styleUrls: ['./coin-switcher.component.less'],
 })
 export class CoinSwitcherComponent implements OnInit {
     @Output()
@@ -31,8 +31,8 @@ export class CoinSwitcherComponent implements OnInit {
 
     ngOnInit(): void {
         this.ready = false;
-        this.fetchPoolDataService.apiGetListOfCoins.subscribe(result => {
-            if (result) this.processCoins();
+        this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
+            if (data.status && data.type !== '') this.processCoins();
         });
 
         //this.fetchPoolDataService.getCoinsData.subscribe(data => {
@@ -41,7 +41,7 @@ export class CoinSwitcherComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        this.fetchPoolDataService.apiGetListOfCoins.unsubscribe();
+        //this.fetchPoolDataService.apiGetListOfCoins.unsubscribe();
     }
 
     cangeCoin(newCoin: TCoinName) {

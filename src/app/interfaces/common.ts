@@ -45,6 +45,25 @@ export interface ICharts {
     data?: IChartParams;
     isLoading: boolean;
 }*/
+export interface IUserBalanceItem {
+    coin: string;
+    balance: string;
+    requested: string;
+    paid: string;
+}
+export interface IUserSettingsItem {
+    name: string;
+    address: string;
+    payoutThreshold: number;
+    autoPayoutEnabled: boolean;
+}
+export interface IUserData {
+    balance: IUserBalanceItem;
+    settings?: IUserSettingsItem;
+    isBalanceLoading: boolean;
+    isSettingsLoading: boolean;
+}
+
 export interface IBlocks {
     data: IBlockItem[];
     isLoading: boolean;
@@ -67,7 +86,7 @@ export interface IHistoryStat {
     chart: IChartData;
 }
 export interface ILiveStat {
-    data: ILiveStatPool | ILiveStatUser | ILiveStatWorker;
+    data: ILiveStatCommon;
     isLoading: boolean;
     cacheTs: number;
 }
@@ -83,6 +102,7 @@ export interface IZoomParams {
 export interface IFetchResponce {
     status: boolean;
     coin: string;
+    type?: string;
 }
 
 export interface ICoinParams {
@@ -94,6 +114,7 @@ export interface ICoinParams {
     blocks?: IBlocks;
     live?: ILiveStat;
     history?: IHistoryStat;
+    user?: IUserData;
 }
 
 export interface ICoinsData {
@@ -133,7 +154,7 @@ export interface ILocalTimeDelta {
 }
 export interface ISendLiveStat {
     coin: string;
-    stats: ILiveStatPool | ILiveStatUser | ILiveStatWorker;
+    stats: ILiveStatCommon;
     status: boolean;
 }
 export interface ISendHistoryStat {
@@ -143,20 +164,30 @@ export interface ISendHistoryStat {
 }
 
 export interface ILiveStatCommon {
+    coin?: string;
+    clients?: number;
     shareRate: number;
     shareWork: number;
     power: number;
     lastShareTime: number;
-    powerMultLog10?: number | 1;
+    powerMultLog10?: number;
     powerUnit?: EPowerUnit;
+    total?: ILiveStatUser;
+    workers?: number;
+    miners?: ILiveStatWorker[];
 }
-export interface ILiveStatUser extends ILiveStatCommon {
+export interface ILiveStatUser {
     clients: number;
     workers: number;
+    shareRate: number;
+    shareWork: number;
+    power: number;
+    lastShareTime: number;
 }
-export interface ILiveStatWorker extends ILiveStatCommon {
+export interface ILiveStatWorker {
     name: string;
-}
-export interface ILiveStatPool extends ILiveStatUser {
-    coin: string;
+    shareRate: number;
+    shareWork: number;
+    power: number;
+    lastShareTime: number;
 }

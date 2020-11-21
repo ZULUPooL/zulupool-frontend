@@ -1,17 +1,18 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 
-import { EAppRoutes } from "enums/routing";
-import { BackendQueryApiService } from "api/backend-query.api";
-import { TCoinName } from "interfaces/coin";
-import { IWorkerStatsHistoryItem } from "interfaces/backend-query";
-import { AppService } from "services/app.service";
-import { ESuffix } from "pipes/suffixify.pipe";
-import { ETime } from "enums/time";
+import { EAppRoutes } from 'enums/routing';
+import { BackendQueryApiService } from 'api/backend-query.api';
+import { TCoinName } from 'interfaces/coin';
+import { IWorkerStatsHistoryItem } from 'interfaces/backend-query';
+import { AppService } from 'services/app.service';
+import { ESuffix } from 'pipes/suffixify.pipe';
+import { ETime } from 'enums/time';
+import { StorageService } from 'services/storage.service';
 
 @Component({
-    selector: "app-history",
-    templateUrl: "./history.component.html",
-    styleUrls: ["./history.component.less"],
+    selector: 'app-history',
+    templateUrl: './history.component.html',
+    styleUrls: ['./history.component.less'],
 })
 export class HistoryComponent implements OnInit {
     readonly EAppRoutes = EAppRoutes;
@@ -26,6 +27,7 @@ export class HistoryComponent implements OnInit {
     constructor(
         private backendQueryApiService: BackendQueryApiService,
         private appService: AppService,
+        private storageService: StorageService,
     ) {}
 
     ngOnInit(): void {
@@ -65,6 +67,8 @@ export class HistoryComponent implements OnInit {
     public onCurrentCoinChange(coin: TCoinName): void {
         this.currentCoin = coin;
         const groupByInterval = ETime.Day;
+        if (this.storageService.coinsObj[coin].isSpliName)
+            coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
 
         this.appService.user.subscribe(user => {
             this.backendQueryApiService

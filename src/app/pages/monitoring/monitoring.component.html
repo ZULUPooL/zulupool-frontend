@@ -5,25 +5,8 @@
         <div class="coin-select-block">
             <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
         </div>
-
-        <!--
-        <div class="coin-select-block">
-            <nz-radio-group
-                nzButtonStyle="solid"
-                [(ngModel)]="currentCoin"
-                (ngModelChange)="onCurrentCoinChange($event)"
-            >
-                <label
-                    *ngFor="let coin of coins"
-                    nz-radio-button
-                    [nzValue]="coin"
-                >
-                    {{ coin }}
-                </label>
-            </nz-radio-group>
-        </div> -->
         <div class="info-table">
-            <nz-table nzBordered [nzTemplateMode]="true" [nzLoading]="tableData.isLoading">
+            <nz-table nzBordered [nzTemplateMode]="true" [nzLoading]="isLiveLoading">
                 <thead>
                     <tr>
                         <th style="padding: 3px 4px 0px; text-align: center;">
@@ -41,20 +24,20 @@
                     <tr>
                         <td style="padding: 1px 4px 0px; text-align: center;">
                             {{ 
-                                userStatsItem?.workers 
+                                liveStats?.workers 
                             }}
                         </td>
                         <td style="padding: 1px 4px 0px; text-align: center;">
                             {{
-                                userStatsItem?.shareRate
+                                liveStats?.shareRate
                                     | suffixify: ESuffix.ShareRate
                             }}
                         </td>
                         <td style="padding: 1px 4px 0px; text-align: center;">
                             {{
-                                userStatsItem?.power
+                                liveStats?.power
                                     | metricPrefixify
-                                        : userStatsItemZeroUnitsOffset
+                                        : liveStats?.powerMultLog10
                                     | toFixed
                                     | suffixify: ESuffix.Power
                             }}
@@ -65,11 +48,11 @@
         </div>
 
         <nz-table class="info-table-mobile _table-mobile" nzBordered [nzTemplateMode]="true"
-            [nzLoading]="tableData.isLoading">
+            [nzLoading]="isLiveLoading">
             <thead>
                 <tr>
                     <th style="padding: 3px 4px 0px; text-align: center;">
-                        {{ "common.dictionary.workers" | translate }}
+                        {{ "common.dictionary.worker" | translate }}
                     </th>
                     <th style="padding: 3px 4px 0px; text-align: center;">
                         {{ "common.dictionary.shareRate" | translate }}
@@ -83,20 +66,20 @@
                 <tr>
                     <td style="padding: 1px 4px 0px; text-align: center;">
                         {{ 
-                            userStatsItem?.workers 
+                            liveStats?.workers 
                         }}
                     </td>
                     <td style="padding: 1px 4px 0px; text-align: center;">
                         {{
-                            userStatsItem?.shareRate
+                            liveStats?.shareRate
                                 | suffixify: ESuffix.ShareRate
                         }}
                     </td>
                     <td style="padding: 1px 4px 0px; text-align: center;">
                         {{
-                            userStatsItem?.power
+                            liveStats?.power
                                 | metricPrefixify
-                                    : userStatsItemZeroUnitsOffset
+                                    : liveStats?.powerMultLog10
                                 | toFixed
                                 | suffixify: ESuffix.Power
                         }}
@@ -105,8 +88,9 @@
             </tbody>
         </nz-table>
         <!--class="info-table"-->
-        <nz-table *ngIf="currentCoinName && currentCoinName !== 'sha256'" nzBordered [nzTemplateMode]="true"
-            [nzLoading]="tableData.isLoading">
+        <div style="padding: 3px 4px 0px;">
+        <nz-table *ngIf="haveBalanceData" nzBordered [nzTemplateMode]="true"
+            [nzLoading]="isBalanceDataLoading">
             <thead>
 
                 <tr>
@@ -125,22 +109,23 @@
             <tbody>
                 <tr>
                     <td style="padding: 3px 4px 0px; text-align: center;">
-                        {{ currentBalance.balance }}
+                        {{ currentBalance?.balance }}
                     </td>
                     <td style="padding: 3px 4px 0px; text-align: center;">
-                        {{ currentBalance.requested }}
+                        {{ currentBalance?.requested }}
                     </td>
                     <td style="padding: 3px 4px 0px; text-align: center;">
-                        {{ currentBalance.paid }}
+                        {{ currentBalance?.paid }}
                     </td>
                 </tr>
                 <tr style="padding: 3px 4px 0px; text-align: center;">
-                    <button nz-button nzType="primary" [nzLoading]="isManualPayoutSending" (click)="manualPayout()">
+                    <button nz-button nzType="primary" [nzLoading]="isSending" (click)="manualPayout()">
                         {{ "payouts.manualPayoutButton" | translate }}
                     </button>
                 </tr>
         </tbody>
         </nz-table>
+    </div>
        <!-- <nz-table *ngIf="currentCoin && currentCoin !== 'sha256'" class="info-table-mobile _table-mobile" nzBordered [nzTemplateMode]="true"
             [nzLoading]="tableData.isLoading">
             <thead>
@@ -164,12 +149,14 @@
     -->
     </div>
 
+    <app-chart class="coin-chart"></app-chart>
+
 <!--
     <app-chart-power  class="chart" [stats]="userStatsHistory.stats" [powerMultLog10]="userStatsHistory.powerMultLog10" [chartName]="userStatsHistory.coin">
     </app-chart-power> -->
 </div>
 <br />
-<nz-table class="workers-table" nzBordered [nzTemplateMode]="true" [nzLoading]="tableData.isLoading">
+<nz-table class="workers-table" nzBordered [nzTemplateMode]="true" [nzLoading]="isLiveLoading">
     <thead>
         <tr>
             <th nzWidth="1px"></th>
@@ -187,8 +174,8 @@
             </th>
         </tr>
     </thead>
-    <tbody *ngIf="userWorkersStatsList">
-        <tr *ngFor="let item of userWorkersStatsList" className="_clickable" (click)="onWorkerRowClick(item.name)">
+    <tbody *ngIf="liveStatsWorkers">
+        <tr *ngFor="let item of liveStatsWorkers" className="_clickable" (click)="onWorkerRowClick(item.name)">
             <td>
                 <ng-container [ngSwitch]="getWorkerState(item.lastShareTime)">
                     <i *ngSwitchCase="EWorkerState.Normal" class="worker-state _normal" nz-icon nzType="check-circle"
@@ -206,7 +193,7 @@
             <td>
                 {{
                     item.power
-                        | metricPrefixify: userStatsItemZeroUnitsOffset
+                        | metricPrefixify: liveStats?.powerMultLog10
                         | toFixed
                         | suffixify: ESuffix.Power
                 }}
@@ -216,40 +203,53 @@
     </tbody>
 </nz-table>
 
-<div *ngIf="userWorkersStatsList" class="workers-mobile">
-    <div *ngFor="let item of userWorkersStatsList" class="worker-mobile-card" (click)="onWorkerRowClick(item.name)">
-        <div class="worker-mobile-card-title">
-            <ng-container [ngSwitch]="getWorkerState(item.lastShareTime)">
-                <i *ngSwitchCase="EWorkerState.Normal" class="worker-state _normal" nz-icon nzType="check-circle"
-                    nzTheme="outline"></i>
-                <i *ngSwitchCase="EWorkerState.Warning" class="worker-state _warning" nz-icon
-                    nzType="exclamation-circle" nzTheme="outline"></i>
-                <i *ngSwitchCase="EWorkerState.Error" class="worker-state _error" nz-icon nzType="minus-circle"
-                    nzTheme="outline"></i>
-            </ng-container>
 
-            <span>{{ item.name }}</span>
-        </div>
 
-        <p>
-            {{ "common.dictionary.shareRate" | translate }}:
-            {{ item.shareRate | suffixify: ESuffix.ShareRate }}
-        </p>
-        <p>
-            {{ "common.dictionary.power" | translate }}:
-            {{
-                item.power
-                    | metricPrefixify: userStatsItemZeroUnitsOffset
-                    | toFixed
-                    | suffixify: ESuffix.Power
-            }}
-        </p>
-        <p>
-            {{ "common.dictionary.lastSeen" | translate }}:
-            {{ item.lastShareTime | ago | async }}
-        </p>
-    </div>
-</div>
+
+
+
+<nz-table class="workers-mobile" nzBordered [nzTemplateMode]="true" [nzLoading]="isLiveLoading">
+    <thead>
+        <tr>
+            <th>
+                {{ "common.dictionary.worker" | translate }}
+            </th>
+            <th>
+                {{ "common.dictionary.power" | translate }}
+            </th>
+            <th>
+                {{ "common.dictionary.lastSeen" | translate }}
+            </th>
+        </tr>
+    </thead>
+    <tbody *ngIf="liveStatsWorkers">
+        <tr *ngFor="let item of liveStatsWorkers" className="_clickable" (click)="onWorkerRowClick(item.name)">
+            <td>
+                <ng-container [ngSwitch]="getWorkerState(item.lastShareTime)">
+                    <i *ngSwitchCase="EWorkerState.Normal" class="worker-state _normal" nz-icon nzType="check-circle"
+                        nzTheme="outline"></i>
+                    <i *ngSwitchCase="EWorkerState.Warning" class="worker-state _warning" nz-icon
+                        nzType="exclamation-circle" nzTheme="outline"></i>
+                    <i *ngSwitchCase="EWorkerState.Error" class="worker-state _error" nz-icon nzType="minus-circle"
+                        nzTheme="outline"></i>
+                </ng-container>
+
+                {{ item.name }}</td>
+            <td>
+                {{
+                    item.power
+                        | metricPrefixify: liveStats?.powerMultLog10
+                        | toFixed
+                        | suffixify: ESuffix.Power
+                }}
+            </td>
+            <td>{{ item.lastShareTime | ago | async }}</td>
+        </tr>
+    </tbody>
+</nz-table>
+
+
+
 <!--
 <nz-modal nzWidth="100%" [nzVisible]="userWorkersStatsHistory.ready" [nzTitle]="userWorkersStatsHistory?.name"
     [nzFooter]="null" (nzOnCancel)="clearWorker()">

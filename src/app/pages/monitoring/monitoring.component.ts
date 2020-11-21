@@ -1,200 +1,89 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { SubscribableComponent } from "ngx-subscribable";
-import { StorageService } from "services/storage.service";
-import { RoleAccessService } from "services/role-access.service";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { SubscribableComponent } from 'ngx-subscribable';
+import { StorageService } from 'services/storage.service';
+import { ZoomSwitchService } from 'services/zoomswitch.service';
 
-import { not } from "logical-not";
+import { DefaultParams } from 'components/defaults.component';
+import { ILiveStatCommon, ICoinParams, ILiveStatWorker } from 'interfaces/common';
 
-import { EAppRoutes } from "enums/routing";
-import { BackendQueryApiService } from "api/backend-query.api";
-import { BackendManualApiService } from "api/backend-manual.api";
-import { TCoinName } from "interfaces/coin";
-import {
-    IUserBalanceItem,
-    IUserStats,
-    IUserStatsItem,
-    IUserHistoryInfo,
-    IUserStatsHistoryItem,
-    IWorkerStatsItem,
-    IWorkerStatsHistoryItem,
-    IWorkerHistoryInfo,
-    IPoolCoinsItem,
-    IPoolStatsItem,
-    ICoinInfo,
-} from "interfaces/backend-query";
-import { ESuffix } from "pipes/suffixify.pipe";
-import { CoinSwitchService } from "services/coinswitch.service";
-import { FetchPoolDataService } from "services/fetchdata.service";
-import { ERole } from "enums/role";
+import { EAppRoutes } from 'enums/routing';
+import { BackendManualApiService } from 'api/backend-manual.api';
+import { TCoinName } from 'interfaces/coin';
+import { IUserBalanceItem, IWorkerStatsItem } from 'interfaces/backend-query';
+import { ESuffix } from 'pipes/suffixify.pipe';
+import { FetchPoolDataService } from 'services/fetchdata.service';
 
 enum EWorkerState {
-    Normal = "normal",
-    Warning = "warning",
-    Error = "error,",
+    Normal = 'normal',
+    Warning = 'warning',
+    Error = 'error,',
 }
 
 @Component({
-    selector: "app-monitoring",
-    templateUrl: "./monitoring.component.html",
-    styleUrls: ["./monitoring.component.less"],
+    selector: 'app-monitoring',
+    templateUrl: './monitoring.component.html',
+    styleUrls: ['./monitoring.component.less'],
 })
-export class MonitoringComponent extends SubscribableComponent
-    implements OnInit, OnDestroy {
+export class MonitoringComponent extends SubscribableComponent implements OnInit, OnDestroy {
     readonly EAppRoutes = EAppRoutes;
     readonly EWorkerState = EWorkerState;
     readonly ESuffix = ESuffix;
 
-    coinsList: TCoinName[];
-    currentCoinName: TCoinName;
-    currentCoinNameWorker: TCoinName;
+    currentBalance: IUserBalanceItem;
+    workersList: IWorkerStatsItem[];
+    haveBalanceData: boolean;
+    isLiveLoading: boolean;
+    liveStats: ILiveStatCommon;
+    liveStatsWorkers: ILiveStatWorker[];
+    isBalanceDataLoading: boolean;
+    isManualPayoutSending: boolean;
 
-    userBalances: IUserBalanceItem[];
-    currentBalance: {
-        balance?: string;
-        paid?: string;
-        requested?: string;
-    };
-    //    currentBalance: string = "";
-    //    currentPaid: string = "";
-    //    currentRequested: string = "";
-    userStatsItem: IUserStatsItem;
-    userStatsItemZeroUnitsOffset: number = 6;
-    //userStatsHistory: IUserStatsHistoryItem[];
-    //currentPowerMultLog10: number = 6;
-    //stats: [] as IWorkerStatsItem[],
-    //powerMultLog10: 0,
-    //};
-    currentWorkerId: string;
-    //workersStatsList: IWorkerStatsItem[];
-    //workerStatsHistoryReady: boolean;
-    //workerStatsHistoryData: IWorkerStatsHistoryItem[];
-    //workersStatsHistory: IWorkerHistoryInfo;
-    userWorkersStatsList: IWorkerStatsItem[];
-
-    userStatsHistory: {
-        coin: TCoinName;
-        stats: IUserStatsHistoryItem[];
-        powerMultLog10: number;
-    };
-
-    userWorkersStatsHistory: {
-        name: string;
-        stats: IWorkerStatsItem[];
-        powerMultLog10: number;
-        coin: TCoinName;
-        ready: boolean;
-    };
-
-    tableData = {
-        isLoading: false,
-        updateTimeoutId: null,
-    };
-    // acceptedDifficulty: number;
-    /*
-    get balance(): string {
-        if (this.userBalances.length === 0 || this.currentCoinName === "sha256")
-            return "0";
-
-        return this.userBalances.find(item => {
-            return item.coin === this.currentCoinName;
-        }).balance;
+    get activeCoinName(): string {
+        return this.storageService.currCoin;
     }
-    get requested(): string {
-        if (this.userBalances.length === 0 || this.currentCoinName === "sha256")
-            return "0";
-
-        return this.userBalances.find(item => {
-            return item.coin === this.currentCoinName;
-        }).requested;
+    set activeCoinName(coin: string | '') {
+        this.storageService.currCoin = coin;
     }
-    get paid(): string {
-        if (this.userBalances.length === 0 || this.currentCoinName === "sha256")
-            return "0";
 
-        return this.userBalances.find(item => {
-            return item.coin === this.currentCoinName;
-        }).paid;
+    get activeCoinObj(): ICoinParams {
+        return this.storageService.coinsObj[this.storageService.currCoin];
     }
-*/
-    isManualPayoutSending = false;
+    set activeCoinObj(data: ICoinParams) {
+        this.storageService.coinsObj[this.storageService.currCoin] = data;
+    }
 
-    private ppdaUser: ERole = ERole.PPDAUser;
-    //private isStarting: boolean = false;
-    private currentAlgo: TCoinName;
-    private nullBallance: string = "0.00";
-    private currentCoinWorkerLiveStat: IWorkerStatsItem; // = {} as IWorkerStatsItem;
-    private s1witchWorkerCoin: boolean = false;
-    //    private currentCoinWorkerId: string;
-
-    private loading = {
-        coins: <boolean>false,
-        balances: <boolean>false,
-        liveStat: <boolean>false,
-        userHistStat: <boolean>false,
-        workerHistStat: <boolean>false,
-    };
+    get isSending(): boolean {
+        return this.isManualPayoutSending;
+    }
+    private subscrip: any;
+    private fetcherTimeoutId: number;
+    private mainCoinApplyTimeoutId: number;
 
     constructor(
-        private backendQueryApiService: BackendQueryApiService,
         private backendManualApiService: BackendManualApiService,
-        private coinSwitchService: CoinSwitchService,
+        private zoomSwitchService: ZoomSwitchService,
         private fetchPoolDataService: FetchPoolDataService,
         private storageService: StorageService,
-        private roleAccessService: RoleAccessService,
     ) {
         super();
     }
 
     ngOnInit(): void {
-        this.subscriptions = [
-            //this.coinSwitchService.coinSwitch.subscribe(coinName => {
-            //this.currentCoinName = coinName;
-            //this.onCurrentCoinChange(coinName);
-            //}),
-
-            this.fetchPoolDataService.poolCoinsList.subscribe(coins => {
-                if (coins.length !== 0) this.processPoolCoinsList(coins);
-            }),
-
-            this.fetchPoolDataService.subjUStats.subscribe(stats => {
-                if (Object.keys(stats).length !== 0)
-                    this.processUserLiveStats(stats);
-            }),
-
-            this.fetchPoolDataService.subjUStatsHist.subscribe(userHistory => {
-                this.processUserStatsHistory(userHistory);
-            }),
-
-            this.fetchPoolDataService.subjUWStatsHist.subscribe(
-                workerHistory => {
-                    this.processWorkerStatsHistory(workerHistory);
-                },
-            ),
-
-            this.fetchPoolDataService.subjUBalance.subscribe(balances => {
-                this.processUserBalances(balances);
-            }),
-        ];
-
-        this.loading.coins = true;
-        this.tableData.isLoading = true;
-        //this.workerStatsHistoryReady = false;
-        this.fetchPoolDataService.fetchCoins();
-        this.userWorkersStatsHistory = {
-            name: "",
-            stats: [],
-            powerMultLog10: 6,
-            coin: "",
-            ready: false,
-        };
+        this.start();
+        this.subs();
+        this.periodicFetch();
+        this.fetchPoolDataService.coins({ coin: '', type: 'user', forceUpdate: true });
     }
 
     ngOnDestroy(): void {
-        clearTimeout(this.tableData.updateTimeoutId);
-        this.subscriptions.forEach(el => el.unsubscribe);
+        clearTimeout(this.fetcherTimeoutId);
+        clearTimeout(this.mainCoinApplyTimeoutId);
+        //this.subscrip.forEach(el => el.unsubscribe);
     }
-
     onWorkerCurrentCoinChange(coinName: TCoinName): void {
+        //TODO
+        return;
+        /*
         if (
             coinName === "" ||
             this.loading.coins ||
@@ -206,52 +95,20 @@ export class MonitoringComponent extends SubscribableComponent
         this.loading.workerHistStat = true;
         this.currentCoinNameWorker = coinName;
         //this.fetchWorkerData(coinName, this.currentWorkerId);
-        this.fetchPoolDataService.getUserCoinStats(coinName);
+        this.fetchPoolDataService.getUserCoinStats(coinName);*/
     }
 
-    onCurrentCoinChange(coinName: TCoinName): void {
-        if (coinName === "" || this.loading.coins)
-            //|| this.switchWorkerCoin)
-            return;
-        this.currentCoinName = coinName;
-        this.fetchData(coinName);
-        this.periodicCall(coinName);
+    onCurrentCoinChange(coin: string): void {
+        if (coin === null || coin === '') return;
+        this.storageService.coinsObj[coin].isNeedRefresh = true;
+        this.setMainCoinTimer(coin);
+        this.activeCoinName = coin;
+        this.storageService.currCoin = coin;
+        this.getLiveInfo(coin);
     }
 
     onWorkerRowClick(workerId: string): void {
-        if (workerId === "" || this.loading.coins) return;
-        //this.storageService.needWorkerInint = true;
-        this.fetchWorkerData(workerId, this.currentCoinName);
-        /*
-        var lastPower = this.userWorkersStatsList.find(item => {
-            return item.name === workerId;
-        }).power;
-        let timeFrom =
-            ((new Date().valueOf() / 1000) as any).toFixed(0) -
-            3 * 24 * 60 * 60;
-        let groupByInterval = 15 * 60;
-        this.backendQueryApiService
-            .getWorkerStatsHistory({
-                coin: this.currentCoinName,
-                workerId,
-                timeFrom,
-                groupByInterval,
-            })
-            .subscribe(({ stats, powerMultLog10, currentTime }) => {
-                if (stats.length > 0) {
-                    const lastStatTime = stats[stats.length - 1].time;
-                    if (currentTime < lastStatTime) {
-                        stats[stats.length - 1].time = currentTime;
-                        stats[stats.length - 1].power = lastPower;
-                    }
-                    if (stats.length > 2) stats.shift();
-                    this.userWorkersStatsHistory = {
-                        name: workerId,
-                        stats,
-                        powerMultLog10,
-                    };
-                }
-            });*/
+        //TODO
     }
 
     getWorkerState(time: number): EWorkerState {
@@ -266,169 +123,26 @@ export class MonitoringComponent extends SubscribableComponent
         return EWorkerState.Normal;
     }
     clearWorker(): void {
+        //TODO
+        /*
         this.userWorkersStatsHistory = {
-            name: "",
+            name: '',
             stats: [],
             powerMultLog10: 6,
-            coin: "",
+            coin: '',
             ready: false,
         };
         //this.workerStatsHistoryReady = false;
         //this.userWorkersStatsHistory = null;
         this.storageService.currentCoinInfoWorker = null;
         this.storageService.currentWorkerName = null;
-        //this.storageService.needWorkerInint = false;
-    }
-
-    private processPoolCoinsList(coins: IPoolCoinsItem[]) {
-        if (coins.length > 0) {
-            this.storageService.poolCoins = coins;
-            this.storageService.currentCoinInfo = coins[coins.length - 1];
-            this.coinsList = coins.map(item => item.name);
-            this.currentCoinName = coins[coins.length - 1].name;
-            this.currentCoinNameWorker = coins[coins.length - 1].name;
-            this.currentAlgo = coins[coins.length - 1].algorithm;
-
-            if (!this.loading.liveStat) {
-                this.loading.liveStat = true;
-                this.fetchPoolDataService.getUserCoinStats();
-            }
-        }
-        this.loading.coins = false;
-    }
-
-    private processUserLiveStats(stats: IUserStats) {
-        if (this.loading.coins || Object.keys(stats).length === 0) return;
-        this.storageService.currentUserliveStat = stats;
-        this.userStatsItem = stats.total;
-        this.userStatsItemZeroUnitsOffset = stats.powerMultLog10;
-
-        this.userWorkersStatsList = stats.workers;
-        //this.userWorkersStatsHistory.
-        if (this.loading.workerHistStat)
-            this.fetchWorkerData(
-                this.currentWorkerId,
-                this.currentCoinNameWorker,
-            );
-
-        if (!this.loading.userHistStat && !this.loading.workerHistStat) {
-            this.loading.userHistStat = true;
-            this.fetchPoolDataService.getUserCoinStatsHistory();
-        }
-        this.loading.liveStat = false;
-    }
-
-    private processUserBalances(userBalances) {
-        if (this.loading.coins) return;
-
-        if (
-            userBalances.length !== 0 &&
-            this.currentCoinName !== this.currentAlgo
-        ) {
-            this.userBalances = userBalances as IUserBalanceItem[];
-            this.currentBalance.balance = this.userBalances.find(item => {
-                return item.coin === this.currentCoinName;
-            }).balance;
-            this.currentBalance.paid = this.userBalances.find(item => {
-                return item.coin === this.currentCoinName;
-            }).paid;
-            this.currentBalance.requested = this.userBalances.find(item => {
-                return item.coin === this.currentCoinName;
-            }).requested;
-        } else if (this.currentCoinName !== this.currentAlgo) {
-            this.currentBalance.balance = this.nullBallance;
-            this.currentBalance.paid = this.nullBallance;
-            this.currentBalance.requested = this.nullBallance;
-        } else {
-            this.currentBalance = {};
-        }
-        this.loading.balances = false;
-    }
-
-    private processUserStatsHistory(userHistory) {
-        if (this.loading.coins) return;
-
-        this.userStatsHistory = {
-            coin: this.currentCoinName,
-            stats: userHistory.stats,
-            powerMultLog10: userHistory.powerMultLog10,
-        };
-        //this.currentPowerMultLog10 = userHistory.powerMultLog10;
-        this.tableData.isLoading = false;
-        this.loading.userHistStat = false;
-    }
-
-    private processWorkerStatsHistory(workerHistory: IWorkerHistoryInfo) {
-        if (this.loading.coins) return;
-
-        //this.switchWorkerCoin = false;
-        if (Object.keys(workerHistory).length === 0) return;
-        //this.currentWorkerId = workerHistory.workerId;
-        this.userWorkersStatsHistory = {
-            name: workerHistory.workerId,
-            stats: workerHistory.stats,
-            powerMultLog10: workerHistory.powerMultLog10,
-            coin: this.currentCoinNameWorker,
-            ready: true,
-        };
-        this.loading.workerHistStat = false;
-    }
-
-    private fetchData(coinName: TCoinName) {
-        if (this.loading.coins) return;
-        if (coinName === "") return;
-        //this.userStatsHistory = null;
-        this.currentCoinName = coinName;
-        //this.currentCoinNameWorker = coinName;
-        //this.workerStatsHistory = null;
-
-        const coins = this.storageService.poolCoins;
-        this.storageService.currentCoinInfo = coins.find(
-            item => item.name === coinName,
-        );
-
-        this.tableData.isLoading = true;
-        if (!this.loading.liveStat) {
-            this.loading.liveStat = true;
-            this.fetchPoolDataService.getUserCoinStats();
-        }
-    }
-
-    private fetchWorkerData(workerId: string, coinName: TCoinName) {
-        if (this.loading.coins || this.loading.liveStat || workerId === "")
-            return;
-
-        //this.workerStatsHistory = null;
-
-        this.currentWorkerId = workerId;
-        const coins = this.storageService.poolCoins;
-        this.storageService.currentCoinInfoWorker = coins.find(
-            item => item.name === coinName,
-        );
-        this.storageService.currentWorkerName = workerId;
-        //this.storageService.chartsBaseData = null;
-        //this.currentCoinWorkerId = coins[coins.length-1].name;
-
-        //this.storageService.currentWorkerName = workerId;
-
-        //this.tableData.isLoading = true;
-        //this.currentCoinWorkerLiveStat = this.workersStatsList.find(item => {
-        //return item.name === workerId;
-        //});
-        this.fetchPoolDataService.getUserWorkerCoinStatsHistory();
-    }
-
-    private periodicCall(coinName: TCoinName) {
-        clearTimeout(this.tableData.updateTimeoutId);
-        this.tableData.updateTimeoutId = setTimeout(() => {
-            this.fetchData(coinName);
-            this.periodicCall(coinName);
-        }, 45 * 1000);
+        //this.storageService.needWorkerInint = false;*/
     }
 
     manualPayout(): void {
+        return; //TODO
         this.isManualPayoutSending = true;
-        const coin = this.currentCoinName;
+        const coin = this.activeCoinName;
         this.backendManualApiService.forcePayout({ coin }).subscribe(
             () => {
                 this.isManualPayoutSending = false;
@@ -438,119 +152,150 @@ export class MonitoringComponent extends SubscribableComponent
             },
         );
     }
-    /*
+
+    private start() {
+        this.haveBalanceData = false;
+        this.isLiveLoading = true;
+        this.isBalanceDataLoading = true;
+        this.storageService.currType = DefaultParams.REQTYPE.USER;
+    }
+
+    private processZoom(newZoom: string) {
+        if (this.storageService.currZoom !== newZoom) {
+            this.storageService.currZoom = newZoom;
+            this.setupMainCoin(this.activeCoinName);
+            const h = this.activeCoinObj.history;
+            (h.chart.label = []), (h.chart.data = []), (h.data = []);
+            this.fetchData();
+        }
+    }
+
+    private processCoins() {
+        const store = this.storageService;
+        const coinI = store.coinsList.length > 2 ? store.coinsList.length - 1 : 0;
+        const coin = store.coinsList[coinI];
+        this.setupMainCoin(coin);
+        this.getLiveInfo(coin);
+    }
+
+    private processLive(coin: string) {
+        this.getBalanceInfo(coin);
+        if (this.activeCoinName === coin) {
+            this.liveStats = this.activeCoinObj.live.data;
+            this.liveStatsWorkers = this.liveStats.miners;
+        }
+        this.isLiveLoading = false;
+        this.getHistoryInfo(coin);
+    }
+
+    private getBalanceInfo(coin: string) {
+        if (this.activeCoinObj.user.isBalanceLoading) return;
+        else this.activeCoinObj.user.isBalanceLoading = true;
+        if (!this.activeCoinObj.isAlgo) {
+            this.isBalanceDataLoading = true;
+            this.haveBalanceData = true;
+            this.getBalanceInfo(coin);
+        }
+        if (coin === this.activeCoinName) this.fetchPoolDataService.balance({ coin, type: 'pool' });
+        this.isBalanceDataLoading = true;
+    }
+    private processBalance(coin: string) {
+        if (this.activeCoinName !== coin) return;
+        if (this.activeCoinObj.isAlgo) return; //TODO PPDA Users
+        this.currentBalance = this.activeCoinObj.user.balance;
+        this.isBalanceDataLoading = false;
+    }
+    private setupMainCoin(coin: string) {
+        if (this.storageService.mainCoin !== coin) {
+            this.storageService.coinsList.forEach(el => {
+                if (el !== coin) {
+                    this.storageService.coinsObj[el].isMain = false;
+                    this.storageService.coinsObj[el].isNeedRefresh = false;
+                    this.storageService.coinsObj[el].history.chart.label = [];
+                    this.storageService.coinsObj[el].history.chart.data = [];
+                    this.storageService.coinsObj[el].history.data = [];
+                } else {
+                    this.storageService.coinsObj[el].isMain = true;
+                    this.storageService.coinsObj[el].isNeedRefresh = true;
+                }
+            });
+            this.storageService.mainCoin = coin;
+            this.storageService.currCoin = coin;
+            this.getLiveInfo(coin);
+        }
+    }
+    private getLiveInfo(coin: string) {
+        if (this.activeCoinObj.live.isLoading) return;
+        else this.activeCoinObj.live.isLoading = true;
+        if (coin === this.activeCoinName) this.isLiveLoading = true;
+        this.fetchPoolDataService.live({ coin, type: 'user' });
+    }
+    private getHistoryInfo(coin: string) {
+        if (this.activeCoinObj.history.isLoading || this.activeCoinObj.live.isLoading) return;
+        else this.activeCoinObj.history.isLoading = true;
+        this.fetchPoolDataService.history({ coin, type: 'user' });
+    }
+    private setMainCoinTimer(coin: string, timer: number = DefaultParams.BASECOINSWITCHTIMER) {
+        clearTimeout(this.mainCoinApplyTimeoutId);
+        this.mainCoinApplyTimeoutId = setTimeout(() => {
+            this.setupMainCoin(coin);
+        }, timer * 1000);
+    }
+
+    private fetchData() {
+        const list = this.storageService.coinsList;
+        const coins = this.storageService.coinsObj;
+        for (let i in list) {
+            if (coins[list[i]].isNeedRefresh) this.getLiveInfo(list[i]);
+        }
+    }
+    private periodicFetch(
+        timer: number = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].refreshTimer,
+    ) {
+        clearTimeout(this.fetcherTimeoutId);
+        this.fetcherTimeoutId = setTimeout(() => {
+            this.fetchData();
+            this.periodicFetch();
+        }, timer * 1000);
+    }
+
+    private subs(): void {
+        this.subscrip = [
+            this.zoomSwitchService.zoomSwitch.subscribe(zoom => {
+                if (zoom !== '') this.processZoom(zoom);
+            }),
+            this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
+                if (data.status && data.type === 'user') this.processCoins();
+            }),
+            this.fetchPoolDataService.apiGetLiveStat.subscribe(data => {
+                if (data.status && data.type === 'user') this.processLive(data.coin);
+            }),
+            this.fetchPoolDataService.apiGetUserBalance.subscribe(data => {
+                if (data.status && data.type === 'user') this.processBalance(data.coin);
+            }),
+        ];
+    }
+
     private reset() {
         this.storageService.poolCoins = null;
+        this.storageService.poolCoinsliveStat = null;
         this.storageService.currentCoinInfo = null;
         this.storageService.chartsTimeFrom = null;
-        this.storageService.chartsBaseData = null;
+        //this.storageService.sessionId = null;
+        //this.storageService.targetLogin = null;
+        this.storageService.whatCoins = null;
+        this.storageService.poolCoinsliveStat2 = null;
+        this.storageService.poolCoinsliveStat = null;
+        this.storageService.currentCoinInfo = null;
+        this.storageService.currentCoinInfoWorker = null;
+        this.storageService.currentUser = null;
+        this.storageService.chartsTimeFrom = null;
+        this.storageService.chartsWorkerTimeFrom = null;
+        this.storageService.chartsWorkerBaseData = null;
         this.storageService.currentUserliveStat = null;
         this.storageService.currentWorkerName = null;
+        this.storageService.needWorkerInint = null;
         this.storageService.userSettings = null;
         this.storageService.userCredentials = null;
     }
-*/
-    // private setAcceptedDifficulty(stats: IWorkerStatsItem[]): void {
-    //     this.acceptedDifficulty = 0;
-
-    //     const today = new Date().getDate();
-
-    //     stats.forEach(item => {
-    //         const date = new Date(item.time * 1000);
-
-    //         if (date.getDate() === today && date.getHours()) {
-    //             this.acceptedDifficulty += item.shareWork;
-    //         }
-    //     });
-    // }
 }
-/*
-    private getCoinsList(): void {
-        this.backendQueryApiService.getPoolCoins().subscribe(({ coins }) => {
-            if (coins.length >= 2) {
-                coins.push({
-                    name: coins[0].algorithm,
-                    fullName: coins[0].algorithm,
-                    algorithm: coins[0].algorithm,
-                });
-            }
-            this.coins = coins.map(item => item.name);
-            if (this.coins.length > 0) {
-                const coin = this.coins.includes(coins[0].algorithm)
-                    ? coins[0].algorithm
-                    : this.coins[0];
-                this.getUserStat(coin);
-
-                this.onCurrentCoinChange(coin);
-            }
-        });
-    }
-
-    private getUserBalance(): void {
-        this.backendQueryApiService
-            .getUserBalance()
-            .subscribe(({ balances }) => {
-                this.userBalances = balances;
-            });
-    }
-
-    private getUserStat(coinName: TCoinName): void {
-        this.currentCoinName = coinName;
-        this.updateTablesData();
-    }
-
-    private getUserStatsHistory(
-        coinName: TCoinName,
-        liveStats: IUserStatsItem,
-    ): void {
-        let timeFrom =
-            ((new Date().valueOf() / 1000) as any).toFixed(0) -
-            1.5 * 24 * 60 * 60;
-        let groupByInterval = 30 * 60;
-        this.backendQueryApiService
-            .getUserStatsHistory({ coin: coinName, timeFrom, groupByInterval })
-            .subscribe(({ stats, powerMultLog10, currentTime }) => {
-                if (stats.length > 0) {
-                    const lastStatTime = stats[stats.length - 1].time;
-                    if (currentTime < lastStatTime) {
-                        stats[stats.length - 1].time = liveStats.lastShareTime;
-                        stats[stats.length - 1].power = liveStats.power;
-                    }
-                    if (stats.length > 2) stats.shift();
-                    this.userStatsHistory = { stats, powerMultLog10 };
-                }
-            });
-    }
-    private updateTablesData(): void {
-        this.tableData.isLoading = true;
-
-        clearTimeout(this.tableData.updateTimeoutId);
-
-        this.backendQueryApiService
-            .getUserStats({ coin: this.currentCoinName })
-            .subscribe({
-                complete: () => {
-                    this.tableData.isLoading = false;
-
-                    this.tableData.updateTimeoutId = setTimeout(() => {
-                        this.updateTablesData();
-                    }, 45000);
-                },
-                next: ({ total, workers, currentTime, powerMultLog10 }) => {
-                    workers.forEach(item => {
-                        item.lastShareTime = currentTime - item.lastShareTime;
-                    });
-                    workers.sort((a, b) => {
-                        return b.lastShareTime - a.lastShareTime;
-                    });
-
-                    this.userStatsItem = total;
-                    this.getUserStatsHistory(this.currentCoinName, total);
-                    this.getUserBalance();
-                    this.userStatsItemZeroUnitsOffset = powerMultLog10;
-                    this.userWorkersStatsList = workers;
-                    this.tableData.isLoading = false;
-                },
-            });
-    }
-*/

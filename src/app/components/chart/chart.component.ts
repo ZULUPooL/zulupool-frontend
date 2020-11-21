@@ -23,8 +23,8 @@ import { DefaultParams } from 'components/defaults.component';
     styleUrls: ['./chart.component.less'],
 })
 export class ChartComponent extends SubscribableComponent implements OnInit, OnChanges {
-    @Input()
-    mainCoin: string;
+    //@Input()
+    //mainCoin: string;
 
     @ViewChild(BaseChartDirective)
     chartDirective: BaseChartDirective;

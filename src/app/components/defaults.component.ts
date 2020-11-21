@@ -7,6 +7,8 @@ import {
     ILiveStatWorker,
     IFetchResponce,
     ILocalTimeDelta,
+    ILiveStatUser,
+    ILiveStatCommon,
 } from 'interfaces/common';
 //import { Injectable } from "@angular/core";
 
@@ -22,7 +24,7 @@ export class DefaultParams {
     static readonly HISTORYSTATCACHE: number = 50;
     static readonly MAXHISTORYITEMS: number = 500;
     static readonly MULTIPLYHISTORYDATAFORCHART: number = 3;
-    static readonly FETCHRESPONCE: IFetchResponce = { status: false, coin: '' };
+    static readonly FETCHRESPONCE: IFetchResponce = { status: false, coin: '', type: '' };
     static readonly DEFAULTTYPE = 'pool';
     static readonly REQTYPE = {
         POOL: 'pool',
@@ -46,6 +48,14 @@ export class DefaultParams {
         power: 0,
         shareRate: 0,
         shareWork: 0,
+    };
+    static readonly NULLSTATUSERLIVEITEM: ILiveStatCommon = {
+        lastShareTime: 0,
+        power: 0,
+        shareRate: 0,
+        shareWork: 0,
+        miners: [],
+        workers: 0,
     };
     static readonly BLOCKSLINKS: IExplorerLink = {
         BTC: 'https://btc.com/',
@@ -95,8 +105,8 @@ export class DefaultParams {
     static readonly ZOOMPARAMS: IZoomSettings = {
         '1M': {
             groupByInterval: 1 * 60,
-            statsWindow: 40,
-            maxStatsWindow: 30,
+            statsWindow: 80,
+            maxStatsWindow: 90,
             refreshTimer: 20,
             labelText: 'HH:mm',
             lastLabelText: 'HH:mm:ss',

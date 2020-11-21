@@ -1,16 +1,17 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 
-import { UserApiService } from "api/user.api";
-import { BackendQueryApiService } from "api/backend-query.api";
-import { BackendManualApiService } from "api/backend-manual.api";
-import { IUserPayouts } from "interfaces/backend-query";
-import { IUserSettings } from "interfaces/user";
-import { TCoinName } from "interfaces/coin";
+import { UserApiService } from 'api/user.api';
+import { BackendQueryApiService } from 'api/backend-query.api';
+import { BackendManualApiService } from 'api/backend-manual.api';
+import { IUserPayouts } from 'interfaces/backend-query';
+import { IUserSettings } from 'interfaces/user';
+import { TCoinName } from 'interfaces/coin';
+import { StorageService } from 'services/storage.service';
 
 @Component({
-    selector: "app-payouts",
-    templateUrl: "./payouts.component.html",
-    styleUrls: ["./payouts.component.less"],
+    selector: 'app-payouts',
+    templateUrl: './payouts.component.html',
+    styleUrls: ['./payouts.component.less'],
 })
 export class PayoutsComponent implements OnInit {
     settings: IUserSettings[];
@@ -23,32 +24,31 @@ export class PayoutsComponent implements OnInit {
     currentCoin: TCoinName;
 
     private explorersLinksPref = {
-        BTC: "https://btc.com/",
-        BCH: "https://bch.btc.com/",
-        BSV: "https://whatsonchain.com/tx/",
-        "DGB.sha256": "https://chainz.cryptoid.info/dgb/tx.dws?",
-        FCH: "http://fch.world/tx/",
-        HTR: "https://explorer.hathor.network/transaction/",
+        BTC: 'https://btc.com/',
+        BCH: 'https://bch.btc.com/',
+        BSV: 'https://whatsonchain.com/tx/',
+        'DGB.sha256': 'https://chainz.cryptoid.info/dgb/tx.dws?',
+        FCH: 'http://fch.world/tx/',
+        HTR: 'https://explorer.hathor.network/transaction/',
     };
 
     constructor(
         private userApiService: UserApiService,
         private backendQueryApiService: BackendQueryApiService,
         private backendManualApiService: BackendManualApiService,
+        private storageService: StorageService,
     ) {}
 
     ngOnInit(): void {
-        this.userApiService
-            .userGetSettings()
-            .subscribe(({ coins: settings }) => {
-                this.settings = settings;
+        this.userApiService.userGetSettings().subscribe(({ coins: settings }) => {
+            this.settings = settings;
 
-                if (settings.length > 0) {
-                    this.selectedIndex = 0;
+            if (settings.length > 0) {
+                this.selectedIndex = 0;
 
-                    this.onCurrentCoinChange(this.settings[0].name);
-                }
-            });
+                this.onCurrentCoinChange(this.settings[0].name);
+            }
+        });
     }
 
     onCurrentCoinChange(coin: TCoinName): void {
@@ -66,6 +66,9 @@ export class PayoutsComponent implements OnInit {
 
     getUserStat(coin: TCoinName): void {
         this.isPayoutsLoading = true;
+
+        if (this.storageService.coinsObj[coin].isSpliName)
+            coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
 
         this.backendQueryApiService.getUserPayouts({ coin }).subscribe(
             ({ payouts }) => {
@@ -95,6 +98,6 @@ export class PayoutsComponent implements OnInit {
     }
     onTxClick(payouts: IUserPayouts): void {
         const url = this.explorersLinksPref[this.currentCoin] + payouts.txid;
-        window.open(url, "_system");
+        window.open(url, '_system');
     }
 }
