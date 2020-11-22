@@ -1,13 +1,13 @@
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
-import { UserApiService } from "api/user.api";
-import { IUserSettings } from "interfaces/user";
-import { TCoinName } from "interfaces/coin";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { UserApiService } from 'api/user.api';
+import { IUserSettings } from 'interfaces/user';
+import { TCoinName } from 'interfaces/coin';
 
 @Component({
-    selector: "app-settings",
-    templateUrl: "./settings.component.html",
-    styleUrls: ["./settings.component.less"],
+    selector: 'app-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.less'],
 })
 export class SettingsComponent implements OnInit {
     settingsItems: IUserSettings[];
@@ -21,10 +21,7 @@ export class SettingsComponent implements OnInit {
     } as Record<keyof IUserSettings, any>);
     isSubmitting = false;
 
-    constructor(
-        private formBuilder: FormBuilder,
-        private userApiService: UserApiService,
-    ) { }
+    constructor(private formBuilder: FormBuilder, private userApiService: UserApiService) {}
 
     ngOnInit(): void {
         this.userApiService.userGetSettings().subscribe(({ coins }) => {
@@ -46,11 +43,7 @@ export class SettingsComponent implements OnInit {
     }
 
     save(): void {
-        if (
-            this.form.value.payoutThreshold === null ||
-            this.form.value.address === null
-        )
-            return;
+        if (this.form.value.payoutThreshold === null || this.form.value.address === null) return;
         this.isSubmitting = true;
 
         let index = this.settingsItems.findIndex(el => el.name === this.currentCoin);

@@ -67,7 +67,7 @@ export class HistoryComponent implements OnInit {
     public onCurrentCoinChange(coin: TCoinName): void {
         this.currentCoin = coin;
         const groupByInterval = ETime.Day;
-        if (this.storageService.coinsObj[coin].isSpliName)
+        if (this.storageService.coinsObj[coin].is.nameSplitted)
             coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
 
         this.appService.user.subscribe(user => {

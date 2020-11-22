@@ -100,7 +100,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
 
     onCurrentCoinChange(coin: string): void {
         if (coin === null || coin === '') return;
-        this.storageService.coinsObj[coin].isNeedRefresh = true;
+        this.storageService.coinsObj[coin].is.chartRefresh = true;
         this.setMainCoinTimer(coin);
         this.activeCoinName = coin;
         this.storageService.currCoin = coin;
@@ -191,7 +191,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     private getBalanceInfo(coin: string) {
         if (this.activeCoinObj.user.isBalanceLoading) return;
         else this.activeCoinObj.user.isBalanceLoading = true;
-        if (!this.activeCoinObj.isAlgo) {
+        if (!this.activeCoinObj.is.chartRefresh) {
             this.isBalanceDataLoading = true;
             this.haveBalanceData = true;
             this.getBalanceInfo(coin);
@@ -201,25 +201,25 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     }
     private processBalance(coin: string) {
         if (this.activeCoinName !== coin) return;
-        if (this.activeCoinObj.isAlgo) return; //TODO PPDA Users
+        if (this.activeCoinObj.is.algo) return; //TODO PPDA Users
         this.currentBalance = this.activeCoinObj.user.balance;
         this.isBalanceDataLoading = false;
     }
     private setupMainCoin(coin: string) {
-        if (this.storageService.mainCoin !== coin) {
+        if (this.storageService.chartMainCoinName !== coin) {
             this.storageService.coinsList.forEach(el => {
                 if (el !== coin) {
-                    this.storageService.coinsObj[el].isMain = false;
-                    this.storageService.coinsObj[el].isNeedRefresh = false;
-                    this.storageService.coinsObj[el].history.chart.label = [];
-                    this.storageService.coinsObj[el].history.chart.data = [];
-                    this.storageService.coinsObj[el].history.data = [];
+                    this.storageService.coinsObj[el].is.chartMain = false;
+                    this.storageService.coinsObj[el].is.chartRefresh = false;
+                    //this.storageService.coinsObj[el].history.chart.label = [];
+                    //this.storageService.coinsObj[el].history.chart.data = [];
+                    //this.storageService.coinsObj[el].history.data = [];
                 } else {
-                    this.storageService.coinsObj[el].isMain = true;
-                    this.storageService.coinsObj[el].isNeedRefresh = true;
+                    this.storageService.coinsObj[el].is.chartMain = true;
+                    this.storageService.coinsObj[el].is.chartRefresh = true;
                 }
             });
-            this.storageService.mainCoin = coin;
+            //this.storageService.mainCoin = coin;
             this.storageService.currCoin = coin;
             this.getLiveInfo(coin);
         }
@@ -246,7 +246,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         const list = this.storageService.coinsList;
         const coins = this.storageService.coinsObj;
         for (let i in list) {
-            if (coins[list[i]].isNeedRefresh) this.getLiveInfo(list[i]);
+            if (coins[list[i]].is.chartRefresh) this.getLiveInfo(list[i]);
         }
     }
     private periodicFetch(

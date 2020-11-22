@@ -23,19 +23,17 @@ import { DefaultParams } from 'components/defaults.component';
     styleUrls: ['./chart.component.less'],
 })
 export class ChartComponent extends SubscribableComponent implements OnInit, OnChanges {
-    //@Input()
-    //mainCoin: string;
+    @Input()
+    mainCoinForChart: string;
 
     @ViewChild(BaseChartDirective)
     chartDirective: BaseChartDirective;
 
     chart: IChartSettings;
-
+    private isZoomSwitching: boolean = false;
     private usedColors: IColorsList[];
     private unusedColors: IColorsList[];
-    private isNeedRefresh: boolean;
-    private coin: string;
-    private lastMain: string;
+    private isStarting: boolean = true;
     private colorsLight: IColorsList[] = [
         { r: 23, g: 124, b: 220 },
         { r: 16, g: 6, b: 61 },
@@ -77,9 +75,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     onZoomChange(zoom: string) {}
 
     ngOnInit(): void {
-        this.isNeedRefresh = true;
         this.usedColors = [];
-        this.lastMain = '';
         this.subscriptions.push(
             this.themeService.chartsColor.subscribe(() => {
                 //                this.changeColors();
@@ -87,37 +83,117 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             this.fetchPoolDataService.apiGetHistory.subscribe(result => {
                 if (result.status) this.processHistory(result.coin);
             }),
-            this.zoomSwitchService.zoomSwitch.subscribe(zoom => {
-                this.processZoomSwitch(zoom);
-            }),
+            //this.zoomSwitchService.zoomSwitch.subscribe(zoom => {
+            //if (zoom !== '' && this.storageService.coinsList.length !== 0)
+            //this.processZoomSwitch(zoom);
+            //}),
         );
-    }
+    } /*
     private processZoomSwitch(zoom: string) {
-        this.isNeedRefresh = true;
+        if (zoom === null) debugger;
+        if (zoom === undefined) debugger;
+        if (zoom === '') debugger;
+        if (this.storageService.coinsList.length === 0) debugger;
+
+        this.isProcessZoomSwitch = true;
+        const mainCoin = this.storageService.chartMainCoinName;
+        const mainCoinObj = this.storageService.chartMainCoinObj;
+        const type: string = this.storageService.chartMainCoinObj.is.pool
+            ? 'pool'
+            : this.storageService.chartMainCoinObj.is.worker
+            ? 'worker'
+            : 'user';
+
+        mainCoinObj.live.isLoading = true;
+        mainCoinObj.history.timeFrom = this.storageService.currZoomTimeFrom;
+        mainCoinObj.history.grByInterval = this.storageService.currZoomGroupByInterval;
+        mainCoinObj.history.data = [];
+        mainCoinObj.history.chart.data = [];
+        mainCoinObj.history.chart.label = [];
+
+        this.fetchPoolDataService.live({ coin: mainCoin, type });
+    }*/
+    /*
+    private getLiveInfo() {
+        this.storageService.coinsList.forEach(coin => {
+            const coinObj = this.storageService.coinsObj[coin];
+            //if (coinObj.is.liveVisible) this.isLiveLoading = true;
+            if (coinObj.is.chartRefresh && !coinObj.live.isLoading) {
+                coinObj.live.isLoading = true;
+                this.fetchPoolDataService.live({ coin, type: 'pool' });
+            }
+        });
+    }
+*/
+
+    private setupNewZoom(coin: string) {
+        if (this.isStarting) return;
+        //this.isZoomSwitching=true
+        const labelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].labelText;
+        const lastLabelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].lastLabelText;
+        const langService = this.langService;
+        const mainCoinObj = this.storageService.chartMainCoinObj;
+
+        const dsI = this.chart.datasets.findIndex(item => item.label === coin);
+        this.chart.datasets[dsI].data = [];
+        this.chart.labels = [];
+        mainCoinObj.history.chart.data = [];
+        mainCoinObj.history.chart.label = [];
+
+        let count = 0;
+        mainCoinObj.history.data.forEach(historyItem => {
+            const isLast = count === mainCoinObj.history.data.length - 1;
+            this.chart.labels.push(getStr(historyItem.time, isLast));
+            this.chart.datasets[dsI].data.push(historyItem.power);
+            mainCoinObj.history.chart.data.push(historyItem.power);
+            mainCoinObj.history.chart.label.push(historyItem.time);
+            count++;
+        });
+        for (let i = 0; i < this.chart.datasets.length; i++) {
+            if (this.chart.datasets[i].label !== coin) {
+                this.chart.datasets.splice(i, 1);
+                i--;
+            }
+        }
+
+        this.storageService.coinsObj[coin].history.timeFrom =
+            mainCoinObj.history.chart.label[0] - 2 * mainCoinObj.history.grByInterval;
+        const coins = this.storageService.coinsList.filter(item => item !== coin);
+        coins.forEach(item => {
+            const coinObj = this.storageService.coinsObj[item];
+            coinObj.history.chart.label = [];
+        });
+
+        function getStr(time: number, lastItem: boolean): string {
+            let str = lastItem ? lastLabelText : labelText;
+            return formatDate(new Date(time * 1000), str, langService.getCurrentLang());
+        }
     }
 
     private processHistory(coin: string) {
-        if (this.lastMain === '') this.lastMain = this.storageService.mainCoin;
-        if (this.lastMain !== this.storageService.mainCoin) {
-            this.isNeedRefresh = true;
-            this.lastMain = this.storageService.mainCoin;
+        if (this.isStarting || this.chart.labels.length === 0) {
+            this.createNewChart(coin);
+            return;
         }
-        this.coin = coin;
-        if (this.isNeedRefresh) {
-            this.isNeedRefresh = false;
-            this.createChart();
+
+        const mainCoinObj = this.storageService.chartMainCoinObj,
+            //coinObj = this.storageService.coinsObj[coin],
+            haveDS = this.chart.datasets.findIndex(item => item.label === coin) >= 0;
+
+        //onst mainCoinTF = mainCoinObj.history.timeFrom;
+        //const coinTF = coinObj.history.timeFrom;
+
+        if (haveDS) {
+            const prevgrI = mainCoinObj.history.chart.label[1] - mainCoinObj.history.chart.label[0],
+                currgrI = mainCoinObj.history.grByInterval;
+            if (prevgrI !== currgrI) this.setupNewZoom(coin);
+            else this.updateChartData(coin);
         } else {
-            const dsI = this.storageService.coinsObj[coin].history.chart.datasetI;
-            if (dsI < 0) this.addChart(coin);
-            else {
-                if (this.storageService.coinsObj[coin].isNeedRefresh) this.updateChart(coin, dsI);
-                else this.chart.datasets.splice(dsI, 1);
-            }
+            this.addDataset(coin);
         }
-        return;
     }
 
-    private addChart(coin: string, scheme: string = 'l'): void {
+    private addDataset(coin: string, scheme: string = 'l'): void {
         let color: IColorsList;
         if (this.unusedColors.length !== 0) {
             color = this.unusedColors[Math.floor(Math.random() * this.unusedColors.length)];
@@ -135,9 +211,9 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             pointBackgroundColor: 'rgba(0,0,0,0)',
             pointBorderColor: 'rgba(0,0,0,0)',
         });
-        const dsI = this.chart.datasets.length - 1;
-        this.storageService.coinsObj[this.coin].history.chart.datasetI = dsI;
-        this.updateChart(coin, dsI);
+        //const dsI = this.chart.datasets.length - 1;
+        //this.storageService.coinsObj[coin].history.chart.datasetI = dsI;
+        this.updateChartData(coin);
         /*
         function mineNewColor(usedColors: IColorsList[]): IColorsList {
             let counter = 0,
@@ -173,11 +249,11 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
         }*/
     }
 
-    private updateChart(coin: string, dsI: number): void {
+    private updateChartData(coin: string): void {
         const labelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].labelText;
         const lastLabelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].lastLabelText;
         const langService = this.langService,
-            mainCoin = this.storageService.mainCoin,
+            mainCoin = this.storageService.chartMainCoinName,
             coinObj = this.storageService.coinsObj[coin],
             mainCoinObj = this.storageService.coinsObj[mainCoin],
             newHistoryData = coinObj.history.data,
@@ -187,9 +263,17 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
         // chartHistoryData - откуда рисуется временная шакала на графике
         // currHistoryData - откуда берутся значения мощности для линии. Совпадает с предыдущим в случае обновления данных "основной" монеты
 
+        const curLasttime = chartHistoryData.label[0];
+        let goNext = newHistoryData[0].time < curLasttime;
+        // проверить, вдруг пришли данные больше, чем нам нужно
+        while (goNext) {
+            coinObj.history.data.shift();
+            goNext = newHistoryData[0].time < curLasttime;
+        }
+
         let chartDataI = 0,
-            tmp = 0,
-            goNext = currHistoryData.label.length > 1;
+            tmp = 0;
+        goNext = currHistoryData.label.length > 1;
         // последний элемент старых данных нам не интересен
         //ищем "хвост" пересекающихся данных - с какого I история обгоняет свежие данные или, вдруг, заканчивается
         while (goNext) {
@@ -211,6 +295,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             if (tmp > 3000) throw new Error('Something is wrong');
         }
 
+        const dsI = this.chart.datasets.findIndex(item => item.label === coin);
         let newDataI = 0;
         goNext = chartDataI < currHistoryData.label.length && newDataI < newHistoryData.length - 1;
         // если перебрали ещё не всю историю то нужно подменить старые данные.
@@ -308,40 +393,37 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
         }
     }
 
-    private createChart(): void {
+    private createNewChart(coin: string): void {
         const labelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].labelText;
         const lastLabelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].lastLabelText;
-        const store = this.storageService.coinsObj,
-            thisLangService = this.langService;
 
-        setDataSetsIndexesAndCleardata(this.coin, this.storageService.coinsList);
-        const [r, g, b] = this.themeService.chartsColor.value;
+        if (this.mainCoinForChart !== coin) debugger;
+
+        const [r, g, b] = this.themeService.chartsColor.value,
+            stor = this.storageService.chartMainCoinObj,
+            thisLangService = this.langService;
 
         this.unusedColors = this.colorsLight;
         if (r === 43) this.unusedColors = this.colorsDark;
         else this.unusedColors = this.colorsLight;
-
         this.usedColors.push({ r, g, b });
         this.unusedColors = this.unusedColors.filter(color => {
             return color.r !== r && color.g !== g && color.b !== b;
         });
 
-        this.chart = createDefaultData(this.coin, this.themeService);
+        this.chart = createDefaultData(
+            coin,
+            this.themeService.gridLinesColorX,
+            this.themeService.gridLinesColorY,
+        );
 
-        const thisCoinStore = store[this.coin];
-
-        const history = thisCoinStore.history,
-            //live = thisCoinStore.live.data,
-            chartLabelsTS = thisCoinStore.history.chart.label,
-            chartDataStore = thisCoinStore.history.chart.data;
-
-        const l = history.data.length;
+        const l = stor.history.data.length;
         for (let i = 0; i < l; i++) {
-            const el = history.data[i];
+            const el = stor.history.data[i];
             this.chart.labels.push(getStr(el.time, i === l - 1));
             this.chart.datasets[0].data.push(el.power);
-            chartLabelsTS.push(el.time);
-            chartDataStore.push(el.power);
+            stor.history.chart.label.push(el.time);
+            stor.history.chart.data.push(el.power);
         }
 
         let goNext =
@@ -349,34 +431,19 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
         while (goNext) {
             this.chart.labels.shift();
-            this.chart.datasets.forEach(el => {
-                el.data.shift();
-            });
-            this.storageService.coinsList.forEach(coin => {
-                if (this.storageService.coinsObj[coin].history.data.length > 0)
-                    this.storageService.coinsObj[coin].history.data.shift();
-                if (this.storageService.coinsObj[coin].history.chart.data.length > 0)
-                    this.storageService.coinsObj[coin].history.chart.data.shift();
-                if (this.storageService.coinsObj[coin].history.chart.label.length > 0)
-                    this.storageService.coinsObj[coin].history.chart.label.shift();
-            });
+            this.chart.datasets[0].data.shift();
+            stor.history.chart.data.shift();
+            stor.history.chart.label.shift();
             goNext =
                 this.chart.labels.length >
                 DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
         }
+        this.isStarting = false;
 
-        function setDataSetsIndexesAndCleardata(coin: string, coins: string[]) {
-            coins.forEach(item => {
-                if (item !== coin) store[item].history.chart.datasetI = -1;
-                else store[item].history.chart.datasetI = 0;
-                store[item].history.chart.data = [];
-                store[item].history.chart.label = [];
-            });
-        }
-        function createDefaultData(coin: string, themeService: any) {
+        function createDefaultData(coin: string, gridLinesColorX: any, gridLinesColorY: any) {
             const pointColor = 'rgba(0,0,0,0)',
-                gridLinesX = { color: themeService.gridLinesColorX },
-                gridLinesY = { color: themeService.gridLinesColorY },
+                gridLinesX = { color: gridLinesColorX },
+                gridLinesY = { color: gridLinesColorY },
                 xAxes = [{ gridLines: gridLinesX }],
                 yAxes = [{ gridLines: gridLinesY }],
                 scales = { xAxes, yAxes },
@@ -405,7 +472,33 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     }
 
     ngOnChanges(): void {
-        return;
+        /* if (this.isStarting || this.chart.datasets.length === 0 || this.mainCoinForChart === '')
+            return;
+        this.storageService.coinsList.forEach(el => {
+            if (el === this.mainCoinForChart) {
+                if (this.chart.datasets.length > 0) {
+                    const oldMainObj = this.storageService.chartMainCoinObj.history;
+                    const newMainObj = this.storageService.coinsObj[el].history;
+                    newMainObj.chart.label = oldMainObj.chart.label;
+                }
+                this.storageService.coinsObj[el].is.chartMain = true;
+                this.storageService.coinsObj[el].is.chartRefresh = true;
+            } else {
+                this.storageService.coinsObj[el].is.chartMain = false;
+                this.storageService.coinsObj[el].is.chartRefresh = false;
+            }
+        });
+
+        for (let i = 0; i < this.chart.datasets.length; i++) {
+            const lab = this.chart.datasets[i].label;
+            if (lab !== this.mainCoinForChart) {
+                this.storageService.coinsObj[lab].history.data = [];
+                this.storageService.coinsObj[lab].history.chart.data = [];
+                this.storageService.coinsObj[lab].history.chart.label = [];
+                this.chart.datasets.splice(i, 1);
+                i--;
+            }
+        }*/
     }
 }
 
@@ -420,15 +513,3 @@ interface IColorsList {
     g: number;
     b: number;
 }
-/*
-interface ICh1arts {
-    [time: number]: {
-        [coin: string]: {
-            power: number;
-            time: number;
-            chartPower: number;
-            chartLabel: string;
-        };
-    };
-}
-*/

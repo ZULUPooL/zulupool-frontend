@@ -4,6 +4,7 @@
     "common.ok": "OK",
     "common.login": "Логин",
     "common.password": "Пароль",
+    "common.passwordgen": "Пароль. (другой)",
     "common.email": "e-mail",
     "common.save": "Сохранить",
     "common.api.unhandledError": "При обращении к серверу произошла ошибка, сервис может работать некорректно",

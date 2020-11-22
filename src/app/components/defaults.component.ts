@@ -18,7 +18,8 @@ import {
 export class DefaultParams {
     static readonly ADMINNAME: string = 'admin';
     static readonly GAZERNAME: string = 'observer';
-    static readonly BASECOINSWITCHTIMER: number = 300;
+    static readonly BASECOINSWITCHTIMER: number = 900;
+    static readonly BLOCKSFETCHTIMER: number = 120;
     static readonly DATAUPDATETIMER: number = 20;
     static readonly LIVESTATCACHE: number = 15;
     static readonly HISTORYSTATCACHE: number = 50;
@@ -91,7 +92,7 @@ export class DefaultParams {
     //static readonly zoom: string = "15M";
     //static readonly zoomList: string[] = ["1M","5M","30M","H1","H4","D","W",];
     static readonly ZOOM: IZoom = {
-        pool: '15M',
+        pool: '1M',
         user: '1M',
         worker: '5M',
         history: 'D',
@@ -105,8 +106,8 @@ export class DefaultParams {
     static readonly ZOOMPARAMS: IZoomSettings = {
         '1M': {
             groupByInterval: 1 * 60,
-            statsWindow: 80,
-            maxStatsWindow: 90,
+            statsWindow: 50,
+            maxStatsWindow: 60,
             refreshTimer: 20,
             labelText: 'HH:mm',
             lastLabelText: 'HH:mm:ss',

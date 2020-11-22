@@ -10,7 +10,7 @@
           <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
         </div>
         <div class="pool-info-table">
-            <nz-table style="width: 100%;" nzBordered nzSize="small" [nzTemplateMode]="true" [nzLoading]="isLiveLoading">
+            <nz-table style="width: 100%;" nzBordered nzSize="small" [nzTemplateMode]="true" [nzLoading]="isLiveStatLoading">
                 <thead>
                     <tr>
                         <th style="min-width: 80px;text-align: center;">{{ "common.coin" | translate }}</th>
@@ -42,10 +42,10 @@
 
     </div>
 
-    <app-chart class="coin-chart"></app-chart>
+    <app-chart class="coin-chart" [mainCoinForChart]="mainChartCoin"></app-chart>
 </div>
 
-<nz-table *ngIf="haveBlocksData" class="found-blocks-table" nzBordered
+<nz-table *ngIf="!haveBlocksData" class="found-blocks-table" nzBordered
     [nzTemplateMode]="true" [nzLoading]="isLoadingBlocks">
     <thead>
         <tr>
@@ -72,7 +72,7 @@
     </tbody>
 </nz-table>
 
-<nz-table *ngIf="haveBlocksData" class="found-blocks-table-mobile _table-mobile"
+<nz-table *ngIf="!haveBlocksData" class="found-blocks-table-mobile _table-mobile"
     nzBordered [nzTemplateMode]="true" [nzLoading]="isLoadingBlocks">
     <thead>
         <tr>

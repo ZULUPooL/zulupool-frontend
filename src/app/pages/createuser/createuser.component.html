@@ -1,58 +1,73 @@
 <form
-    class="createuser-form"
-    nz-form
-    nzLayout="vertical"
-    [formGroup]="form"
-    (submit)="addUser()"
+nz-form
+nzLayout="vertical"
+[formGroup]="addUserForm.formData"
+(submit)="addUser()"
 >
-    <nz-form-item>
-        <nz-form-label nzFor="login">
-            {{ "common.login" | translate }}
-        </nz-form-label>
-        <nz-form-control>
-            <input nz-input formControlName="login" id="login" />
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label nzFor="password">
-            {{ "common.password" | translate }}
-        </nz-form-label>
-        <nz-form-control>
-            <input nz-input formControlName="password" id="password" />
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label nzFor="email">
-            {{ "common.email" | translate }}
-        </nz-form-label>
-        <nz-form-control>
-            <input nz-input formControlName="email" id="email" />
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label nzFor="name">
-            {{ "common.name" | translate }}
-        </nz-form-label>
-        <nz-form-control>
-            <input nz-input formControlName="name" id="name" />
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label nzFor="isActive">
-            <nz-switch [formControl]="form.get('isActive')"></nz-switch>
-            <span class="isUserActive">
-                {{ "createuser.form.isUserActive" | translate }}
-            </span>
-        </nz-form-label>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label nzFor="isReadOnly">
-            <nz-switch [formControl]="form.get('isReadOnly')"></nz-switch>
-            <span class="isUserReadOnly">
-                {{ "createuser.form.isUserReadOnly" | translate }}
-            </span>
-        </nz-form-label>
-    </nz-form-item>
+<nz-form-item>
+    <nz-form-label nzFor="login">
+        {{ "common.login" | translate }}
+    </nz-form-label>
+    <nz-form-control
+        [nzValidateStatus]="addUserForm.errors.login.status | async"
+        [nzErrorTip]="addUserForm.errors.login.error | async"
+    >
+        <input formControlName="login" nz-input id="login" />
+    </nz-form-control>
+</nz-form-item>
+<nz-form-item>
+    <nz-form-label nzFor="password" (click)="genPWD()">
+        {{ "common.passwordgen" | translate }}
+    </nz-form-label>
+    <nz-form-control
+        [nzValidateStatus]="addUserForm.errors.password.status | async"
+        [nzErrorTip]="addUserForm.errors.password.error | async"
+    >
+        <input
+            formControlName="password"
+            nz-input
+            id="password"
+        />
+    </nz-form-control>
+</nz-form-item>
+<nz-form-item>
+    <nz-form-label nzFor="email">
+        {{ "common.email" | translate }}
+    </nz-form-label>
+    <nz-form-control
+        [nzValidateStatus]="addUserForm.errors.email.status | async"
+        [nzErrorTip]="addUserForm.errors.email.error | async"
+    >
+        <input formControlName="email" nz-input id="email" />
+    </nz-form-control>
+</nz-form-item>
+<nz-form-item>
+    <nz-form-label nzFor="name">
+        {{ "common.name" | translate }}
+    </nz-form-label>
+    <nz-form-control
+        [nzValidateStatus]="addUserForm.errors.name.status | async"
+        [nzErrorTip]="addUserForm.errors.name.error | async"
+    >
+        <input formControlName="name" nz-input id="name" />
+    </nz-form-control>
+</nz-form-item>
+<nz-form-item>
+    <nz-form-label nzFor="isActive">
+        <nz-switch [formControl]="addUserForm.formData.get('isActive')"></nz-switch>
+        <span class="isUserActive">
+            {{ "createuser.form.isUserActive" | translate }}
+        </span>
+    </nz-form-label>
+</nz-form-item>
+<nz-form-item>
+    <nz-form-label nzFor="isReadOnly">
+        <nz-switch [formControl]="addUserForm.formData.get('isReadOnly')"></nz-switch>
+        <span class="isUserReadOnly">
+            {{ "createuser.form.isUserReadOnly" | translate }}
+        </span>
+    </nz-form-label>
+</nz-form-item>
 
     <button nz-button nzType="primary" [nzLoading]="isSubmitting">
         {{ "createuser.form.addUser" | translate }}

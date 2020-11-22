@@ -1,6 +1,6 @@
-import * as EApi from "../enums/api-enums";
-import { TCoinName } from "./coin";
-import { IUserSettings, IUser } from "./user";
+import * as EApi from '../enums/api-enums';
+import { TCoinName } from './coin';
+import { IUserSettings, IUser } from './user';
 
 /* export interface IUserChangePasswordParams { }
 export interface IUserChangePasswordResponse { }
@@ -80,7 +80,7 @@ export interface IUserCreateByAdminParams {
     name?: string; // User name (display instead of login in 'blocks found by pool' table (up to 256 characters)
     isActive?: boolean; // if true, function will create activated user (option available for admin account only)
     isReadOnly?: boolean; // if true, user will have no write access to his account (option available for admin account only)
-    id?: string; //unique user session id returned by userlogin function, only admin session is usable
+    //id?: string; //unique user session id returned by userlogin function, only admin session is usable
 }
 export interface IUserCreateResponse {
     status: EApi.statusCommonResp | EApi.userCreateResp; // Request status.

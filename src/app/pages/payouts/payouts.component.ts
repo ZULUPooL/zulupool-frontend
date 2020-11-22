@@ -67,7 +67,7 @@ export class PayoutsComponent implements OnInit {
     getUserStat(coin: TCoinName): void {
         this.isPayoutsLoading = true;
 
-        if (this.storageService.coinsObj[coin].isSpliName)
+        if (this.storageService.coinsObj[coin].is.nameSplitted)
             coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
 
         this.backendQueryApiService.getUserPayouts({ coin }).subscribe(

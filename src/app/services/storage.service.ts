@@ -13,6 +13,7 @@ import {
     IFoundBlock,
     IPoolStatsHistoryItem,
     ICinfo,
+    ICoinInfo,
 } from 'interfaces/backend-query';
 
 import {
@@ -25,7 +26,9 @@ import {
     IZoomParams,
     ILiveStat,
     IBlocks,
+    ICoinParams,
 } from 'interfaces/common';
+import { ICoinsInfo } from './fetchdata.service';
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
@@ -62,13 +65,21 @@ export class StorageService {
         if (ts) this.coinListTS = ts;
         else this.coinListTS = 0;
     }
-    get mainCoin(): string {
-        return this.coinMain;
+    get chartMainCoinName(): string {
+        const resp = Object.entries(this.coinsObj).find(coin => {
+            return coin[1].is.chartMain;
+        });
+        if (resp.length > 0) return resp[0];
+        else return '';
     }
-    set mainCoin(coin: string) {
-        if (coin) this.coinMain = coin;
-        else this.coinMain = '';
+    get chartMainCoinObj(): ICoinParams {
+        const resp = Object.entries(this.coinsObj).find(coin => {
+            return coin[1].is.chartMain;
+        });
+        if (resp.length > 0) return resp[1];
+        else return {} as ICoinParams;
     }
+
     get currCoin(): string {
         return this.coin;
     }
@@ -93,10 +104,19 @@ export class StorageService {
     get currZoomGroupByInterval(): number {
         return this.zoomParams[this.currentZoom].groupByInterval;
     }
+
+    get currZoomStatsWindow(): number {
+        return this.zoomParams[this.currentZoom].statsWindow;
+    }
+    get currZoomMaxStatsWindow(): number {
+        return this.zoomParams[this.currentZoom].maxStatsWindow;
+    }
+
     get currZoomTimeFrom(): number {
-        const delta = this.localTimeD.delta;
-        const currentTime =
-            delta + parseInt(((new Date().setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(0));
+        //const delta = this.localTimeD.delta;
+        const currentTime = parseInt(
+            ((new Date().setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(0),
+        );
         const statsWindow = this.zoomParams[this.currentZoom].statsWindow;
         const groupByInterval = this.zoomParams[this.currentZoom].groupByInterval;
         return currentTime - statsWindow * groupByInterval;

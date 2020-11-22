@@ -104,19 +104,35 @@ export interface IFetchResponce {
     coin: string;
     type?: string;
 }
-
+export interface ICoinState {
+    liveVisible: boolean; // требует обновления табличных данных живой статистики
+    blocksVisible: boolean; // требует обновления табличных данных найденных блоков
+    balanseVisible: boolean; // требует обновления табличных данных баланса
+    worker: boolean; // работаем с информацией по воркеру
+    user: boolean; // работаем с информацией по пользователю
+    pool: boolean; // работаем с информацией по пулу
+    algo: boolean; // является алгоритмом
+    nameSplitted: boolean; // имеет имя алгоритм в названии на бэкенде
+    chartMain: boolean; // является основной для графика, по ней строится временная шкала
+    chartRefresh: boolean; // требует обновления исторических данных и перерисовки графика
+    //chartSwitching: boolean; // в состоянии переключения с прошлой главной монеты
+}
 export interface ICoinParams {
+    is: ICoinState;
     info: ICoinItem;
-    isMain: boolean;
-    isAlgo: boolean;
-    isSpliName: boolean;
-    isNeedRefresh: boolean;
     blocks?: IBlocks;
     live?: ILiveStat;
     history?: IHistoryStat;
     user?: IUserData;
+    worker?: IWorkerData;
 }
-
+export interface IWorkerData {
+    isMain: boolean;
+    isAlgo: boolean;
+    live?: ILiveStat;
+    history?: IHistoryStat;
+    isNeedRefresh: boolean;
+}
 export interface ICoinsData {
     [coin: string]: ICoinParams;
 }
@@ -130,7 +146,7 @@ export interface IChartData {
     data: number[];
     label: number[];
     workerId?: string;
-    datasetI?: number;
+    //datasetI?: number;
 }
 
 export interface IFetchResponce {

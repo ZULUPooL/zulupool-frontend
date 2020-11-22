@@ -63,7 +63,6 @@ import {
     IGetPoolStatsResponse,
     //GetUHistory,
 } from 'api/backend-query.api';
-import { renderFlagCheckIfStmt } from '@angular/compiler/src/render3/view/template';
 
 @Injectable({
     providedIn: 'root',
@@ -124,62 +123,13 @@ export class FetchPoolDataService {
     subjUStatsHist = new BehaviorSubject<IUserHistoryInfo>(this.uStatsHist);
     subjUWStatsHist = new BehaviorSubject<IWorkerHistoryInfo>(this.uWStatsHist);
     subjUBalance = new BehaviorSubject<IUserBalanceItem[]>(this.uBalances);
-    /*
-    fetchCoins(forceUpdate?: boolean | false) {
-        const storage = this.storageService;
-        if (forceUpdate) {
-            this.backendQueryApiService.getPoolCoins().subscribe(({ coins }) => {
-                coins = sort(coins);
-                storage.whatCoins = coins;
-                this.getCoinsData.next({ msg: coins });
-            });
-        } else {
-            if (storage.whatCoins.length !== 0) {
-                const resp = { msg: storage.whatCoins, fromCache: true };
-                this.getCoinsData.next(resp);
-            } else this.fetchCoins(true);
-        }
-
-        function sort(coins) {
-            let algo = true,
-                newList = [] as IPoolCoinsItem[];
-            coins.forEach(coin => {
-                addCoinToList(coin, coin.name === 'BTC');
-                algo ? (algo = coins[0].algorithm === coin.algorithm) : true;
-                initCoinsData(coin.name);
-            });
-            if (algo) {
-                const a = coins[0].algorithm;
-                addCoinToList({
-                    name: a,
-                    fullName: a,
-                    algorithm: a,
-                });
-            }
-            return newList;
-            function addCoinToList(coin: IPoolCoinsItem, btc: boolean = false) {
-                if (!btc) newList.push(coin);
-                else newList.unshift(coin);
-                initCoinsData(coin.name);
-            }
-            function initCoinsData(coin: TCoinName) {
-                storage.isChartsLoaded[coin] = false;
-                storage.chartData[coin] = {
-                    title: coin,
-                    actualData: [],
-                    prevData: [],
-                };
-            }
-        }
-    }
-*/
     coins(params: IFetchParams): void {
         const storage = this.storageService;
         if (params.forceUpdate) {
             this.backendQueryApiService.getPoolCoins().subscribe(
                 ({ coins }) => {
                     storage.coinsList = [];
-                    coins = sort(coins);
+                    sort(coins);
                     storage.coinsListTs = getTs();
                     this.apiGetListOfCoins.next({ status: true, coin: '', type: params.type });
                 },
@@ -195,52 +145,68 @@ export class FetchPoolDataService {
             } else this.coins(true);*/
         }
 
-        function sort(coins): ICoinItem[] {
-            let algo = true,
-                newList = [] as ICoinItem[];
+        function sort(coins: IPoolCoinsItem[]): void {
+            let algo = true;
+            //newList = [] as ICoinItem[];
             const ts = getTs();
             coins.forEach(coin => {
-                addCoinToList(coin, coin.name === 'BTC');
+                addCoinToList(coin, coin.name === 'BTC', coins.length);
                 algo ? algo && coins[0].algorithm === coin.algorithm : true;
             });
             if (algo) {
                 const a = coins[0].algorithm;
-                addCoinToList({ name: a, fullName: a, algorithm: a });
+                addCoinToList({ name: a, fullName: a, algorithm: a }, false, coins.length);
             }
-            return newList;
-            function addCoinToList(coin: ICoinItem, isBtc: boolean = false): void {
-                if (!isBtc) newList.push(coin);
-                else newList.unshift(coin);
+
+            function addCoinToList(coin: ICoinItem, isBtc: boolean = false, length: number): void {
                 const isAlgo = coin.name === coin.algorithm;
                 let isSpliName = false;
                 if (coin.name.split('.').length > 1) {
                     coin.name = coin.name.split('.')[0];
                     isSpliName = true;
                 }
+                if (!isBtc) storage.coinsList.push(coin.name);
+                else storage.coinsList.unshift(coin.name);
                 const state = { isLoading: false, cacheTs: 0 };
                 const blocksState = { data: [], ...state };
                 const liveState = { data: {} as any, ...state };
                 const histState = {
                     data: [],
-                    timeFrom: 0,
+                    timeFrom: storage.currZoomTimeFrom,
                     grByInterval: storage.currZoomGroupByInterval,
-                    chart: { data: [], label: [], datasetI: -1 },
+                    chart: { data: [], label: [] },
                     ...state,
                 };
                 const user = { balance: [], isBalanceLoading: false, isSettingsLoading: false };
+                const worker = {
+                    isMain: false,
+                    isAlgo: false,
+                    live: liveState,
+                    history: histState,
+                    isNeedRefresh: false,
+                };
+                const is = {
+                    liveVisible: false,
+                    blocksVisible: false,
+                    balanseVisible: false,
+                    worker: params.type === 'worker',
+                    algo: isAlgo,
+                    nameSplitted: isSpliName,
+                    chartMain: isAlgo,
+                    chartRefresh: false,
+                    pool: params.type === 'pool',
+                    user: params.type === 'user',
+                };
                 const store: ICoinParams = {
                     info: coin,
-                    isMain: false,
-                    isAlgo,
-                    isSpliName,
-                    isNeedRefresh: false,
+                    is,
                     blocks: blocksState,
                     live: liveState,
                     history: histState,
                     user: user as any,
+                    worker: worker,
                 };
                 storage.coinsObj[coin.name] = store;
-                storage.coinsList.push(coin.name);
             }
         }
         function getTs(): number {
@@ -258,7 +224,7 @@ export class FetchPoolDataService {
             const api = this.backendQueryApiService;
             let coinName = params.coin,
                 ts = 0;
-            if (storage.isSpliName) coinName = params.coin + '.' + storage.info.algorithm;
+            if (storage.is.nameSplitted) coinName = params.coin + '.' + storage.info.algorithm;
             const apiRequest = { coin: coinName };
             switch (params.type) {
                 case 'worker':
@@ -358,7 +324,7 @@ export class FetchPoolDataService {
             const api = this.backendQueryApiService;
             let coinName = params.coin;
 
-            if (coinObj.isSpliName) coinName = params.coin + '.' + coinObj.info.algorithm;
+            if (coinObj.is.nameSplitted) coinName = params.coin + '.' + coinObj.info.algorithm;
             let apiReq = {} as {
                 coin: string;
                 timeFrom: number;
@@ -367,29 +333,23 @@ export class FetchPoolDataService {
                 workerId?: string;
             };
             apiReq.coin = coinName;
-            const mainCoin = storage.mainCoin;
-            const mainCoinObj = storage.coinsObj[mainCoin];
-            //apiReq.groupByInterval = mainCoinObj.history.grByInterval;
-            apiReq.groupByInterval = storage.currZoomGroupByInterval;
+            apiReq.groupByInterval = storage.chartMainCoinObj.history.grByInterval;
+            //if (coinObj.is.chartMain)
+            apiReq.timeFrom = storage.chartMainCoinObj.history.timeFrom;
+            //else
+            //apiReq.timeFrom =
+            //storage.chartMainCoinObj.history.timeFrom + apiReq.groupByInterval;
 
+            /*
             let lMainCoin = mainCoinObj.history.chart.label.length;
             let lCoin = coinObj.history.chart.label.length;
-            /*if (params.coin !== mainCoin) {
-                //apiReq.groupByInterval = mainCoinObj.history.grByInterval;
-                apiReq.timeTo =
-                    mainCoinObj.history.chart.label[lMainCoin - 1] + apiReq.groupByInterval;
-            }*/
-            if (lMainCoin === 0) {
-                apiReq.timeFrom = storage.currZoomTimeFrom;
-                apiReq.groupByInterval = storage.currZoomGroupByInterval;
-            } else if (lCoin === 0) {
+
+            if (lCoin === 0 && lMainCoin !== 0) {
                 apiReq.timeFrom = mainCoinObj.history.chart.label[0] - 2 * apiReq.groupByInterval;
-            } else {
+            } else if (lCoin !== 0) {
                 apiReq.timeFrom = mainCoinObj.history.chart.label[lMainCoin - 5];
             }
-            // +
-            //apiReq.groupByInterval;
-
+*/
             switch (params.type) {
                 case 'worker':
                     if (params.workerId === '') return;
@@ -397,7 +357,7 @@ export class FetchPoolDataService {
                     api.getWorkerStatsHistory(apiReq as any).subscribe(
                         (historyResponce: IHistoryResp) => {
                             if (historyResponce.stats.length > 1) historyResponce.stats.shift();
-                            processResponce(historyResponce);
+                            processChartsData(historyResponce);
                         },
                         () => {
                             processErr();
@@ -408,7 +368,7 @@ export class FetchPoolDataService {
                     api.getUserStatsHistory(apiReq as any).subscribe(
                         (historyResponce: IHistoryResp) => {
                             if (historyResponce.stats.length > 1) historyResponce.stats.shift();
-                            processResponce(historyResponce);
+                            processChartsData(historyResponce);
                         },
                         () => {
                             processErr();
@@ -420,14 +380,14 @@ export class FetchPoolDataService {
                     api.getPoolStatsHistory(apiReq).subscribe(
                         (historyResponce: IHistoryResp) => {
                             if (historyResponce.stats.length > 1) historyResponce.stats.shift();
-                            processResponce(historyResponce);
+                            processChartsData(historyResponce);
                         },
                         () => {
                             processErr();
                         },
                     );
             }
-            function processResponce(historyResponce: IHistoryResp) {
+            function processChartsData(historyResponce: IHistoryResp): void {
                 if (!storage.locatTimeDelta.isUpdated) {
                     const ts = getTs();
                     const delta = ts - historyResponce.currentTime;
@@ -436,11 +396,16 @@ export class FetchPoolDataService {
                     storage.locatTimeDelta = data;
                 }
 
-                let histData = fixHistory(historyResponce);
-
-                calcChartsData(histData);
-
-                coinObj.history.data = histData.stats;
+                const time = historyResponce.currentTime;
+                const lastItem = historyResponce.stats.length - 1;
+                if (lastItem >= 0 && historyResponce.stats[lastItem].time > time) {
+                    historyResponce.stats[lastItem].time = time;
+                    historyResponce.stats[lastItem].power = coinObj.live.data.power;
+                }
+                historyResponce.stats.forEach(el => {
+                    el.power = el.power / Math.pow(10, 15 - historyResponce.powerMultLog10);
+                });
+                coinObj.history.data = historyResponce.stats;
                 coinObj.history.isLoading = false;
                 coinObj.history.cacheTs = historyResponce.currentTime;
                 sendResult.next({ status: true, coin: params.coin, type: params.type });
@@ -452,76 +417,6 @@ export class FetchPoolDataService {
                     coin: params.coin,
                     type: params.type,
                 });
-            }
-
-            function fixHistory(data: IHistoryResp): IHistoryResp {
-                const grInterval = apiReq.groupByInterval;
-                let time = data.currentTime,
-                    timeFrom = apiReq.timeFrom;
-
-                if (data.stats.length === 0) {
-                    let nullStat = DefaultParams.NULLSTATHISTORYITEM;
-                    nullStat.time = timeFrom;
-                    data.stats.push(nullStat);
-                }
-
-                //const maxIterations = 1000;
-                //let count = 0;
-
-                while (data.stats[0].time - timeFrom > 2 * grInterval) {
-                    //let nullStat = DefaultParams.NULLSTATHISTORYITEM;
-                    //nullStat.time = ;
-                    data.stats.unshift({
-                        name: '',
-                        time: data.stats[0].time - grInterval,
-                        shareRate: 0,
-                        shareWork: 0,
-                        power: 0,
-                    });
-                }
-                while (data.stats[data.stats.length - 1].time + grInterval < time) {
-                    //let nullStat = DefaultParams.NULLSTATHISTORYITEM;
-                    //nullStat.time =
-                    //data.stats[data.stats.length - 1].time + grInterval;
-                    data.stats.push({
-                        name: '',
-                        time: data.stats[data.stats.length - 1].time + grInterval,
-                        shareRate: 0,
-                        shareWork: 0,
-                        power: 0,
-                    });
-                }
-
-                if (data.stats[data.stats.length - 1].time < time) {
-                    if (data.stats[data.stats.length - 1].power === 0) {
-                        data.stats.push({
-                            name: '',
-                            time,
-                            shareRate: 0,
-                            shareWork: 0,
-                            power: 0,
-                        });
-                    } else {
-                        data.stats.push({
-                            name: '',
-                            time,
-                            shareRate: 0,
-                            shareWork: 0,
-                            power: coinObj.live.data.power,
-                        });
-                    }
-                }
-                if (data.stats[data.stats.length - 1].time > time) {
-                    data.stats[data.stats.length - 1].time = time;
-                    data.stats[data.stats.length - 1].power = coinObj.live.data.power;
-                }
-                return data;
-            }
-            function calcChartsData(data: IHistoryResp): void {
-                data.stats.forEach(el => {
-                    el.power = el.power / Math.pow(10, 15 - data.powerMultLog10);
-                });
-                //coinObj.history.data = data.stats;
             }
         } else {
             /*
@@ -546,11 +441,11 @@ export class FetchPoolDataService {
     }
 
     blocks(params: IFetchParams) {
-        if (params.coin === '' || this.storageService.coinsObj[params.coin].isAlgo) return;
+        if (params.coin === '' || this.storageService.coinsObj[params.coin].is.algo) return;
         if (params.forceUpdate) {
             const store = this.storageService.coinsObj[params.coin];
             let reqCoin = params.coin;
-            if (store.isSpliName) reqCoin = params.coin + '.' + store.info.algorithm;
+            if (store.is.nameSplitted) reqCoin = params.coin + '.' + store.info.algorithm;
 
             let req = {} as IGetFoundBlocksParams;
             req.coin = reqCoin;
@@ -603,10 +498,10 @@ export class FetchPoolDataService {
     }
 
     balance(params: IFetchParams) {
-        if (params.coin === '' || this.storageService.coinsObj[params.coin].isAlgo) return;
+        if (params.coin === '' || this.storageService.coinsObj[params.coin].is.algo) return;
         const store = this.storageService.coinsObj[params.coin];
         let reqCoin = params.coin;
-        if (store.isSpliName) reqCoin = params.coin + '.' + store.info.algorithm;
+        if (store.is.nameSplitted) reqCoin = params.coin + '.' + store.info.algorithm;
 
         let req = {} as IGetUserBalanceParams;
         req.coin = reqCoin;
