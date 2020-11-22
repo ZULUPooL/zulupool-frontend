@@ -65,12 +65,14 @@ export class CreateUserComponent implements OnInit {
         private formService: FormService,
     ) {
         this.addUserForm.formData.controls['password'].setValue(this.generatePassword());
+        this.addUserForm.formData.controls['isActive'].setValue(true);
+        this.addUserForm.formData.controls['isReadOnly'].setValue(true);
     }
 
     private generatePassword(): string {
-        var buf = new Uint8Array(8);
+        var buf = new Uint8Array(19);
         window.crypto.getRandomValues(buf);
-        return btoa(String.fromCharCode.apply(null, buf));
+        return btoa(String.fromCharCode.apply(null, buf)).slice(0, -1);
     }
     genPWD() {
         this.addUserForm.formData.controls['password'].setValue(this.generatePassword());

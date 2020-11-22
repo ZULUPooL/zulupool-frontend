@@ -74,7 +74,6 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     }
 
     onZoomChange(zoom: string) {}
-
     ngOnInit(): void {
         this.usedColors = [];
         this.subscriptions.push(
@@ -82,7 +81,8 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
                 //                this.changeColors();
             }),
             this.fetchPoolDataService.apiGetHistory.subscribe(result => {
-                if (result.status) this.processHistory(result.coin);
+                if (result.status && result.type === this.storageService.currType)
+                    this.processHistory(result.coin);
             }),
             //this.zoomSwitchService.zoomSwitch.subscribe(zoom => {
             //if (zoom !== '' && this.storageService.coinsList.length !== 0)
@@ -112,8 +112,6 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             this.addDataset(coin);
         }
     }
-
-    private setupNewMain(coin: string) {}
 
     private setupNewZoom(coin: string) {
         this.mainCoin === '';
@@ -364,8 +362,6 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
 
         const labelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].labelText;
         const lastLabelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].lastLabelText;
-
-        if (this.mainCoinForChart !== coin) debugger;
 
         const [r, g, b] = this.themeService.chartsColor.value,
             stor = this.storageService.chartMainCoinObj,

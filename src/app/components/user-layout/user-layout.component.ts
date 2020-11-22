@@ -1,71 +1,70 @@
-import { Component, OnInit } from "@angular/core";
-import { Location } from "@angular/common";
-import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
-import { Validators } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Validators } from '@angular/forms';
 
-import { Observable } from "rxjs";
-import { filter } from "rxjs/operators";
+import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
-import { SubscribableComponent } from "ngx-subscribable";
+import { SubscribableComponent } from 'ngx-subscribable';
 
-import { EAppRoutes } from "enums/routing";
-import { trackById, patchTrackIds } from "tools/trackers";
-import { toValueArray } from "tools/enum";
-import { hasValue } from "tools/has-value";
-import { AppService } from "services/app.service";
-import { routeToUrl } from "tools/route-to-url";
-import { ERole } from "enums/role";
-import { RoleAccessService } from "services/role-access.service";
-import { FormService } from "services/form.service";
-import { UserApiService, IUserChangePassword } from "api/user.api";
+import { EAppRoutes } from 'enums/routing';
+import { trackById, patchTrackIds } from 'tools/trackers';
+import { toValueArray } from 'tools/enum';
+import { hasValue } from 'tools/has-value';
+import { AppService } from 'services/app.service';
+import { routeToUrl } from 'tools/route-to-url';
+import { ERole } from 'enums/role';
+import { RoleAccessService } from 'services/role-access.service';
+import { FormService } from 'services/form.service';
+import { UserApiService, IUserChangePassword } from 'api/user.api';
 
 @Component({
-    selector: "app-user-layout",
-    templateUrl: "./user-layout.component.html",
-    styleUrls: ["./user-layout.component.less"],
+    selector: 'app-user-layout',
+    templateUrl: './user-layout.component.html',
+    styleUrls: ['./user-layout.component.less'],
 })
-export class UserLayoutComponent extends SubscribableComponent
-    implements OnInit {
+export class UserLayoutComponent extends SubscribableComponent implements OnInit {
     readonly EAppRoutes = EAppRoutes;
     readonly trackById = trackById;
 
     readonly navigationItems: INavigationItem[] = patchTrackIds([
         {
             route: EAppRoutes.Monitoring,
-            title: "components.userLayout.nav.monitoring",
-            icon: "fund-projection-screen",
+            title: 'components.userLayout.nav.monitoring',
+            icon: 'fund-projection-screen',
         },
         {
             route: EAppRoutes.History,
-            title: "components.userLayout.nav.history",
-            icon: "history",
+            title: 'components.userLayout.nav.history',
+            icon: 'history',
         },
         {
             route: EAppRoutes.Payouts,
-            title: "components.userLayout.nav.payouts",
-            icon: "wallet",
+            title: 'components.userLayout.nav.payouts',
+            icon: 'wallet',
         },
         {
             route: EAppRoutes.Settings,
-            title: "components.userLayout.nav.settings",
-            icon: "setting",
+            title: 'components.userLayout.nav.settings',
+            icon: 'setting',
         },
         {
             route: EAppRoutes.Users,
-            title: "components.userLayout.nav.users",
-            icon: "user",
+            title: 'components.userLayout.nav.users',
+            icon: 'user',
             access: ERole.SuperUser,
         },
         {
             route: EAppRoutes.CreateUser,
-            title: "components.userLayout.nav.createuser",
-            icon: "user-add",
+            title: 'components.userLayout.nav.createuser',
+            icon: 'user-add',
             access: ERole.SuperUser,
         },
         {
             route: EAppRoutes.CreateUser,
-            title: "components.userLayout.nav.profitswitch",
-            icon: "pull-request",
+            title: 'components.userLayout.nav.profitswitch',
+            icon: 'pull-request',
             access: ERole.SuperUser,
         },
     ]);
@@ -76,13 +75,11 @@ export class UserLayoutComponent extends SubscribableComponent
 
     showMobileNavMenu = false;
 
-    changePasswordForm = this.formService.createFormManager<
-        IUserChangePassword
-    >(
+    changePasswordForm = this.formService.createFormManager<IUserChangePassword>(
         {
             newPassword: {
                 validators: [Validators.required, Validators.maxLength(64)],
-                errors: ["password_format_invalid"],
+                errors: ['password_format_invalid'],
             },
         },
         {
@@ -131,8 +128,7 @@ export class UserLayoutComponent extends SubscribableComponent
     changePassword(): void {
         this.isPasswordChanging = true;
 
-        const params = this.changePasswordForm.formData
-            .value as IUserChangePassword;
+        const params = this.changePasswordForm.formData.value as IUserChangePassword;
 
         this.userApiService.changePassword(params).subscribe(
             () => {
@@ -161,9 +157,7 @@ export class UserLayoutComponent extends SubscribableComponent
     private onUrlChange(): void {
         const urlParts = this.location.path().split(/\//);
 
-        const route = urlParts.find(source =>
-            this.appRoutes.includes(source),
-        ) as EAppRoutes;
+        const route = urlParts.find(source => this.appRoutes.includes(source)) as EAppRoutes;
 
         if (route) {
             this.currentRoute = route;
@@ -174,8 +168,6 @@ export class UserLayoutComponent extends SubscribableComponent
 
 interface INavigationItem {
     route: EAppRoutes;
-    title:
-        | "components.userLayout.nav.monitoring"
-        | "components.userLayout.nav.payments";
-    icon: "fund-projection-screen" | "wallet";
+    title: 'components.userLayout.nav.monitoring' | 'components.userLayout.nav.payments';
+    icon: 'fund-projection-screen' | 'wallet';
 }

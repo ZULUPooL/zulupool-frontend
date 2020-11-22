@@ -17,7 +17,7 @@ nzLayout="vertical"
 </nz-form-item>
 <nz-form-item>
     <nz-form-label nzFor="password" (click)="genPWD()">
-        {{ "common.passwordgen" | translate }}
+        {{ "common.password" | translate }} <span style="font-weight: bold;"> &nbsp; {{ "common.passwordgen" | translate }}</span>
     </nz-form-label>
     <nz-form-control
         [nzValidateStatus]="addUserForm.errors.password.status | async"

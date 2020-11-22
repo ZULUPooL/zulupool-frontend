@@ -29,9 +29,10 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     readonly EWorkerState = EWorkerState;
     readonly ESuffix = ESuffix;
 
+    mainChartCoin: string = '';
     currentBalance: IUserBalanceItem;
     workersList: IWorkerStatsItem[];
-    haveBalanceData: boolean;
+    haveBalanceData: boolean = false;
     isLiveLoading: boolean;
     liveStats: ILiveStatCommon;
     liveStatsWorkers: ILiveStatWorker[];
@@ -52,12 +53,23 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         this.storageService.coinsObj[this.storageService.currCoin] = data;
     }
 
+    get isLiveStatLoading(): boolean {
+        return this.isLiveLoading;
+    }
+
+    get isLoadingBalance(): boolean {
+        return this.isBalanceDataLoading;
+    }
+
     get isSending(): boolean {
         return this.isManualPayoutSending;
     }
-    private subscrip: any;
-    private fetcherTimeoutId: number;
+    //private fetcherTimeoutId: number;
     private mainCoinApplyTimeoutId: number;
+
+    private historyFetcherTimeoutId: number;
+    private changeMainChartCoinTimeoutId: number;
+    private subscrip: any;
 
     constructor(
         private backendManualApiService: BackendManualApiService,
@@ -69,16 +81,22 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     }
 
     ngOnInit(): void {
-        this.start();
+        //this.storageService.resetChartsData = true;
+        this.storageService.currType = DefaultParams.REQTYPE.USER;
         this.subs();
-        this.periodicFetch();
         this.fetchPoolDataService.coins({ coin: '', type: 'user', forceUpdate: true });
+
+        //this.haveBalanceData = false;
+        this.isLiveLoading = true;
+        //this.isBalanceDataLoading = false;
+        this.storageService.currType = DefaultParams.REQTYPE.USER;
     }
 
     ngOnDestroy(): void {
-        clearTimeout(this.fetcherTimeoutId);
+        //this.storageService.resetChartsData = true;
+        clearTimeout(this.historyFetcherTimeoutId);
         clearTimeout(this.mainCoinApplyTimeoutId);
-        //this.subscrip.forEach(el => el.unsubscribe);
+        this.subscrip.forEach(el => el.unsubscribe);
     }
     onWorkerCurrentCoinChange(coinName: TCoinName): void {
         //TODO
@@ -100,11 +118,28 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
 
     onCurrentCoinChange(coin: string): void {
         if (coin === null || coin === '') return;
+        if (this.activeCoinName === '') this.activeCoinName = coin;
         this.storageService.coinsObj[coin].is.chartRefresh = true;
         this.setMainCoinTimer(coin);
+        this.storageService.coinsObj[this.activeCoinName].is.liveVisible = false;
+
+        this.storageService.coinsObj[coin].is.liveVisible = true;
         this.activeCoinName = coin;
-        this.storageService.currCoin = coin;
-        this.getLiveInfo(coin);
+        this.getLiveInfo();
+
+        if (coin === null || coin === '') return;
+        if (this.activeCoinName === '') this.activeCoinName = coin;
+        this.storageService.coinsObj[coin].is.chartRefresh = true;
+        this.setMainCoinTimer(coin);
+        this.storageService.coinsObj[this.activeCoinName].is.liveVisible = false;
+        this.storageService.coinsObj[this.activeCoinName].is.balanseVisible = false;
+        this.storageService.coinsObj[coin].is.liveVisible = true;
+        this.storageService.coinsObj[coin].is.blocksVisible = !this.storageService.coinsObj[coin].is
+            .algo;
+        this.haveBalanceData = !this.storageService.coinsObj[coin].is.algo;
+        this.activeCoinName = coin;
+        this.getLiveInfo();
+        this.getBalanceInfo(coin);
     }
 
     onWorkerRowClick(workerId: string): void {
@@ -153,50 +188,94 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         );
     }
 
-    private start() {
-        this.haveBalanceData = false;
-        this.isLiveLoading = true;
-        this.isBalanceDataLoading = true;
-        this.storageService.currType = DefaultParams.REQTYPE.USER;
-    }
+    private processZoomChange(zoom: string) {
+        if (zoom === null) debugger;
+        if (zoom === undefined) debugger;
+        if (zoom === '') debugger;
+        if (this.storageService.coinsList.length === 0) return;
+        const coinsObj = this.storageService.coinsObj;
+        const mainCoinObj = this.storageService.chartMainCoinObj,
+            currTime = mainCoinObj.history.chart.label[mainCoinObj.history.chart.label.length - 1],
+            currTime2 = parseInt(
+                ((new Date(currTime * 1000).setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(
+                    0,
+                ),
+            );
 
-    private processZoom(newZoom: string) {
-        if (this.storageService.currZoom !== newZoom) {
-            this.storageService.currZoom = newZoom;
-            this.setupMainCoin(this.activeCoinName);
-            const h = this.activeCoinObj.history;
-            (h.chart.label = []), (h.chart.data = []), (h.data = []);
-            this.fetchData();
+        const grI = DefaultParams.ZOOMPARAMS[zoom].groupByInterval;
+        const statWindow = DefaultParams.ZOOMPARAMS[zoom].statsWindow;
+        const delta = currTime - currTime2;
+        let intrevals = Math.round(delta / grI);
+        let newTimefrom = 0;
+
+        if (intrevals * grI + currTime2 > currTime) intrevals--;
+        if (intrevals === 0) {
+            newTimefrom = currTime2 - grI * (statWindow + 1);
+        } else {
+            newTimefrom = currTime2 - grI * (statWindow + 1 - intrevals);
         }
+
+        const activeCoin = this.activeCoinName;
+        coinsObj[activeCoin].is.chartMain = true;
+        coinsObj[activeCoin].is.chartRefresh = true;
+
+        coinsObj[activeCoin].history.timeFrom = newTimefrom - grI;
+        coinsObj[activeCoin].history.grByInterval = grI;
+        coinsObj[activeCoin].history.data = [];
+        coinsObj[activeCoin].history.chart.data = [];
+        coinsObj[activeCoin].history.chart.label = mainCoinObj.history.chart.label;
+
+        const coins = this.storageService.coinsList.filter(item => item !== activeCoin);
+
+        coins.forEach(item => {
+            coinsObj[item].history.chart.label = [];
+            coinsObj[item].is.chartMain = false;
+            coinsObj[item].is.chartRefresh = false;
+        });
+        this.isLiveLoading = true;
+
+        this.fetchPoolDataService.live({ coin: activeCoin, type: 'user' });
     }
+    /*
+    private processCoins() {
+        const coinI =
+            this.storageService.coinsList.length > 2 ? this.storageService.coinsList.length - 1 : 0;
+        const coin = this.storageService.coinsList[coinI];
+        const coinObjIs = this.storageService.coinsObj[coin].is;
+
+        coinObjIs.chartMain;
+        coinObjIs.chartMain = true;
+        coinObjIs.chartRefresh = true;
+        coinObjIs.liveVisible = true;
+        coinObjIs.pool = false;
+        coinObjIs.worker = false;
+        coinObjIs.user = true;
+        coinObjIs.balanseVisible = !coinObjIs.algo;
+        this.mainChartCoin = coin;
+        //this.getLiveInfo();
+
+        this.historyFetcher();
+    }*/
 
     private processCoins() {
-        const store = this.storageService;
-        const coinI = store.coinsList.length > 2 ? store.coinsList.length - 1 : 0;
-        const coin = store.coinsList[coinI];
-        this.setupMainCoin(coin);
-        this.getLiveInfo(coin);
-    }
+        const coinI =
+            this.storageService.coinsList.length > 2 ? this.storageService.coinsList.length - 1 : 0;
+        this.mainChartCoin = this.storageService.coinsList[coinI];
+        //this.getLiveInfo();
 
-    private processLive(coin: string) {
-        this.getBalanceInfo(coin);
-        if (this.activeCoinName === coin) {
-            this.liveStats = this.activeCoinObj.live.data;
-            this.liveStatsWorkers = this.liveStats.miners;
-        }
-        this.isLiveLoading = false;
-        this.getHistoryInfo(coin);
+        this.historyFetcher();
+        //this.blocksFetch();
     }
 
     private getBalanceInfo(coin: string) {
         if (this.activeCoinObj.user.isBalanceLoading) return;
         else this.activeCoinObj.user.isBalanceLoading = true;
-        if (!this.activeCoinObj.is.chartRefresh) {
+        if (!this.activeCoinObj.is.balanseVisible) {
             this.isBalanceDataLoading = true;
-            this.haveBalanceData = true;
+            //this.haveBalanceData = true;
             this.getBalanceInfo(coin);
         }
-        if (coin === this.activeCoinName) this.fetchPoolDataService.balance({ coin, type: 'pool' });
+        if (coin === this.activeCoinName) this.fetchPoolDataService.balance({ coin, type: 'user' });
         this.isBalanceDataLoading = true;
     }
     private processBalance(coin: string) {
@@ -205,64 +284,85 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         this.currentBalance = this.activeCoinObj.user.balance;
         this.isBalanceDataLoading = false;
     }
-    private setupMainCoin(coin: string) {
-        if (this.storageService.chartMainCoinName !== coin) {
-            this.storageService.coinsList.forEach(el => {
-                if (el !== coin) {
-                    this.storageService.coinsObj[el].is.chartMain = false;
-                    this.storageService.coinsObj[el].is.chartRefresh = false;
-                    //this.storageService.coinsObj[el].history.chart.label = [];
-                    //this.storageService.coinsObj[el].history.chart.data = [];
-                    //this.storageService.coinsObj[el].history.data = [];
-                } else {
-                    this.storageService.coinsObj[el].is.chartMain = true;
-                    this.storageService.coinsObj[el].is.chartRefresh = true;
-                }
-            });
-            //this.storageService.mainCoin = coin;
-            this.storageService.currCoin = coin;
-            this.getLiveInfo(coin);
-        }
+
+    private getLiveInfo() {
+        const coinObj = this.storageService.coinsObj;
+        const list = this.storageService.coinsList.filter(coin => {
+            return coinObj[coin].is.chartRefresh && !coinObj[coin].live.isLoading;
+        });
+        list.forEach(coin => {
+            if (coinObj[coin].is.liveVisible) this.isLiveLoading = true;
+            this.fetchPoolDataService.live({ coin, type: 'user' });
+        });
     }
-    private getLiveInfo(coin: string) {
-        if (this.activeCoinObj.live.isLoading) return;
-        else this.activeCoinObj.live.isLoading = true;
-        if (coin === this.activeCoinName) this.isLiveLoading = true;
-        this.fetchPoolDataService.live({ coin, type: 'user' });
+    private processLive(coin: string) {
+        this.isLiveLoading = false;
+        this.getHistoryInfo(coin);
+        const coinObj = this.storageService.coinsObj[coin];
+        if (!coinObj.is.liveVisible) return;
+        this.liveStats = coinObj.live.data;
+        this.liveStatsWorkers = this.liveStats.miners;
     }
-    private getHistoryInfo(coin: string) {
-        if (this.activeCoinObj.history.isLoading || this.activeCoinObj.live.isLoading) return;
-        else this.activeCoinObj.history.isLoading = true;
-        this.fetchPoolDataService.history({ coin, type: 'user' });
-    }
+
     private setMainCoinTimer(coin: string, timer: number = DefaultParams.BASECOINSWITCHTIMER) {
-        clearTimeout(this.mainCoinApplyTimeoutId);
-        this.mainCoinApplyTimeoutId = setTimeout(() => {
-            this.setupMainCoin(coin);
+        clearTimeout(this.changeMainChartCoinTimeoutId);
+        this.changeMainChartCoinTimeoutId = setTimeout(() => {
+            //this.processZoomChange(this.storageService.currZoom);
+            //clearTimeout(this.changeMainChartCoinTimeoutId);
+            this.changeMainChartCoin(coin);
         }, timer * 1000);
     }
 
-    private fetchData() {
-        const list = this.storageService.coinsList;
-        const coins = this.storageService.coinsObj;
-        for (let i in list) {
-            if (coins[list[i]].is.chartRefresh) this.getLiveInfo(list[i]);
-        }
+    private changeMainChartCoin(coin: string) {
+        const coinsObj = this.storageService.coinsObj;
+        const mainChartCoin = this.storageService.chartMainCoinName;
+
+        coinsObj[coin].is.chartMain = true;
+        coinsObj[coin].is.chartRefresh = true;
+
+        coinsObj[coin].history.data = [];
+        coinsObj[coin].history.chart.data = [];
+        coinsObj[coin].history.chart.label = [];
+        coinsObj[coin].history.timeFrom = coinsObj[mainChartCoin].history.timeFrom;
+        coinsObj[coin].history.grByInterval = coinsObj[mainChartCoin].history.grByInterval;
+
+        const coins = this.storageService.coinsList.filter(item => item !== coin);
+
+        coins.forEach(item => {
+            coinsObj[item].is.chartMain = false;
+            coinsObj[item].is.chartRefresh = false;
+            coinsObj[item].history.data = [];
+            coinsObj[item].history.chart.data = [];
+            coinsObj[item].history.chart.label = [];
+            coinsObj[item].history.timeFrom = coinsObj[mainChartCoin].history.timeFrom;
+            coinsObj[item].history.grByInterval = coinsObj[mainChartCoin].history.grByInterval;
+        });
+        this.isLiveLoading = true;
+        this.fetchPoolDataService.live({ coin: coin, type: 'usre' });
+        this.mainChartCoin = coin;
     }
-    private periodicFetch(
+
+    private getHistoryInfo(coin: string) {
+        const info = this.storageService.coinsObj[coin];
+        if (info.history.isLoading || !info.is.chartRefresh) return;
+        info.history.isLoading = true;
+        this.fetchPoolDataService.history({ coin, type: 'user' });
+    }
+
+    private historyFetcher(
         timer: number = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].refreshTimer,
     ) {
-        clearTimeout(this.fetcherTimeoutId);
-        this.fetcherTimeoutId = setTimeout(() => {
-            this.fetchData();
-            this.periodicFetch();
+        clearTimeout(this.historyFetcherTimeoutId);
+        this.historyFetcherTimeoutId = setTimeout(() => {
+            this.getLiveInfo();
+            this.historyFetcher();
         }, timer * 1000);
     }
 
     private subs(): void {
         this.subscrip = [
             this.zoomSwitchService.zoomSwitch.subscribe(zoom => {
-                if (zoom !== '') this.processZoom(zoom);
+                if (zoom !== '') this.processZoomChange(zoom);
             }),
             this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
                 if (data.status && data.type === 'user') this.processCoins();
@@ -274,28 +374,5 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
                 if (data.status && data.type === 'user') this.processBalance(data.coin);
             }),
         ];
-    }
-
-    private reset() {
-        this.storageService.poolCoins = null;
-        this.storageService.poolCoinsliveStat = null;
-        this.storageService.currentCoinInfo = null;
-        this.storageService.chartsTimeFrom = null;
-        //this.storageService.sessionId = null;
-        //this.storageService.targetLogin = null;
-        this.storageService.whatCoins = null;
-        this.storageService.poolCoinsliveStat2 = null;
-        this.storageService.poolCoinsliveStat = null;
-        this.storageService.currentCoinInfo = null;
-        this.storageService.currentCoinInfoWorker = null;
-        this.storageService.currentUser = null;
-        this.storageService.chartsTimeFrom = null;
-        this.storageService.chartsWorkerTimeFrom = null;
-        this.storageService.chartsWorkerBaseData = null;
-        this.storageService.currentUserliveStat = null;
-        this.storageService.currentWorkerName = null;
-        this.storageService.needWorkerInint = null;
-        this.storageService.userSettings = null;
-        this.storageService.userCredentials = null;
     }
 }

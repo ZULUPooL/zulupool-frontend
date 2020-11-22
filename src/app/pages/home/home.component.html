@@ -45,7 +45,7 @@
     <app-chart class="coin-chart" [mainCoinForChart]="mainChartCoin"></app-chart>
 </div>
 
-<nz-table *ngIf="!haveBlocksData" class="found-blocks-table" nzBordered
+<nz-table *ngIf="haveBlocksData" class="found-blocks-table" nzBordered
     [nzTemplateMode]="true" [nzLoading]="isLoadingBlocks">
     <thead>
         <tr>
@@ -72,7 +72,7 @@
     </tbody>
 </nz-table>
 
-<nz-table *ngIf="!haveBlocksData" class="found-blocks-table-mobile _table-mobile"
+<nz-table *ngIf="haveBlocksData" class="found-blocks-table-mobile _table-mobile"
     nzBordered [nzTemplateMode]="true" [nzLoading]="isLoadingBlocks">
     <thead>
         <tr>

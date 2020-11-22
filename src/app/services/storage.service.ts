@@ -1,34 +1,7 @@
-import { DefaultParams } from 'components/defaults.component';
-
 import { Injectable } from '@angular/core';
-import {
-    IPoolCoinsItem,
-    IPoolStatsItem,
-    IWorkerStatsHistoryItem,
-    IWorkerStatsItem,
-    IUserStatsItem,
-    IUserStats,
-    IPoolCoinsData,
-    IPoolStatsData,
-    IFoundBlock,
-    IPoolStatsHistoryItem,
-    ICinfo,
-    ICoinInfo,
-} from 'interfaces/backend-query';
 
-import {
-    ICoinsData,
-    IZoomSettings,
-    ILiveStatCommon,
-    IHistoryItem2,
-    IBlockItem,
-    ICoinItem,
-    IZoomParams,
-    ILiveStat,
-    IBlocks,
-    ICoinParams,
-} from 'interfaces/common';
-import { ICoinsInfo } from './fetchdata.service';
+import { DefaultParams } from 'components/defaults.component';
+import { ICoinsData, ICoinParams } from 'interfaces/common';
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
@@ -36,18 +9,15 @@ export class StorageService {
 
     private localTimeD = DefaultParams.LOCALTIMEDELTA;
     private coin: string = '';
-    private coinMain: string = '';
+    private user: string = '';
+    private worker: string = '';
     private type: string = DefaultParams.DEFAULTTYPE;
     private coinList: string[] = [];
     private coinListTS: number = 0;
     private coinsData: ICoinsData = {};
     private currentZoom = DefaultParams.ZOOM[this.type];
+    private currentZoomList = DefaultParams.ZOOMSLIST[this.type];
 
-    private zoomListOld = DefaultParams.ZOOMSLIST[this.type];
-    private zoomParamsOld = DefaultParams.ZOOMPARAMS;
-
-    //private defaulZoom = DefaultParams.ZOOM;
-    //private zoomList = DefaultParams.ZOOMSLIST;
     private zoomParams = DefaultParams.ZOOMPARAMS;
 
     get locatTimeDelta(): { delta: number; isUpdated: boolean } {
@@ -56,6 +26,9 @@ export class StorageService {
     set locatTimeDelta(data: { delta: number; isUpdated: boolean }) {
         if (data) this.localTimeD = data;
         else this.localTimeD = DefaultParams.LOCALTIMEDELTA;
+    }
+    get zoomsList(): string[] {
+        return this.currentZoomList;
     }
 
     get coinsListTs(): number {
@@ -78,6 +51,33 @@ export class StorageService {
         });
         if (resp.length > 0) return resp[1];
         else return {} as ICoinParams;
+    }
+
+    set resetChartsData(data: boolean) {
+        if (data) {
+            //this.currentUser = null;
+            //this.currentWorker = null;
+            //this.currCoin = null;
+            //this.currType = null;
+            //this.currZoom = DefaultParams.ZOOM[this.type];
+            //this.coinsList = null;
+            //this.coinsObj = null;
+        }
+    }
+
+    get currentUser(): string {
+        return this.user;
+    }
+    set currentUser(user: string) {
+        if (user) this.user = user;
+        else this.coin = '';
+    }
+    get currentWorker(): string {
+        return this.worker;
+    }
+    set currentWorker(worker: string) {
+        if (worker) this.worker = worker;
+        else this.worker = '';
     }
 
     get currCoin(): string {
@@ -137,6 +137,24 @@ export class StorageService {
         else this.coinsData = {} as ICoinsData;
     }
 
+    get sessionId(): string | null {
+        return window.localStorage.getItem('sessionId') || null;
+    }
+
+    set sessionId(sessionId: string | null) {
+        if (sessionId) window.localStorage.setItem('sessionId', sessionId);
+        else window.localStorage.removeItem('sessionId');
+    }
+
+    get targetLogin(): string | null {
+        return window.localStorage.getItem('targetLogin') || null;
+    }
+
+    set targetLogin(targetLogin: string | null) {
+        if (targetLogin) window.localStorage.setItem('targetLogin', targetLogin);
+        else window.localStorage.removeItem('targetLogin');
+    }
+
     ///////////////////TODO//////////////////////////////////////TODO///////////////////
     ///////////////////TODO//////////////////////////////////////TODO///////////////////
     ///////////////////TODO//////////////////////////////////////TODO///////////////////
@@ -150,6 +168,8 @@ export class StorageService {
     ///////////////////TODO//////////////////////////////////////TODO///////////////////
     ///////////////////TODO//////////////////////////////////////TODO///////////////////
     ///////////////////TODO//////////////////////////////////////TODO///////////////////
+
+    /*
     private allCoins = [] as IPoolCoinsItem[];
     private currentCoin = {};
     private baseCoin = {} as IPoolCoinsItem;
@@ -264,7 +284,10 @@ export class StorageService {
     set targetLogin(targetLogin: string | null) {
         if (targetLogin) window.localStorage.setItem('targetLogin', targetLogin);
         else window.localStorage.removeItem('targetLogin');
-    } /*
+    }
+    */
+
+    /*
     get poolCoins2(): { [coin: string]: IPoolCoinsData } {
         return JSON.parse(window.localStorage.getItem("coins")) || false;
     }
@@ -273,14 +296,14 @@ export class StorageService {
         else window.localStorage.removeItem("coins");
     }
 */
-
+    /*
     get poolCoins(): IPoolCoinsItem[] | null {
         return JSON.parse(window.localStorage.getItem('poolCoins')) || null;
     }
     set poolCoins(poolCoins: IPoolCoinsItem[] | null) {
         if (poolCoins) window.localStorage.setItem('poolCoins', JSON.stringify(poolCoins));
         else window.localStorage.removeItem('poolCoins');
-    }
+    }*/
     /*
     get coinsCacheTime(): number | null {
         return parseInt(window.localStorage.getItem("coinsCacheTime")) || null;
@@ -291,6 +314,7 @@ export class StorageService {
         else window.localStorage.removeItem("coinsCacheTime");
     }
 */
+    /*
     get poolCoinsliveStat(): IPoolStatsItem | null {
         return JSON.parse(window.localStorage.getItem('poolCoinsliveStat')) || null;
     }
@@ -355,6 +379,7 @@ export class StorageService {
             window.localStorage.setItem('chartsWorkerTimeFrom', chartsWorkerTimeFrom.toString());
         else window.localStorage.removeItem('chartsWorkerTimeFrom');
     }
+    */
     /*
     get chartsDataLoaded(): { [coin: string]: boolean | false } {
         return JSON.parse(window.localStorage.getItem("chDLoaded")) || false;
@@ -365,7 +390,7 @@ export class StorageService {
         else window.localStorage.removeItem("chDLoaded");
     }
     */
-
+    /*
     get charts1BaseData(): {
         title: string;
         data: IWorkerStatsHistoryItem[];
@@ -436,7 +461,7 @@ export class StorageService {
             window.localStorage.setItem('needWorkerInint', needWorkerInint.toString());
         else window.localStorage.removeItem('needWorkerInint');
     }
-
+*/
     /*    get currentWorkerliveStat(): IWorkerStatsItem[] | null {
         return (
             JSON.parse(window.localStorage.getItem("currentWorkerliveStat")) ||
@@ -454,6 +479,7 @@ export class StorageService {
         else window.localStorage.removeItem("currentWorkerliveStat");
     }
 */
+    /*
     get userSettings(): {} | null {
         return JSON.parse(window.localStorage.getItem('userSettings')) || null;
     }
@@ -469,5 +495,5 @@ export class StorageService {
         if (userCredentials)
             window.localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
         else window.localStorage.removeItem('userCredentials');
-    }
+    }*/
 }

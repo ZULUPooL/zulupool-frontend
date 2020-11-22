@@ -18,9 +18,9 @@ import {
 export class DefaultParams {
     static readonly ADMINNAME: string = 'admin';
     static readonly GAZERNAME: string = 'observer';
-    static readonly BASECOINSWITCHTIMER: number = 30;
+    static readonly BASECOINSWITCHTIMER: number = 900;
     static readonly BLOCKSFETCHTIMER: number = 120;
-    static readonly DATAUPDATETIMER: number = 20;
+    static readonly DATAUPDATETIMER: number = 29;
     static readonly LIVESTATCACHE: number = 15;
     static readonly HISTORYSTATCACHE: number = 50;
     static readonly MAXHISTORYITEMS: number = 500;
@@ -93,13 +93,13 @@ export class DefaultParams {
     //static readonly zoomList: string[] = ["1M","5M","30M","H1","H4","D","W",];
     static readonly ZOOM: IZoom = {
         pool: '1M',
-        user: '1M',
+        user: '5M',
         worker: '5M',
         history: 'D',
     };
     static readonly ZOOMSLIST: IZoomList = {
         pool: ['1M', '15M', 'H1', 'H4', 'D'],
-        user: ['1M', '5M', '10M', '15M', '30M', 'H1', 'H4', 'D'],
+        user: ['5M', '15M', 'H1', 'H4', 'D'],
         worker: ['5M', '30M', 'H1', 'H4', 'D'],
         history: ['D', 'W', 'M'],
     };

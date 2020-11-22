@@ -21,7 +21,7 @@ export class CoinSwitcherComponent implements OnInit {
     coin: string;
     coins: string[];
 
-    ready: boolean;
+    coinsListLoading: boolean;
 
     constructor(
         private coinSwitchService: CoinSwitchService,
@@ -30,9 +30,9 @@ export class CoinSwitcherComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.ready = false;
+        this.coinsListLoading = false;
         this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
-            if (data.status && data.type !== '') this.processCoins();
+            if (data.status && data.type !== '') this.processCoins(data);
         });
 
         //this.fetchPoolDataService.getCoinsData.subscribe(data => {
@@ -49,13 +49,44 @@ export class CoinSwitcherComponent implements OnInit {
         this.onChange.emit(newCoin);
     }
 
+    private processCoins(data) {
+        const coinI =
+            this.storageService.coinsList.length > 2 ? this.storageService.coinsList.length - 1 : 0;
+        this.coin = this.storageService.coinsList[coinI];
+        this.coins = this.storageService.coinsList;
+        const coinObjIs = this.storageService.coinsObj[this.coin].is;
+
+        coinObjIs.chartMain = true;
+        coinObjIs.chartRefresh = true;
+        coinObjIs.liveVisible = true;
+
+        if (data.type === 'pool') {
+            coinObjIs.pool = data.type === 'pool';
+            coinObjIs.blocksVisible = !coinObjIs.algo;
+        } else if (data.type === 'user') {
+            coinObjIs.user = data.type === 'user';
+            coinObjIs.balanseVisible = !coinObjIs.algo;
+        } else if (data.type === 'worker') {
+            coinObjIs.worker = data.type === 'worker';
+        }
+
+        this.coinsListLoading = true;
+        this.cangeCoin(this.coin);
+
+        //this.mainChartCoin = coin;
+        //this.getLiveInfo();
+
+        //this.historyFetcher();
+        //this.blocksFetch();
+    }
+    /*
     private processCoins() {
         this.coins = this.storageService.coinsList;
         const i = this.coins.length > 2 ? this.coins.length - 1 : 0;
         this.coin = this.coins[i];
         this.ready = true;
         this.cangeCoin(this.coin);
-    }
+    }*/
 }
 
 /*

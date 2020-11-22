@@ -112,7 +112,7 @@ export class AuthComponent {
 
         this.authApiService.sigIn(params).subscribe(
             ({ sessionid }) => {
-                this.appService.authorize(sessionid, true).subscribe(
+                this.appService.authorize(sessionid).subscribe(
                     () => {
                         const target =
                             (this.activatedRoute.snapshot.queryParams.to as string) ||

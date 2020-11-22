@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ZoomSwitchService } from 'services/zoomswitch.service';
 import { StorageService } from 'services/storage.service';
 import { FetchPoolDataService } from 'services/fetchdata.service';
+import { DefaultParams } from 'components/defaults.component';
 
 @Component({
     selector: 'app-zoom-switcher',
@@ -24,8 +25,9 @@ export class ZoomSwitcherComponent implements OnInit {
 
     ngOnInit(): void {
         this.zoomListReady = false;
-        this.activeZoom = this.storageService.whatZoom;
-        this.zooms = this.storageService.whatZooms;
+        const type = this.storageService.currType;
+        this.activeZoom = DefaultParams.ZOOM[type];
+        this.zooms = DefaultParams.ZOOMSLIST[type];
         this.zoomListReady = true;
         this.cangeZoom(this.activeZoom);
 

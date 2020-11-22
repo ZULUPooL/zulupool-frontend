@@ -88,9 +88,9 @@
             </tbody>
         </nz-table>
         <!--class="info-table"-->
-        <div style="padding: 3px 4px 0px;">
-        <nz-table *ngIf="haveBalanceData" nzBordered [nzTemplateMode]="true"
-            [nzLoading]="isBalanceDataLoading">
+        <div *ngIf="haveBalanceData" style="padding: 3px 4px 0px;">
+        <nz-table nzBordered [nzTemplateMode]="true"
+            [nzLoading]="isLoadingBalance">
             <thead>
 
                 <tr>
@@ -149,7 +149,7 @@
     -->
     </div>
 
-    <app-chart class="coin-chart"></app-chart>
+    <app-chart class="coin-chart"  [mainCoinForChart]="mainChartCoin"></app-chart>
 
 <!--
     <app-chart-power  class="chart" [stats]="userStatsHistory.stats" [powerMultLog10]="userStatsHistory.powerMultLog10" [chartName]="userStatsHistory.coin">

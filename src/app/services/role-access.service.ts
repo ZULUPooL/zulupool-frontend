@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-import { Observable, of } from "rxjs";
-import { map } from "rxjs/operators";
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { ERole } from "enums/role";
-import { AppService } from "services/app.service";
+import { ERole } from 'enums/role';
+import { AppService } from 'services/app.service';
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class RoleAccessService {
     constructor(private appService: AppService) {}

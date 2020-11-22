@@ -6,7 +6,7 @@
     "common.name": "Public name",
     "common.registrationDate": "Registration Date",
     "common.password": "User password",
-    "common.passwordgen": "User password. (click here)",
+    "common.passwordgen": "(click here)",
     "common.email": "e-mail",
     "common.save": "Save",
     "common.api.unhandledError": "An error occurred while accessing the server, the service may not work correctly, please try again later",
