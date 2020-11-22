@@ -97,7 +97,8 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
 
     ngOnInit(): void {
         this.reset();
-        this.start();
+        this.storageService.currType = DefaultParams.REQTYPE.POOL;
+        this.blocks = [];
         this.subs();
         this.fetchPoolDataService.coins({ coin: '', type: 'pool', forceUpdate: true });
     }
@@ -138,7 +139,6 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         if (zoom === undefined) debugger;
         if (zoom === '') debugger;
         if (this.storageService.coinsList.length === 0) return;
-        clearTimeout(this.historyFetcherTimeoutId);
         const coinsObj = this.storageService.coinsObj;
         const mainCoinObj = this.storageService.chartMainCoinObj,
             currTime = mainCoinObj.history.chart.label[mainCoinObj.history.chart.label.length - 1],
@@ -216,12 +216,36 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         this.blocks = coinObj.blocks.data as any;
     }
 
+    //
     private changeMainChartCoin(coin: string) {
-        if (coin !== '' && this.storageService.chartMainCoinName !== coin) {
-            this.mainChartCoin = coin;
-            this.onCurrentCoinChange(coin);
-        }
+        const coinsObj = this.storageService.coinsObj;
+        const mainChartCoin = this.storageService.chartMainCoinName;
+
+        coinsObj[coin].is.chartMain = true;
+        coinsObj[coin].is.chartRefresh = true;
+
+        coinsObj[coin].history.data = [];
+        coinsObj[coin].history.chart.data = [];
+        coinsObj[coin].history.chart.label = coinsObj[mainChartCoin].history.chart.label;
+        coinsObj[coin].history.timeFrom = coinsObj[mainChartCoin].history.timeFrom;
+        coinsObj[coin].history.grByInterval = coinsObj[mainChartCoin].history.grByInterval;
+
+        const coins = this.storageService.coinsList.filter(item => item !== coin);
+
+        coins.forEach(item => {
+            coinsObj[item].is.chartMain = false;
+            coinsObj[item].is.chartRefresh = false;
+            coinsObj[item].history.data = [];
+            coinsObj[item].history.chart.data = [];
+            coinsObj[item].history.chart.label = [];
+            coinsObj[item].history.timeFrom = coinsObj[mainChartCoin].history.timeFrom;
+            coinsObj[item].history.grByInterval = coinsObj[mainChartCoin].history.grByInterval;
+        });
+        this.isLiveLoading = true;
+        this.fetchPoolDataService.live({ coin: coin, type: 'pool' });
+        this.mainChartCoin = coin;
     }
+
     private getLiveInfo() {
         const coinObj = this.storageService.coinsObj;
         const list = this.storageService.coinsList.filter(coin => {
@@ -274,21 +298,12 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     }
 
     private setMainCoinTimer(coin: string, timer: number = DefaultParams.BASECOINSWITCHTIMER) {
-        if (coin === '') debugger;
-        if (coin === undefined) debugger;
-        if (coin === null) debugger;
-
         clearTimeout(this.changeMainChartCoinTimeoutId);
         this.changeMainChartCoinTimeoutId = setTimeout(() => {
+            //this.processZoomChange(this.storageService.currZoom);
+            //clearTimeout(this.changeMainChartCoinTimeoutId);
             this.changeMainChartCoin(coin);
         }, timer * 1000);
-    }
-
-    private start() {
-        this.storageService.currType = DefaultParams.REQTYPE.POOL;
-        //this.isLiveLoading = true;
-        //this.haveBlocksData = false;
-        this.blocks = [];
     }
 
     private reset() {

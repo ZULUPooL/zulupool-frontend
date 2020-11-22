@@ -30,7 +30,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     chartDirective: BaseChartDirective;
 
     chart: IChartSettings;
-    private isZoomSwitching: boolean = false;
+    private mainCoin: string = '';
     private usedColors: IColorsList[];
     private unusedColors: IColorsList[];
     private isStarting: boolean = true;
@@ -52,8 +52,9 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
         // { r: 23, g: 124, b: 220 },
         { r: 241, g: 251, b: 43 },
         { r: 247, g: 31, b: 239 },
-        { r: 47, g: 219, b: 23 },
-        { r: 25, g: 188, b: 186 },
+        //{ r: 202, g: 16, b: 6 },
+        //{ r: 47, g: 219, b: 23 },
+        //{ r: 25, g: 188, b: 186 },
         { r: 244, g: 166, b: 244 },
         { r: 247, g: 31, b: 239 },
         { r: 222, g: 34, b: 35 },
@@ -88,45 +89,34 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             //this.processZoomSwitch(zoom);
             //}),
         );
-    } /*
-    private processZoomSwitch(zoom: string) {
-        if (zoom === null) debugger;
-        if (zoom === undefined) debugger;
-        if (zoom === '') debugger;
-        if (this.storageService.coinsList.length === 0) debugger;
-
-        this.isProcessZoomSwitch = true;
-        const mainCoin = this.storageService.chartMainCoinName;
-        const mainCoinObj = this.storageService.chartMainCoinObj;
-        const type: string = this.storageService.chartMainCoinObj.is.pool
-            ? 'pool'
-            : this.storageService.chartMainCoinObj.is.worker
-            ? 'worker'
-            : 'user';
-
-        mainCoinObj.live.isLoading = true;
-        mainCoinObj.history.timeFrom = this.storageService.currZoomTimeFrom;
-        mainCoinObj.history.grByInterval = this.storageService.currZoomGroupByInterval;
-        mainCoinObj.history.data = [];
-        mainCoinObj.history.chart.data = [];
-        mainCoinObj.history.chart.label = [];
-
-        this.fetchPoolDataService.live({ coin: mainCoin, type });
-    }*/
-    /*
-    private getLiveInfo() {
-        this.storageService.coinsList.forEach(coin => {
-            const coinObj = this.storageService.coinsObj[coin];
-            //if (coinObj.is.liveVisible) this.isLiveLoading = true;
-            if (coinObj.is.chartRefresh && !coinObj.live.isLoading) {
-                coinObj.live.isLoading = true;
-                this.fetchPoolDataService.live({ coin, type: 'pool' });
-            }
-        });
     }
-*/
+    private processHistory(coin: string) {
+        if (this.isStarting || this.chart.labels.length === 0 || this.mainCoin === coin) {
+            this.createNewChart(coin);
+            return;
+        }
+
+        const mainCoinObj = this.storageService.chartMainCoinObj,
+            //coinObj = this.storageService.coinsObj[coin],
+            haveDS = this.chart.datasets.findIndex(item => item.label === coin) >= 0;
+
+        //onst mainCoinTF = mainCoinObj.history.timeFrom;
+        //const coinTF = coinObj.history.timeFrom;
+
+        if (haveDS) {
+            const prevgrI = mainCoinObj.history.chart.label[1] - mainCoinObj.history.chart.label[0],
+                currgrI = mainCoinObj.history.grByInterval;
+            if (prevgrI !== currgrI) this.setupNewZoom(coin);
+            else this.updateChartData(coin);
+        } else {
+            this.addDataset(coin);
+        }
+    }
+
+    private setupNewMain(coin: string) {}
 
     private setupNewZoom(coin: string) {
+        this.mainCoin === '';
         if (this.isStarting) return;
         //this.isZoomSwitching=true
         const labelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].labelText;
@@ -170,29 +160,6 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
         }
     }
 
-    private processHistory(coin: string) {
-        if (this.isStarting || this.chart.labels.length === 0) {
-            this.createNewChart(coin);
-            return;
-        }
-
-        const mainCoinObj = this.storageService.chartMainCoinObj,
-            //coinObj = this.storageService.coinsObj[coin],
-            haveDS = this.chart.datasets.findIndex(item => item.label === coin) >= 0;
-
-        //onst mainCoinTF = mainCoinObj.history.timeFrom;
-        //const coinTF = coinObj.history.timeFrom;
-
-        if (haveDS) {
-            const prevgrI = mainCoinObj.history.chart.label[1] - mainCoinObj.history.chart.label[0],
-                currgrI = mainCoinObj.history.grByInterval;
-            if (prevgrI !== currgrI) this.setupNewZoom(coin);
-            else this.updateChartData(coin);
-        } else {
-            this.addDataset(coin);
-        }
-    }
-
     private addDataset(coin: string, scheme: string = 'l'): void {
         let color: IColorsList;
         if (this.unusedColors.length !== 0) {
@@ -221,7 +188,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
                 newR = 0,
                 newG = 0,
                 newB = 0;
-            while (isMining && counter < 50000) {
+            while (isMining && counter < 1500000000) {
                 (newR = Math.floor(Math.random() * 255 + 1)),
                     (newG = Math.floor(Math.random() * 255 + 1)),
                     (newB = Math.floor(Math.random() * 255 + 1));
@@ -229,11 +196,10 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
                     goodColor = true;
                 usedColors.forEach(color => {
                     cdiff = coldiff(color.r, color.g, color.b, newR, newG, newB);
-                    goodColor ? (goodColor = cdiff > 400) : true;
-                    //if (goodColor) debugger;
+                    goodColor ? (goodColor = cdiff > 500) : false;
+                    counter++;
                 });
                 isMining = !goodColor;
-                counter++;
             }
             return { r: newR, g: newG, b: newB };
         }
@@ -394,6 +360,8 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     }
 
     private createNewChart(coin: string): void {
+        this.mainCoin = '';
+
         const labelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].labelText;
         const lastLabelText = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].lastLabelText;
 
@@ -472,6 +440,8 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     }
 
     ngOnChanges(): void {
+        if (this.mainCoin !== this.mainCoinForChart) this.mainCoin = this.mainCoinForChart;
+
         /* if (this.isStarting || this.chart.datasets.length === 0 || this.mainCoinForChart === '')
             return;
         this.storageService.coinsList.forEach(el => {

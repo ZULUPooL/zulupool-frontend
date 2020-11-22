@@ -18,7 +18,7 @@ import {
 export class DefaultParams {
     static readonly ADMINNAME: string = 'admin';
     static readonly GAZERNAME: string = 'observer';
-    static readonly BASECOINSWITCHTIMER: number = 900;
+    static readonly BASECOINSWITCHTIMER: number = 30;
     static readonly BLOCKSFETCHTIMER: number = 120;
     static readonly DATAUPDATETIMER: number = 20;
     static readonly LIVESTATCACHE: number = 15;
