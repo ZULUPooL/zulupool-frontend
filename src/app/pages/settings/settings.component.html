@@ -50,7 +50,7 @@
         </nz-form-label>
     </nz-form-item>
 
-    <button nz-button nzType="primary" [nzLoading]="isSubmitting">
+    <button [disabled]="isDisabled" nz-button nzType="primary" [nzLoading]="isSubmitting">
         {{ "common.save" | translate }}
     </button>
 </form>

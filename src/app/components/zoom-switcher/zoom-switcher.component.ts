@@ -28,7 +28,7 @@ export class ZoomSwitcherComponent implements OnInit {
         const type = this.storageService.currType;
         this.activeZoom = DefaultParams.ZOOM[type];
         this.zooms = DefaultParams.ZOOMSLIST[type];
-        this.zoomListReady = true;
+        this.zoomListReady = this.storageService.currentWorker === '';
         this.cangeZoom(this.activeZoom);
 
         //this.coinsListReady = false;

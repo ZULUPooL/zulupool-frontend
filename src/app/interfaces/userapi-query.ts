@@ -8,7 +8,6 @@ export interface IUserChangePasswordInitiateParams { }
 export interface IUserChangePasswordInitiateResponse { }
 export interface IUserCreateParams {}
 export interface IUserCreateResponse {} */
-
 export interface IUserResendEmailParams {
     login: string; // login Unique user identifier (up to 64 characters)
     password: string; // Password (8-64 characters length)

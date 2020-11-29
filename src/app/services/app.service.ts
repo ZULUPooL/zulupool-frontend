@@ -7,10 +7,10 @@ import { not } from 'logical-not';
 import { UserApiService } from 'api/user.api';
 import { AuthApiService } from 'api/auth.api';
 import { IUser } from 'interfaces/user';
-import { TCoinName } from 'interfaces/coin';
+//import { TCoinName } from 'interfaces/coin';
 import { StorageService } from 'services/storage.service';
 import { IPoolCoinsItem } from 'interfaces/backend-query';
-import { ERole } from 'enums/role';
+import { EUserRoles, EUsersState } from 'enums/role';
 import * as IApi from 'interfaces/userapi-query';
 
 const undefined = void 0;
@@ -32,40 +32,44 @@ export class AppService {
         this.init();
     }
 
-    authorize(sessionId: string): Observable<void> {
+    authorize(sessionId: string, isReadOnly: boolean): Observable<void> {
         return this.userApiService.userGetCredentials({ id: sessionId }).pipe(
             switchMap<IApi.IUserGetCredentialsResponse, Observable<void>>(user => {
                 this.storageService.sessionId = sessionId;
-                //                if (signIn) this.storageService.currentUser = user.name;
-
+                this.storageService.isReadOnly = isReadOnly;
+                //const state = isReadOnly ? EUsersState.ReadOnly : EUsersState.Regular;
                 return this.userApiService.userEnumerateAll({ id: sessionId }).pipe(
                     map(({ users }) => {
-                        const su =
+                        const superUser =
                             users
                                 .map(el => el.name)
                                 .filter(el => el === 'admin' || el === 'observer').length > 0;
-                        if (su) {
+                        if (superUser) {
+                            this.storageService.userType = 'admin';
                             userStore.next({
-                                role: ERole.SuperUser,
+                                role: EUserRoles.Admin,
+                                //state,
                                 users,
                                 ...user,
                             });
                             this.setUpTargetLogin(users);
                         } else {
+                            this.storageService.userType = 'manger';
                             userStore.next({
-                                role: ERole.User,
+                                role: EUserRoles.User,
+                                //state,
                                 ...user,
                             });
                         }
                     }),
                     catchError(() => {
+                        this.storageService.userType = 'user';
                         userStore.next({
-                            role: ERole.User,
+                            role: EUserRoles.User,
+                            //state,
                             ...user,
                         });
-
-                        this.storageService.targetLogin = null;
-
+                        this.storageService.targetUser = null;
                         return of(void 0);
                     }),
                 );
@@ -96,13 +100,14 @@ export class AppService {
 
     private init(): void {
         const initialSessionId = this.storageService.sessionId;
+        const isReadOnly = this.storageService.isReadOnly;
 
         if (not(initialSessionId)) {
             userStore.next(null);
 
             this.isReady.next(true);
         } else {
-            this.authorize(initialSessionId)
+            this.authorize(initialSessionId, isReadOnly)
                 .pipe(
                     finalize(() => {
                         this.isReady.next(true);
@@ -113,22 +118,21 @@ export class AppService {
     }
 
     private setUpTargetLogin(users: IUser[]): void {
-        const { targetLogin } = this.storageService;
+        const { targetUser } = this.storageService;
 
-        if (targetLogin && users.some(user => user.login === targetLogin)) {
+        if (targetUser && users.some(user => user.login === targetUser)) {
             return;
         }
 
         if (users.length > 0) {
-            this.storageService.targetLogin = users[0].login;
+            this.storageService.targetUser = users[0].login;
         }
     }
 
     private reset(): void {
-        this.storageService.resetChartsData = null;
         this.storageService.sessionId = null;
-        this.storageService.targetLogin = null;
-
+        this.storageService.isReadOnly = null;
+        this.storageService.targetUser = null;
         userStore.next(null);
     }
 }

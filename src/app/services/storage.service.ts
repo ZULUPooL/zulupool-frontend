@@ -10,6 +10,8 @@ export class StorageService {
     private localTimeD = DefaultParams.LOCALTIMEDELTA;
     private coin: string = '';
     private user: string = '';
+    private targetLogin: string = '';
+    private userMode: string = 'user';
     private worker: string = '';
     private type: string = DefaultParams.DEFAULTTYPE;
     private coinList: string[] = [];
@@ -53,24 +55,19 @@ export class StorageService {
         else return {} as ICoinParams;
     }
 
-    set resetChartsData(data: boolean) {
-        if (data) {
-            //this.currentUser = null;
-            //this.currentWorker = null;
-            //this.currCoin = null;
-            //this.currType = null;
-            //this.currZoom = DefaultParams.ZOOM[this.type];
-            //this.coinsList = null;
-            //this.coinsObj = null;
-        }
-    }
-
     get currentUser(): string {
         return this.user;
     }
     set currentUser(user: string) {
         if (user) this.user = user;
         else this.coin = '';
+    }
+    get userType(): string {
+        return this.userMode;
+    }
+    set userType(user: string) {
+        if (user) this.userMode = user;
+        else this.userMode = 'user';
     }
     get currentWorker(): string {
         return this.worker;
@@ -137,6 +134,15 @@ export class StorageService {
         else this.coinsData = {} as ICoinsData;
     }
 
+    get isReadOnly(): boolean {
+        return Boolean(window.localStorage.getItem('isReadOnly')) || false;
+    }
+
+    set isReadOnly(isReadOnly: boolean | null) {
+        if (isReadOnly) window.localStorage.setItem('isReadOnly', 'true');
+        else window.localStorage.removeItem('isReadOnly');
+    }
+
     get sessionId(): string | null {
         return window.localStorage.getItem('sessionId') || null;
     }
@@ -145,7 +151,7 @@ export class StorageService {
         if (sessionId) window.localStorage.setItem('sessionId', sessionId);
         else window.localStorage.removeItem('sessionId');
     }
-
+    /*
     get targetLogin(): string | null {
         return window.localStorage.getItem('targetLogin') || null;
     }
@@ -153,6 +159,14 @@ export class StorageService {
     set targetLogin(targetLogin: string | null) {
         if (targetLogin) window.localStorage.setItem('targetLogin', targetLogin);
         else window.localStorage.removeItem('targetLogin');
+    }*/
+    get targetUser(): string | null {
+        return this.targetLogin || null;
+    }
+
+    set targetUser(targetUser: string | null) {
+        if (targetUser) this.targetLogin = targetUser;
+        else this.targetLogin = null;
     }
 
     ///////////////////TODO//////////////////////////////////////TODO///////////////////

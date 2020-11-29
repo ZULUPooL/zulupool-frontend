@@ -9,6 +9,7 @@
             >
                 <li
                     *ngIf="hasAccess(item.access) | async"
+                    [nzDisabled]="isDisabled(item.ROaccess)"
                     class="nav-item"
                     nz-menu-item
                     nz-tooltip
@@ -61,6 +62,7 @@
                     <nz-dropdown-menu #menu="nzDropdownMenu">
                         <ul nz-menu>
                             <li
+                                [nzDisabled]="true"
                                 nz-menu-item
                                 (click)="showChangePasswordModal()"
                             >
@@ -82,7 +84,7 @@
             </div>
         </nz-header>
 
-        <nz-content>
+        <nz-content style="padding: 6px 6px;">
             <router-outlet></router-outlet>
         </nz-content>
 
@@ -97,9 +99,10 @@
     [nzClosable]="false"
     (nzOnClose)="showMobileNavMenu = false"
 >
-    <div class="nav-menu-mobile-container">
-        <ul nz-menu nzMode="inline" nzTheme="dark">
-            <ng-template
+<div class="nav-menu-mobile-container">
+    <ul nz-menu nzMode="inline" nzTheme="dark" >
+        <button nz-button nzType="link">{{ username }}</button>
+        <ng-template
                 ngFor
                 let-item
                 [ngForOf]="navigationItems"
@@ -107,6 +110,7 @@
             >
                 <li
                     *ngIf="hasAccess(item.access) | async"
+                    [nzDisabled]="isDisabled(item.ROaccess)"
                     nz-menu-item
                     [nzSelected]="item.route === currentRoute"
                 >
@@ -117,10 +121,14 @@
                 </li>
             </ng-template>
         </ul>
-
-        <button nz-button (click)="logOut()">
-            {{ "components.userLayout.menu.logOut" | translate }}
-        </button>
+        <div>
+            <button nz-button nzType="link" disabled="true" (click)="showChangePasswordModal()">
+                    {{ "components.userLayout.menu.changePassword" | translate }}
+            </button>
+            <button nz-button nzType="link" (click)="logOut()">
+                    {{ "components.userLayout.menu.logOut" | translate }}
+            </button>
+        </div>
     </div>
 </nz-drawer>
 

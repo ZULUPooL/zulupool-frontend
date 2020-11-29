@@ -8,6 +8,8 @@ import { AppService } from 'services/app.service';
 import { ESuffix } from 'pipes/suffixify.pipe';
 import { ETime } from 'enums/time';
 import { StorageService } from 'services/storage.service';
+import { DefaultParams } from 'components/defaults.component';
+import { FetchPoolDataService } from 'services/fetchdata.service';
 
 @Component({
     selector: 'app-history',
@@ -28,10 +30,13 @@ export class HistoryComponent implements OnInit {
         private backendQueryApiService: BackendQueryApiService,
         private appService: AppService,
         private storageService: StorageService,
+        private fetchPoolDataService: FetchPoolDataService,
     ) {}
 
     ngOnInit(): void {
-        this.getCoinsList();
+        this.storageService.currType = 'history';
+        this.fetchPoolDataService.coins({ coin: '', type: 'history', forceUpdate: true });
+        //this.getCoinsList();
         /*this.backendQueryApiService
             .getUserBalance()
             .subscribe(({ balances }) => {
@@ -44,7 +49,7 @@ export class HistoryComponent implements OnInit {
                 }
             });*/
     }
-
+    /*
     private getCoinsList(): void {
         this.backendQueryApiService.getPoolCoins().subscribe(({ coins }) => {
             if (coins.length >= 2) {
@@ -63,7 +68,7 @@ export class HistoryComponent implements OnInit {
             }
         });
     }
-
+*/
     public onCurrentCoinChange(coin: TCoinName): void {
         this.currentCoin = coin;
         const groupByInterval = ETime.Day;

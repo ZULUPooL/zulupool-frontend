@@ -31,6 +31,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
 
     chart: IChartSettings;
     private mainCoin: string = '';
+    private currWorker: string = '';
     private usedColors: IColorsList[];
     private unusedColors: IColorsList[];
     private isStarting: boolean = true;
@@ -91,7 +92,13 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
         );
     }
     private processHistory(coin: string) {
-        if (this.isStarting || this.chart.labels.length === 0 || this.mainCoin === coin) {
+        if (
+            this.isStarting ||
+            this.chart.labels.length === 0 ||
+            this.mainCoin === coin ||
+            this.currWorker !== this.storageService.currentWorker
+        ) {
+            this.currWorker = this.storageService.currentWorker;
             this.createNewChart(coin);
             return;
         }

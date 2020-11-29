@@ -69,7 +69,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     private historyFetcherTimeoutId: number;
     private blocksFetcherTimeoutId: number;
     private changeMainChartCoinTimeoutId: number;
-
+    private isStarting: boolean;
     constructor(
         private zoomSwitchService: ZoomSwitchService,
         private fetchPoolDataService: FetchPoolDataService,
@@ -84,19 +84,22 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
                 if (zoom !== '') this.processZoomChange(zoom);
             }),
             this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
-                if (data.status && data.type === 'pool') this.processCoins();
+                if (data.status && data.type === this.storageService.currType) this.processCoins();
             }),
             this.fetchPoolDataService.apiGetLiveStat.subscribe(data => {
-                if (data.status && data.type === 'pool') this.processLive(data.coin);
+                if (data.status && data.type === this.storageService.currType)
+                    this.processLive(data.coin);
             }),
             this.fetchPoolDataService.apiGetBlocks.subscribe(data => {
-                if (data.status && data.type === 'pool') this.processBlocks(data.coin);
+                if (data.status && data.type === this.storageService.currType)
+                    this.processBlocks(data.coin);
             }),
         ];
     }
 
     ngOnInit(): void {
-        this.storageService.resetChartsData = true;
+        this.isStarting = true;
+        //this.storageService.resetChartsData = true;
         this.storageService.currType = DefaultParams.REQTYPE.POOL;
         this.blocks = [];
         this.subs();
@@ -105,11 +108,11 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         //this.blocksFetch();
     }
     ngOnDestroy(): void {
-        this.storageService.resetChartsData = true;
+        //this.storageService.resetChartsData = true;
         clearTimeout(this.historyFetcherTimeoutId);
         clearTimeout(this.changeMainChartCoinTimeoutId);
         clearTimeout(this.blocksFetcherTimeoutId);
-        this.subscrip.forEach(el => el.unsubscribe);
+        this.subscrip.forEach(el => el.unsubscribe());
     }
 
     onBlockClick(block: IBlockItem): void {
@@ -142,7 +145,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         if (zoom === null) debugger;
         if (zoom === undefined) debugger;
         if (zoom === '') debugger;
-        if (this.storageService.coinsList.length === 0) return;
+        if (this.storageService.coinsList.length === 0 || this.isStarting) return;
         const coinsObj = this.storageService.coinsObj;
         const mainCoinObj = this.storageService.chartMainCoinObj,
             currTime = mainCoinObj.history.chart.label[mainCoinObj.history.chart.label.length - 1],
@@ -182,7 +185,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
             coinsObj[item].is.chartMain = false;
             coinsObj[item].is.chartRefresh = false;
         });
-        this.isLiveLoading = true;
+        //this.isLiveLoading = true;
 
         this.fetchPoolDataService.live({ coin: activeCoin, type: 'pool' });
     }
@@ -192,11 +195,11 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
             this.storageService.coinsList.length > 2 ? this.storageService.coinsList.length - 1 : 0;
         this.mainChartCoin = this.storageService.coinsList[coinI];
         //this.getLiveInfo();
-
         this.historyFetcher();
         this.blocksFetch();
     }
     private processLive(coin: string) {
+        if (this.isStarting) this.isStarting = false;
         this.isLiveLoading = false;
         this.getHistoryInfo(coin);
         const coinObj = this.storageService.coinsObj[coin];

@@ -52,7 +52,7 @@
             <thead>
                 <tr>
                     <th style="padding: 3px 4px 0px; text-align: center;">
-                        {{ "common.dictionary.worker" | translate }}
+                        {{ "common.dictionary.workers" | translate }}
                     </th>
                     <th style="padding: 3px 4px 0px; text-align: center;">
                         {{ "common.dictionary.shareRate" | translate }}
@@ -119,7 +119,7 @@
                     </td>
                 </tr>
                 <tr style="padding: 3px 4px 0px; text-align: center;">
-                    <button nz-button nzType="primary" [nzLoading]="isSending" (click)="manualPayout()">
+                    <button [disabled]="isPayBttnActive" nz-button nzType="primary" [nzLoading]="isSending" (click)="manualPayout()">
                         {{ "payouts.manualPayoutButton" | translate }}
                     </button>
                 </tr>
@@ -149,7 +149,7 @@
     -->
     </div>
 
-    <app-chart class="coin-chart"  [mainCoinForChart]="mainChartCoin"></app-chart>
+    <app-chart class="coin-chart"  [mainCoinForChart]="mainChartCoin" ></app-chart>
 
 <!--
     <app-chart-power  class="chart" [stats]="userStatsHistory.stats" [powerMultLog10]="userStatsHistory.powerMultLog10" [chartName]="userStatsHistory.coin">
@@ -161,7 +161,7 @@
         <tr>
             <th nzWidth="1px"></th>
             <th>
-                {{ "common.dictionary.workers" | translate }}
+                {{ "common.dictionary.worker" | translate }}
             </th>
             <th>
                 {{ "common.dictionary.shareRate" | translate }}
@@ -257,3 +257,11 @@
     <app-chart-power [stats]="userWorkersStatsHistory.stats" [chartName]="userWorkersStatsHistory.coin"
         [powerMultLog10]="userWorkersStatsHistory.powerMultLog10"></app-chart-power>
 </nz-modal>  -->
+ 
+
+
+<nz-modal nzWidth="100%" [nzVisible]="workerDataReady" [nzTitle]="workerData?.name"
+    [nzFooter]="null" (nzOnCancel)="clearWorker()">
+    <app-chart class="coin-chart" [mainCoinForChart]="mainChartCoin" ></app-chart>
+</nz-modal>
+

@@ -1,5 +1,5 @@
-import { ERole } from "enums/role";
-import { TCoinName } from "interfaces/coin";
+import { EUserRoles } from 'enums/role';
+import { TCoinName } from 'interfaces/coin';
 
 export interface IUser {
     login?: string;
@@ -10,7 +10,7 @@ export interface IUser {
     shareRate?: number;
     power?: number;
     lastShareTime?: number;
-    role: ERole;
+    role: EUserRoles;
     users?: IUser[];
 }
 
@@ -23,7 +23,7 @@ export interface IUserInfo {
     shareRate: number;
     power: number;
     lastShareTime: number;
-    role: ERole;
+    role: EUserRoles;
     type?: number;
 }
 

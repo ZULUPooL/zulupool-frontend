@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Validators } from '@angular/forms';
+import { StorageService } from 'services/storage.service';
 
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -14,7 +15,7 @@ import { toValueArray } from 'tools/enum';
 import { hasValue } from 'tools/has-value';
 import { AppService } from 'services/app.service';
 import { routeToUrl } from 'tools/route-to-url';
-import { ERole } from 'enums/role';
+import { EUserRoles, EUsersState } from 'enums/role';
 import { RoleAccessService } from 'services/role-access.service';
 import { FormService } from 'services/form.service';
 import { UserApiService, IUserChangePassword } from 'api/user.api';
@@ -33,39 +34,50 @@ export class UserLayoutComponent extends SubscribableComponent implements OnInit
             route: EAppRoutes.Monitoring,
             title: 'components.userLayout.nav.monitoring',
             icon: 'fund-projection-screen',
+            access: EUserRoles.User,
+            ROaccess: true,
         },
         {
             route: EAppRoutes.History,
             title: 'components.userLayout.nav.history',
             icon: 'history',
+            access: EUserRoles.User,
+            ROaccess: true,
         },
         {
             route: EAppRoutes.Payouts,
             title: 'components.userLayout.nav.payouts',
             icon: 'wallet',
+            access: EUserRoles.User,
+            ROaccess: true,
         },
         {
             route: EAppRoutes.Settings,
             title: 'components.userLayout.nav.settings',
             icon: 'setting',
+            access: EUserRoles.User,
+            ROaccess: false,
         },
         {
             route: EAppRoutes.Users,
             title: 'components.userLayout.nav.users',
             icon: 'user',
-            access: ERole.SuperUser,
+            access: EUserRoles.Admin,
+            ROaccess: true,
         },
         {
             route: EAppRoutes.CreateUser,
             title: 'components.userLayout.nav.createuser',
             icon: 'user-add',
-            access: ERole.SuperUser,
+            access: EUserRoles.Admin,
+            ROaccess: false,
         },
         {
-            route: EAppRoutes.CreateUser,
+            route: EAppRoutes.ProfitSettings,
             title: 'components.userLayout.nav.profitswitch',
             icon: 'pull-request',
-            access: ERole.SuperUser,
+            access: EUserRoles.Admin,
+            ROaccess: false,
         },
     ]);
 
@@ -101,6 +113,7 @@ export class UserLayoutComponent extends SubscribableComponent implements OnInit
         private appService: AppService,
         private roleAccessService: RoleAccessService,
         private userApiService: UserApiService,
+        private storageService: StorageService,
     ) {
         super();
     }
@@ -150,7 +163,11 @@ export class UserLayoutComponent extends SubscribableComponent implements OnInit
         });
     }
 
-    hasAccess(role: ERole): Observable<boolean> {
+    isDisabled(item: boolean): boolean {
+        return !(!this.storageService.isReadOnly || item);
+    }
+
+    hasAccess(role: EUserRoles): Observable<boolean> {
         return this.roleAccessService.hasAccess(role);
     }
 

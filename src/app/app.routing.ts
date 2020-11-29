@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { EAppRoutes, EActionsRoutes } from 'enums/routing';
-import { ERole } from 'enums/role';
+import { EUserRoles, EUsersState } from 'enums/role';
 
 import { AuthGuard } from 'guards/auth.guard';
 import { RoleAccessGuard } from 'guards/role-access.guard';
@@ -23,6 +23,7 @@ import { PayoutsComponent } from 'pages/payouts/payouts.component';
 import { SettingsComponent } from 'pages/settings/settings.component';
 import { CreateUserComponent } from 'pages/createuser/createuser.component';
 import { LandingComponent } from 'pages/landing/landing.component';
+import { ProfitSettingsComponent } from 'pages/profit-settings/profit-settings.component';
 
 const routes: Routes = [
     {
@@ -73,53 +74,65 @@ const routes: Routes = [
                 path: EAppRoutes.Monitoring,
                 component: MonitoringComponent,
                 data: {
-                    permission: [
-                        ERole.SuperUser,
-                        ERole.Observer,
-                        ERole.ReadOnlyUser,
-                        ERole.User,
-                        ERole.PPDAUser,
-                    ],
+                    accessFor: EUserRoles.User,
+                    disabledFor: 'none',
                 },
             },
             {
                 path: EAppRoutes.History,
                 component: HistoryComponent,
                 data: {
-                    permission: [
-                        ERole.SuperUser,
-                        ERole.Observer,
-                        ERole.ReadOnlyUser,
-                        ERole.User,
-                        ERole.PPDAUser,
-                    ],
+                    accessFor: EUserRoles.User,
+                    disabledFor: 'none',
+                },
+            },
+            {
+                path: EAppRoutes.Payouts,
+                component: PayoutsComponent,
+                data: {
+                    accessFor: EUserRoles.User,
+                    disabledFor: 'none',
+                },
+            },
+            {
+                path: EAppRoutes.Settings,
+                component: SettingsComponent,
+                data: {
+                    accessFor: EUserRoles.User,
+                    disabledFor: EUsersState.ReadOnly,
                 },
             },
             {
                 path: EAppRoutes.Users,
                 component: UsersComponent,
                 data: {
-                    permission: ERole.SuperUser,
+                    accessFor: EUserRoles.Admin,
+                    disabledFor: EUsersState.ReadOnly,
                 },
-            },
-            {
-                path: EAppRoutes.Payouts,
-                component: PayoutsComponent,
-            },
-            {
-                path: EAppRoutes.Settings,
-                component: SettingsComponent,
             },
             {
                 path: EAppRoutes.CreateUser,
                 component: CreateUserComponent,
                 data: {
-                    permission: ERole.SuperUser,
+                    accessFor: EUserRoles.Admin,
+                    disabledFor: EUsersState.ReadOnly,
+                },
+            },
+            {
+                path: EAppRoutes.ProfitSettings,
+                component: ProfitSettingsComponent,
+                data: {
+                    accessFor: EUserRoles.Admin,
+                    disabledFor: EUsersState.ReadOnly,
                 },
             },
             {
                 path: '**',
                 component: PageNotFoundComponent,
+                data: {
+                    accessFor: EUserRoles.User,
+                    disabledFor: 'none',
+                },
             },
         ],
         canActivate: [AuthGuard, RoleAccessGuard],

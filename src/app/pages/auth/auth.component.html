@@ -2,6 +2,7 @@
 
 <nz-tabset nzLinkRouter>
     <nz-tab>
+        
         <a
             nz-tab-link
             [routerLink]="['.']"
@@ -60,7 +61,7 @@
             </nz-form-item>
         </form>
     </nz-tab>
-    <nz-tab>
+    <nz-tab >
         <a
             nz-tab-link
             [routerLink]="['.']"
@@ -123,14 +124,14 @@
                         nz-button
                         nzType="primary"
                         [nzLoading]="submitting"
-                    >
+                    > 
                         {{ "auth.signUp.form.submitButton" | translate }}
                     </button>
                 </nz-form-control>
             </nz-form-item>
         </form>
     </nz-tab>
-    <nz-tab>
+    <nz-tab nzDisabled="true">
         <a
             nz-tab-link
             [routerLink]="['.']"
@@ -165,6 +166,7 @@
                         nzType="primary"
                         [nzLoading]="submitting"
                     >
+                    
                         {{ "auth.signIn.form.changePasswordInitiateButton" | translate }}
                     </button>
                 </nz-form-control>

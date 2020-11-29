@@ -1,9 +1,9 @@
-<nz-table nzTemplateMode nzBordered [nzShowPagination]="false">
+
+<nz-table class="header-block" nzBordered nzTemplateMode [nzShowPagination]="false">
     <thead>
-        <tr>
+        <tr >
             <th>
-                {{ "common.login" | translate }} /
-                {{ "common.name" | translate }}
+                {{ "common.login" | translate }}<br>{{ "common.name" | translate }}
             </th>
             <th>{{ "common.email" | translate }}</th>
             <th>{{ "common.registrationDate" | translate }}</th>
@@ -18,13 +18,14 @@
             *ngFor="let user of users"
             [class._selected]="user.name === targetLogin"
             (click)="onUserClick(user)"
+            
         >
-            <td>{{ user.login }}/{{ user.name }}</td>
+            <td>{{ user.login }}<br>{{ user.name }}</td>
             <td>{{ user.email }}</td>
             <td>
                 {{
                     user.registrationDate * 1000
-                        | date: "HH:mm:ss dd MMM yyyy"
+                        | date: "dd.MM.yy HH:mm"
                         | async
                 }}
             </td>
@@ -39,12 +40,12 @@
                 }}
             </td>
             <td>
-                {{
-                    user.lastShareTime * 1000
-                        | date: "HH:mm:ss dd MMM yyyy"
-                        | async
-                }}
+                {{ user.lastShareTime | ago | async }}
             </td>
         </tr>
     </tbody>
 </nz-table>
+
+
+
+

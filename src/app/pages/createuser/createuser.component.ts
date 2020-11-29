@@ -4,6 +4,8 @@ import { UserApiService } from 'api/user.api';
 import { IUserCreateByAdminParams } from 'interfaces/userapi-query';
 import { FormService } from 'services/form.service';
 import { Validators } from '@angular/forms';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-createuser',
@@ -60,9 +62,11 @@ export class CreateUserComponent implements OnInit {
     isSubmitting = false;
 
     constructor(
-        private formBuilder: FormBuilder,
+        //private formBuilder: FormBuilder,
         private userApiService: UserApiService,
         private formService: FormService,
+        private translateService: TranslateService,
+        private nzModalService: NzModalService,
     ) {
         this.addUserForm.formData.controls['password'].setValue(this.generatePassword());
         this.addUserForm.formData.controls['isActive'].setValue(true);
@@ -72,7 +76,7 @@ export class CreateUserComponent implements OnInit {
     private generatePassword(): string {
         var buf = new Uint8Array(19);
         window.crypto.getRandomValues(buf);
-        return btoa(String.fromCharCode.apply(null, buf)).slice(0, -1);
+        return btoa(String.fromCharCode.apply(null, buf)).slice(0, -2);
     }
     genPWD() {
         this.addUserForm.formData.controls['password'].setValue(this.generatePassword());
@@ -86,6 +90,11 @@ export class CreateUserComponent implements OnInit {
 
         this.userApiService.createUser(params as any).subscribe(
             () => {
+                this.nzModalService.success({
+                    nzContent: this.translateService.instant('createuser.form.success'),
+                    nzOkText: this.translateService.instant('common.ok'),
+                });
+                this.genPWD();
                 this.isSubmitting = false;
             },
             err => {

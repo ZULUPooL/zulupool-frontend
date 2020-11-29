@@ -32,7 +32,7 @@ export class CoinSwitcherComponent implements OnInit {
     ngOnInit(): void {
         this.coinsListLoading = false;
         this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
-            if (data.status && data.type !== '') this.processCoins(data);
+            if (data.status && data.type === this.storageService.currType) this.processCoins(data);
         });
 
         //this.fetchPoolDataService.getCoinsData.subscribe(data => {
@@ -70,7 +70,7 @@ export class CoinSwitcherComponent implements OnInit {
             coinObjIs.worker = data.type === 'worker';
         }
 
-        this.coinsListLoading = true;
+        this.coinsListLoading = this.coins.length > 1;
         this.cangeCoin(this.coin);
 
         //this.mainChartCoin = coin;

@@ -83,7 +83,7 @@
     "auth.tabs.lostPassword": "Забыл пароль",
     "auth.signIn.form.changePasswordInitiateButton": "Получить ссылку",
     "auth.signIn.form.submitButton": "Войти",
-    "auth.signIn.success": "Регистрация прошла успешно. На вашу почту было выслано письмо для активации учетной записи",
+    "auth.signUp.success": "Регистрация прошла успешно. На вашу почту было выслано письмо для активации учетной записи",
     "auth.signUp.form.submitButton": "Создать пользователя",
     "userResendEmail.submitButton": "Выслать письмо",
     "userResendEmail.success": "На указанную вами почту отправлено письмо",
@@ -97,7 +97,10 @@
     "settings.form.address": "Адрес",
     "settings.form.payoutThreshold": "Мин. платёж",
     "settings.form.autoPayoutEnabled": "Автовыплаты",
+    "settings.form.success":"Данные для {{coinName}} успешно сохранены",
+    "settings.form.profitSwitchCoeff":"Коэффициент доходности",
     "createuser.form.isUserActive": "Пользователь активирован",
     "createuser.form.isUserReadOnly": "Read-only пользователь",
-    "createuser.form.addUser": "Create user"
+    "createuser.form.addUser": "Создать",
+    "createuser.form.success": "Пользователь успешно создан"
 }

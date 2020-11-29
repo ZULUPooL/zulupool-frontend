@@ -58,7 +58,7 @@ export class AuthComponent {
             },
         },
         {
-            onSubmit: () => this.onSignIn(),
+            onSubmit: () => this.onLostPassword(),
         },
     );
 
@@ -88,11 +88,18 @@ export class AuthComponent {
             },
         },
         {
-            onSubmit: () => this.onLostPassword(),
+            onSubmit: () => this.onSignUp(),
         },
     );
 
     submitting = false;
+    private lostPassword: boolean;
+    setLostPassword() {
+        this.lostPassword = !this.lostPassword || true;
+    }
+    get isLostPassword() {
+        return this.lostPassword;
+    }
 
     constructor(
         private formService: FormService,
@@ -111,8 +118,8 @@ export class AuthComponent {
         const params = this.signInForm.formData.value as IAuthSignInParams;
 
         this.authApiService.sigIn(params).subscribe(
-            ({ sessionid }) => {
-                this.appService.authorize(sessionid).subscribe(
+            ({ sessionid, isReadOnly }) => {
+                this.appService.authorize(sessionid, isReadOnly).subscribe(
                     () => {
                         const target =
                             (this.activatedRoute.snapshot.queryParams.to as string) ||
@@ -144,7 +151,7 @@ export class AuthComponent {
         this.authApiService.signUp(params).subscribe(
             () => {
                 this.nzModalService.success({
-                    nzContent: this.translateService.instant('auth.signIn.success'),
+                    nzContent: this.translateService.instant('auth.signUp.success'),
                     nzOkText: this.translateService.instant('common.ok'),
                 });
 

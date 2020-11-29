@@ -1,4 +1,3 @@
-import { Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {
     IPoolCoinsItem,
@@ -6,70 +5,38 @@ import {
     IWorkerStatsItem,
     IFoundBlock,
     IPoolHistoryInfo,
-    IPoolStatsHistoryItem,
     IUserHistoryInfo,
     IWorkerHistoryInfo,
     IUserBalanceItem,
     IUserStatsItem,
     IUserStats,
     IHistoryItem,
-    //IGetFoundBlocksParams,
-    IUserStatsHistoryItem,
-    IWorkerStatsHistoryItem,
-    //IHistorySettings,
-    //ILiveStatSettings,
-    //ILiveData,
 } from 'interfaces/backend-query';
 
 import { DefaultParams } from 'components/defaults.component';
 
-import {
-    IGetUserStatsResponse,
-    IGetFoundBlocksParams,
-    IGetPoolStatsHistoryParams,
-    IGetPoolStatsParams,
-    IGetUserStatsHistoryParams,
-    IGetUserStatsParams,
-    IGetWorkerStatsHistoryParams,
-    IGetUserBalanceParams,
-} from 'api/backend-query.api';
+import { IGetFoundBlocksParams, IGetUserBalanceParams } from 'api/backend-query.api';
 
 import { TCoinName } from 'interfaces/coin';
 import { Injectable } from '@angular/core';
 
 import {
     ICoinParams,
-    IHistoryItem2,
-    //    ILiveStatPool,
-    //IHistoryItem2,
-    //IBlockItem,
     ICoinItem,
-    //IZoomParams,
-    //ILiveStat,
-    //IBlocks,
     ISendLiveStat,
-    ISendHistoryStat,
-    //    ILiveStatUser, ILiveStatWorker,
     IFetchResponce,
     IHistoryResp,
     IFetchParams,
-    ICoinsData,
     ILiveStatCommon,
 } from 'interfaces/common';
 
 import { StorageService } from 'services/storage.service';
-import {
-    BackendQueryApiService,
-    IGetPoolStatsResponse,
-    //GetUHistory,
-} from 'api/backend-query.api';
+import { BackendQueryApiService } from 'api/backend-query.api';
 
 @Injectable({
     providedIn: 'root',
 })
 export class FetchPoolDataService {
-    //@Output()
-
     private defResponse = <IFetchResponce>DefaultParams.FETCHRESPONCE;
 
     private listOfCoinsLoaded = this.defResponse;
@@ -95,11 +62,6 @@ export class FetchPoolDataService {
 
     private coinsList = <IPoolCoinsItem[]>[];
 
-    //private coinsData = <IDataCoins>{};
-    //private liveData = <IDataLive>{};
-    //private blocksData = <IDataBlocks>{};
-    //private historyData = <IDataHistory>{};
-
     private coinStat = <IPoolStatsItem>{};
     private coinBlocks = <IFoundBlock[]>[];
 
@@ -107,8 +69,6 @@ export class FetchPoolDataService {
     private uStatsHist = <IUserHistoryInfo>{};
     private uWStatsHist = <IWorkerHistoryInfo>{};
     private uBalances = <IUserBalanceItem[]>[];
-
-    //private uBlocks = <IFoundBlock[]>[];
 
     getBloksData = new BehaviorSubject<IDataBlocks>(<IDataBlocks>{});
     getCoinsData = new BehaviorSubject<IDataCoins>(<IDataCoins>{});
@@ -147,18 +107,17 @@ export class FetchPoolDataService {
 
         function sort(coins: IPoolCoinsItem[]): void {
             let algo = true;
-            //newList = [] as ICoinItem[];
             const ts = getTs();
             coins.forEach(coin => {
-                addCoinToList(coin, coin.name === 'BTC', coins.length);
+                addCoinToList(coin, coin.name === 'BTC');
                 algo ? algo && coins[0].algorithm === coin.algorithm : true;
             });
-            if (algo) {
+            if (algo && coins.length !== 1) {
                 const a = coins[0].algorithm;
-                addCoinToList({ name: a, fullName: a, algorithm: a }, false, coins.length);
+                addCoinToList({ name: a, fullName: a, algorithm: a }, false);
             }
 
-            function addCoinToList(coin: ICoinItem, isBtc: boolean = false, length: number): void {
+            function addCoinToList(coin: ICoinItem, isBtc: boolean = false): void {
                 const isAlgo = coin.name === coin.algorithm;
                 let isSpliName = false;
                 if (coin.name.split('.').length > 1) {

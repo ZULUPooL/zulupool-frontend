@@ -8,25 +8,24 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-settings',
-    templateUrl: './settings.component.html',
-    styleUrls: ['./settings.component.less'],
+    selector: 'app-profit-settings',
+    templateUrl: './profit-settings.component.html',
+    styleUrls: ['./profit-settings.component.less'],
 })
-export class SettingsComponent implements OnInit {
-    settingsItems: IUserSettings[];
+export class ProfitSettingsComponent implements OnInit {
+    profitItems: IProfitSett[];
     selectedIndex: number;
     currentCoin: TCoinName;
     isStarting: boolean;
     form = this.formBuilder.group({
-        address: [],
-        payoutThreshold: [],
-        autoPayoutEnabled: [],
-    } as Record<keyof IUserSettings, any>);
+        profitSwitchCoeff: [],
+    });
     isSubmitting = false;
+
     private disabledCoin: string;
 
     get isDisabled(): boolean {
-        return this.currentCoin === this.disabledCoin;
+        return this.currentCoin === this.disabledCoin || this.currentCoin === 'HTR';
     }
 
     constructor(
@@ -44,28 +43,35 @@ export class SettingsComponent implements OnInit {
     onCurrentCoinChange(coin: TCoinName): void {
         if (this.isStarting) return;
         this.currentCoin = coin;
-        let index = this.settingsItems.findIndex(el => el.name === coin);
-        this.form.patchValue(this.settingsItems[index]);
+        let index = this.profitItems.findIndex(el => el.name === coin);
+        this.form.patchValue(this.profitItems[index]);
     }
 
     changeCoin(): void {
-        this.form.patchValue(this.settingsItems[this.selectedIndex]);
+        this.form.patchValue(this.profitItems[this.selectedIndex]);
     }
 
     save(): void {
         if (this.form.value.payoutThreshold === null || this.form.value.address === null) return;
         this.isSubmitting = true;
 
-        const index = this.settingsItems.findIndex(el => el.name === this.currentCoin);
-        let coinName = this.settingsItems[index].name;
+        const index = this.profitItems.findIndex(el => el.name === this.currentCoin);
+        let coinName = this.profitItems[index].name;
         const coinObj = this.storageService.coinsObj[coinName];
         if (coinObj.is.nameSplitted) coinName = coinObj.info.name + '.' + coinObj.info.algorithm;
+        const value = this.form.value.profitSwitchCoeff;
+
+        const jsonValue = JSON.stringify(value, function (key, val) {
+            if (typeof val === 'number') return '<<<' + val.toFixed(3) + '>>>';
+            return val;
+        }).replace(/"<<<|>>>"/g, '');
+
         const data = {
-            ...this.form.value,
+            profitSwitchCoeff: jsonValue,
             coin: coinName,
         };
 
-        this.userApiService.userUpdateSettings(data).subscribe(
+        this.userApiService.updateProfitSwitchCoeff(data).subscribe(
             () => {
                 this.nzModalService.success({
                     nzContent: this.translateService.instant('settings.form.success', {
@@ -82,38 +88,40 @@ export class SettingsComponent implements OnInit {
     }
 
     private getSettings(): void {
-        this.userApiService.userGetSettings().subscribe(({ coins }) => {
-            if (coins.length > 0) {
+        this.userApiService.queryProfitSwitchCoeff().subscribe((data: IProfitSett[]) => {
+            if (data.length > 0) {
                 const coinObj = this.storageService.coinsObj;
-                if (coins.length > 2) {
+                if (data.length > 2) {
                     const algoCoin = this.storageService.coinsList.find(coin => {
                         return coinObj[coin].is.algo;
                     });
                     const algoData =
-                        coins.find(coin => {
+                        data.find(coin => {
                             return coin.name === algoCoin;
                         }) || {};
                     if (algoCoin.length > 0 && Object.keys(algoData).length === 0) {
-                        coins.push({
+                        data.push({
                             name: algoCoin,
-                            address: '',
-                            payoutThreshold: null,
-                            autoPayoutEnabled: false,
+                            profitSwitchCoeff: 0.0,
                         });
                         this.disabledCoin = algoCoin;
                     }
                 }
-                coins.forEach(coin => {
+                data.forEach(coin => {
                     if (coin.name.split('.').length > 1) {
                         coin.name = coin.name.split('.')[0];
                     }
                 });
-
-                this.settingsItems = coins;
-                this.currentCoin = coins[coins.length - 1].name;
-                this.isStarting = false;
-                this.onCurrentCoinChange(this.currentCoin);
             }
+            this.profitItems = data;
+            this.currentCoin = data[data.length - 1].name;
+            this.isStarting = false;
+            this.onCurrentCoinChange(this.currentCoin);
         });
     }
+}
+
+export interface IProfitSett {
+    name: string;
+    profitSwitchCoeff: number;
 }

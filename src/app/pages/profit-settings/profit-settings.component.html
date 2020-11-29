@@ -1,0 +1,18 @@
+
+<div class="coin-select-block">
+    <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
+</div>
+
+<form class="settings-form" nz-form nzLayout="vertical" [formGroup]="form" (submit)="save()">
+    <nz-form-item>
+        <nz-form-label nzFor="profitSwitchCoeff">
+            {{ "settings.form.profitSwitchCoeff" | translate }}
+        </nz-form-label>
+        <nz-form-control>
+            <input nz-input formControlName="profitSwitchCoeff" id="profitSwitchCoeff" />
+        </nz-form-control>
+    </nz-form-item>
+    <button [disabled]="isDisabled" nz-button nzType="primary" [nzLoading]="isSubmitting">
+        {{ "common.save" | translate }}
+    </button>
+</form>

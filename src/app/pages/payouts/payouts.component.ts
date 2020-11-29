@@ -7,6 +7,8 @@ import { IUserPayouts } from 'interfaces/backend-query';
 import { IUserSettings } from 'interfaces/user';
 import { TCoinName } from 'interfaces/coin';
 import { StorageService } from 'services/storage.service';
+import { DefaultParams } from 'components/defaults.component';
+import { FetchPoolDataService } from 'services/fetchdata.service';
 
 @Component({
     selector: 'app-payouts',
@@ -23,32 +25,27 @@ export class PayoutsComponent implements OnInit {
     isManualPayoutSending = false;
     currentCoin: TCoinName;
 
-    private explorersLinksPref = {
-        BTC: 'https://btc.com/',
-        BCH: 'https://bch.btc.com/',
-        BSV: 'https://whatsonchain.com/tx/',
-        'DGB.sha256': 'https://chainz.cryptoid.info/dgb/tx.dws?',
-        FCH: 'http://fch.world/tx/',
-        HTR: 'https://explorer.hathor.network/transaction/',
-    };
+    private explorersLinks = DefaultParams.TXLINKS;
 
     constructor(
         private userApiService: UserApiService,
         private backendQueryApiService: BackendQueryApiService,
         private backendManualApiService: BackendManualApiService,
         private storageService: StorageService,
+        private fetchPoolDataService: FetchPoolDataService,
     ) {}
 
     ngOnInit(): void {
+        this.storageService.currType = 'payouts';
+        this.fetchPoolDataService.coins({ coin: '', type: 'payouts', forceUpdate: true });
+        /*
         this.userApiService.userGetSettings().subscribe(({ coins: settings }) => {
             this.settings = settings;
-
             if (settings.length > 0) {
                 this.selectedIndex = 0;
-
                 this.onCurrentCoinChange(this.settings[0].name);
             }
-        });
+        });*/
     }
 
     onCurrentCoinChange(coin: TCoinName): void {
@@ -82,22 +79,13 @@ export class PayoutsComponent implements OnInit {
         );
     }
 
-    manualPayout(): void {
-        this.isManualPayoutSending = true;
-
-        const { name: coin } = this.settings[this.selectedIndex];
-
-        this.backendManualApiService.forcePayout({ coin }).subscribe(
-            () => {
-                this.isManualPayoutSending = false;
-            },
-            () => {
-                this.isManualPayoutSending = false;
-            },
-        );
+    truncate(fullStr) {
+        let s = { sep: '....', front: 5, back: 10 };
+        return fullStr.substr(0, s.front) + s.sep + fullStr.substr(fullStr.length - s.back);
     }
-    onTxClick(payouts: IUserPayouts): void {
-        const url = this.explorersLinksPref[this.currentCoin] + payouts.txid;
+
+    onTxClick(payout: IUserPayouts): void {
+        const url = this.explorersLinks[this.currentCoin] + payout.txid;
         window.open(url, '_system');
     }
 }

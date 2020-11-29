@@ -79,7 +79,7 @@
     "auth.tabs.lostPassword": "Lost password",
     "auth.signIn.form.changePasswordInitiateButton": "Send link",
     "auth.signIn.form.submitButton": "Login",
-    "auth.signIn.success": "Registration completed successfully. An email was sent to your mail to activate your account",
+    "auth.signUp.success": "Registration completed successfully. An email was sent to your mail to activate your account",
     "auth.signUp.form.submitButton": "Create user",
     "userResendEmail.submitButton": "Send activation e-mail",
     "userResendEmail.success": "A letter has been sent to the mail you specified",
@@ -93,7 +93,10 @@
     "settings.form.address": "Payment address",
     "settings.form.payoutThreshold": "Automatic payout threshold",
     "settings.form.autoPayoutEnabled": "Auto payout enabled",
+    "settings.form.success":"Settings for {{coinName}} successfully saved.",
+    "settings.form.profitSwitchCoeff":"Profit factor",
     "createuser.form.isUserActive": "User activated",
     "createuser.form.isUserReadOnly": "Read-only user",
-    "createuser.form.addUser": "Create user"
+    "createuser.form.addUser": "Create user",
+    "createuser.form.success": "User successfully created"
 }

@@ -39,6 +39,18 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     isBalanceDataLoading: boolean;
     isManualPayoutSending: boolean;
 
+    get isPayBttnActive(): boolean {
+        return (
+            this.storageService.isReadOnly ||
+            this.isBalanceDataLoading ||
+            this.currentBalance?.balance === '0.00' ||
+            this.currentBalance?.requested !== '0.00'
+        );
+    }
+
+    workerData: ILiveStatWorker;
+    workerDataReady: boolean = false;
+
     get activeCoinName(): string {
         return this.storageService.currCoin;
     }
@@ -64,7 +76,8 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     get isSending(): boolean {
         return this.isManualPayoutSending;
     }
-    //private fetcherTimeoutId: number;
+
+    private isStarting: boolean;
     private mainCoinApplyTimeoutId: number;
 
     private historyFetcherTimeoutId: number;
@@ -81,22 +94,24 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     }
 
     ngOnInit(): void {
+        this.isStarting = true;
         //this.storageService.resetChartsData = true;
         this.storageService.currType = DefaultParams.REQTYPE.USER;
+        this.storageService.currentWorker = '';
         this.subs();
         this.fetchPoolDataService.coins({ coin: '', type: 'user', forceUpdate: true });
 
         //this.haveBalanceData = false;
-        this.isLiveLoading = true;
+        //this.isLiveLoading = true;
         //this.isBalanceDataLoading = false;
-        this.storageService.currType = DefaultParams.REQTYPE.USER;
+        //this.storageService.currType = DefaultParams.REQTYPE.USER;
     }
 
     ngOnDestroy(): void {
         //this.storageService.resetChartsData = true;
         clearTimeout(this.historyFetcherTimeoutId);
         clearTimeout(this.mainCoinApplyTimeoutId);
-        this.subscrip.forEach(el => el.unsubscribe);
+        this.subscrip.forEach(el => el.unsubscribe());
     }
     onWorkerCurrentCoinChange(coinName: TCoinName): void {
         //TODO
@@ -117,7 +132,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     }
 
     onCurrentCoinChange(coin: string): void {
-        if (coin === null || coin === '') return;
+        /*      if (coin === null || coin === '') return;
         if (this.activeCoinName === '') this.activeCoinName = coin;
         this.storageService.coinsObj[coin].is.chartRefresh = true;
         this.setMainCoinTimer(coin);
@@ -126,7 +141,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         this.storageService.coinsObj[coin].is.liveVisible = true;
         this.activeCoinName = coin;
         this.getLiveInfo();
-
+*/
         if (coin === null || coin === '') return;
         if (this.activeCoinName === '') this.activeCoinName = coin;
         this.storageService.coinsObj[coin].is.chartRefresh = true;
@@ -143,6 +158,10 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     }
 
     onWorkerRowClick(workerId: string): void {
+        this.isStarting = true;
+        this.storageService.currType = DefaultParams.REQTYPE.WORKER;
+        this.storageService.currentWorker = workerId;
+        this.fetchPoolDataService.coins({ coin: '', type: 'worker', forceUpdate: true, workerId });
         //TODO
     }
 
@@ -158,6 +177,12 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         return EWorkerState.Normal;
     }
     clearWorker(): void {
+        this.isStarting = true;
+        this.storageService.currType = DefaultParams.REQTYPE.USER;
+        this.workerDataReady = false;
+        this.storageService.currentWorker = '';
+        this.fetchPoolDataService.coins({ coin: '', type: 'user', forceUpdate: true });
+
         //TODO
         /*
         this.userWorkersStatsHistory = {
@@ -192,7 +217,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         if (zoom === null) debugger;
         if (zoom === undefined) debugger;
         if (zoom === '') debugger;
-        if (this.storageService.coinsList.length === 0) return;
+        if (this.storageService.coinsList.length === 0 || this.isStarting) return;
         const coinsObj = this.storageService.coinsObj;
         const mainCoinObj = this.storageService.chartMainCoinObj,
             currTime = mainCoinObj.history.chart.label[mainCoinObj.history.chart.label.length - 1],
@@ -234,7 +259,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         });
         this.isLiveLoading = true;
 
-        this.fetchPoolDataService.live({ coin: activeCoin, type: 'user' });
+        this.fetchPoolDataService.live({ coin: activeCoin, type: this.storageService.currType });
     }
     /*
     private processCoins() {
@@ -290,18 +315,26 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         const list = this.storageService.coinsList.filter(coin => {
             return coinObj[coin].is.chartRefresh && !coinObj[coin].live.isLoading;
         });
+        const workerId = this.storageService.currentWorker;
         list.forEach(coin => {
             if (coinObj[coin].is.liveVisible) this.isLiveLoading = true;
-            this.fetchPoolDataService.live({ coin, type: 'user' });
+            this.fetchPoolDataService.live({ coin, type: this.storageService.currType, workerId });
         });
     }
     private processLive(coin: string) {
+        if (this.isStarting) this.isStarting = false;
         this.isLiveLoading = false;
         this.getHistoryInfo(coin);
         const coinObj = this.storageService.coinsObj[coin];
         if (!coinObj.is.liveVisible) return;
         this.liveStats = coinObj.live.data;
         this.liveStatsWorkers = this.liveStats.miners;
+        if (this.storageService.currType === 'worker') {
+            this.workerData = this.liveStatsWorkers.filter(
+                worker => worker.name === this.storageService.currentWorker,
+            )[0];
+            this.workerDataReady = true;
+        }
     }
 
     private setMainCoinTimer(coin: string, timer: number = DefaultParams.BASECOINSWITCHTIMER) {
@@ -338,7 +371,13 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
             coinsObj[item].history.grByInterval = coinsObj[mainChartCoin].history.grByInterval;
         });
         this.isLiveLoading = true;
-        this.fetchPoolDataService.live({ coin: coin, type: 'usre' });
+        const workerId = this.storageService.currentWorker;
+
+        this.fetchPoolDataService.live({
+            coin: coin,
+            type: this.storageService.currType,
+            workerId,
+        });
         this.mainChartCoin = coin;
     }
 
@@ -346,7 +385,9 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         const info = this.storageService.coinsObj[coin];
         if (info.history.isLoading || !info.is.chartRefresh) return;
         info.history.isLoading = true;
-        this.fetchPoolDataService.history({ coin, type: 'user' });
+        const workerId = this.storageService.currentWorker;
+
+        this.fetchPoolDataService.history({ coin, type: this.storageService.currType, workerId });
     }
 
     private historyFetcher(
@@ -365,13 +406,15 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
                 if (zoom !== '') this.processZoomChange(zoom);
             }),
             this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
-                if (data.status && data.type === 'user') this.processCoins();
+                if (data.status && data.type === this.storageService.currType) this.processCoins();
             }),
             this.fetchPoolDataService.apiGetLiveStat.subscribe(data => {
-                if (data.status && data.type === 'user') this.processLive(data.coin);
+                if (data.status && data.type === this.storageService.currType)
+                    this.processLive(data.coin);
             }),
             this.fetchPoolDataService.apiGetUserBalance.subscribe(data => {
-                if (data.status && data.type === 'user') this.processBalance(data.coin);
+                if (data.status && data.type === this.storageService.currType)
+                    this.processBalance(data.coin);
             }),
         ];
     }

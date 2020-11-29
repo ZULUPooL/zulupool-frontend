@@ -3,16 +3,6 @@
     <div class="coin-select-block">
         <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
     </div>
-    <!--
-    <nz-select class="coin-select" [(ngModel)]="selectedIndex" [nzLoading]="!settings"
-        (ngModelChange)="onCurrentCoinChange()">
-        <nz-option *ngFor="let item of settings; index as i" [nzLabel]="item.name" [nzValue]="i"></nz-option>
-    </nz-select> -->
-    <div>
-        <button nz-button nzType="primary" [nzLoading]="isManualPayoutSending" (click)="manualPayout()">
-            {{ "payouts.manualPayoutButton" | translate }}
-        </button>
-    </div>
 </div>
 
 <nz-table nzBordered nzTemplateMode [nzLoading]="isPayoutsLoading">
@@ -28,9 +18,9 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let payout of payouts">
+        <tr *ngFor="let payout of payouts" (click)="onTxClick(payout)">
             <td>{{ payout.time * 1000 | date: "dd MMM HH:mm" | async }}</td>
-            <td>{{ payout.txid }}</td>
+            <td>{{ truncate(payout.txid) }}</td>
             <td>{{ payout.value }}</td>
         </tr>
     </tbody>

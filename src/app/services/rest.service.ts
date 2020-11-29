@@ -1,15 +1,16 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { EAppRoutes } from "enums/routing";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { EAppRoutes, authRoute } from 'enums/routing';
+import { Router } from '@angular/router';
 
-import { Observable } from "rxjs";
-import { tap, catchError, map } from "rxjs/operators";
+import { Observable } from 'rxjs';
+import { tap, catchError, map } from 'rxjs/operators';
 
-import { StorageService } from "services/storage.service";
+import { StorageService } from 'services/storage.service';
 
-import { not } from "logical-not";
+import { not } from 'logical-not';
 
-export const OKStatus = "ok";
+export const OKStatus = 'ok';
 
 export interface IResponse {
     status?: string;
@@ -18,18 +19,19 @@ export interface IResponse {
 export class InvalidDataError extends Error {}
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class RestService {
     readonly headers: { [header: string]: string } = {
-        accept: "application/json",
-        "Content-Type": "application/json",
+        accept: 'application/json',
+        'Content-Type': 'application/json',
     };
     readonly EAppRoutes = EAppRoutes;
 
     constructor(
         private http: HttpClient,
         private storageService: StorageService,
+        private router: Router,
     ) {}
 
     post<T>(url: string, params: any = {}): Observable<T> {
@@ -41,10 +43,10 @@ export class RestService {
             delete params.id;
         }
 
-        const { targetLogin } = this.storageService;
+        const { targetUser } = this.storageService;
 
-        if (targetLogin) {
-            params.targetLogin = targetLogin;
+        if (targetUser && tmpUrl !== '/backendUpdateProfitSwitchCoeff') {
+            params.targetLogin = targetUser;
         }
 
         return this.http.post(createAPIUrl(url), params, options).pipe(
@@ -53,10 +55,15 @@ export class RestService {
             }),
             tap(response => {
                 const { status } = response as IResponse;
-                if (status !== OKStatus) {
+                if (status === 'unknown_id' && tmpUrl !== '/userEnumerateAll') {
+                    this.storageService.sessionId = null;
+                    this.storageService.targetUser = null;
+                    this.storageService.isReadOnly = null;
+                    this.router.navigate([authRoute]);
                     throw new InvalidDataError(status);
-                    //window.location.reload();
-                }
+                } else if (tmpUrl === '/backendQueryProfitSwitchCoeff') {
+                    response['status'] = 'ok';
+                } else if (status !== OKStatus) throw new InvalidDataError(status);
             }),
             map(response => {
                 delete (response as IResponse).status;

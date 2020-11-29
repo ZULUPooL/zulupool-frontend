@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 
-import { RestService } from "services/rest.service";
-import { IUser } from "interfaces/user";
+import { RestService } from 'services/rest.service';
+import { IUser } from 'interfaces/user';
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class AuthApiService {
     constructor(private restService: RestService) {}
@@ -16,11 +16,11 @@ export class AuthApiService {
     }
 
     signUp(user: IUserCreateParams): Observable<any> {
-        return this.restService.post("/userCreate", user);
+        return this.restService.post('/userCreate', user);
     }
 
     logOut(): Observable<void> {
-        return this.restService.post("/userLogout");
+        return this.restService.post('/userLogout');
     }
 }
 
@@ -31,6 +31,7 @@ export interface IAuthSignInParams {
 
 export interface IAuthSignInResponse {
     sessionid: string;
+    isReadOnly: boolean;
 }
 
 export interface IUserCreateParams {}
