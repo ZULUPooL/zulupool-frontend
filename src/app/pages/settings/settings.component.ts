@@ -74,6 +74,8 @@ export class SettingsComponent implements OnInit {
                     nzOkText: this.translateService.instant('common.ok'),
                 });
                 this.isSubmitting = false;
+                this.isStarting = true;
+                this.getSettings(coinName);
             },
             () => {
                 this.isSubmitting = false;
@@ -81,7 +83,7 @@ export class SettingsComponent implements OnInit {
         );
     }
 
-    private getSettings(): void {
+    private getSettings(coin: string = ''): void {
         this.userApiService.userGetSettings().subscribe(({ coins }) => {
             if (coins.length > 0) {
                 const coinObj = this.storageService.coinsObj;
@@ -110,7 +112,8 @@ export class SettingsComponent implements OnInit {
                 });
 
                 this.settingsItems = coins;
-                this.currentCoin = coins[coins.length - 1].name;
+                if (coin === '') this.currentCoin = coins[coins.length - 1].name;
+                else this.currentCoin = coin;
                 this.isStarting = false;
                 this.onCurrentCoinChange(this.currentCoin);
             }

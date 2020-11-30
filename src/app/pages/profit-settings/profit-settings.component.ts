@@ -59,15 +59,9 @@ export class ProfitSettingsComponent implements OnInit {
         let coinName = this.profitItems[index].name;
         const coinObj = this.storageService.coinsObj[coinName];
         if (coinObj.is.nameSplitted) coinName = coinObj.info.name + '.' + coinObj.info.algorithm;
-        const value = this.form.value.profitSwitchCoeff;
-
-        const jsonValue = JSON.stringify(value, function (key, val) {
-            if (typeof val === 'number') return '<<<' + val.toFixed(3) + '>>>';
-            return val;
-        }).replace(/"<<<|>>>"/g, '');
-
+        const value: string = this.form.value.profitSwitchCoeff;
         const data = {
-            profitSwitchCoeff: jsonValue,
+            profitSwitchCoeff: parseFloat(value.replace(',', '.')),
             coin: coinName,
         };
 
@@ -80,6 +74,8 @@ export class ProfitSettingsComponent implements OnInit {
                     nzOkText: this.translateService.instant('common.ok'),
                 });
                 this.isSubmitting = false;
+                this.isStarting = true;
+                this.getSettings(coinName);
             },
             () => {
                 this.isSubmitting = false;
@@ -87,7 +83,7 @@ export class ProfitSettingsComponent implements OnInit {
         );
     }
 
-    private getSettings(): void {
+    private getSettings(coin: string = ''): void {
         this.userApiService.queryProfitSwitchCoeff().subscribe((data: IProfitSett[]) => {
             if (data.length > 0) {
                 const coinObj = this.storageService.coinsObj;
@@ -114,7 +110,8 @@ export class ProfitSettingsComponent implements OnInit {
                 });
             }
             this.profitItems = data;
-            this.currentCoin = data[data.length - 1].name;
+            if (coin === '') this.currentCoin = data[data.length - 1].name;
+            else this.currentCoin = coin;
             this.isStarting = false;
             this.onCurrentCoinChange(this.currentCoin);
         });

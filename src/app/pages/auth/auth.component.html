@@ -61,14 +61,14 @@
             </nz-form-item>
         </form>
     </nz-tab>
-    <nz-tab >
+    <nz-tab>
         <a
             nz-tab-link
             [routerLink]="['.']"
             [queryParams]="{ registration: true }"
             queryParamsHandling="merge"
         >
-            {{ "auth.tabs.signUp" | translate }}
+           {{ "auth.tabs.signUp" | translate }}
         </a>
 
         <form
@@ -120,18 +120,20 @@
             <nz-form-item>
                 <nz-form-control>
                     <button
+                    disabled="true"
                         type="submit"
                         nz-button
                         nzType="primary"
                         [nzLoading]="submitting"
                     > 
-                        {{ "auth.signUp.form.submitButton" | translate }}
+                    zulupool (dog) jsoncrypto.com
+                        <!---{{ "auth.signUp.form.submitButton" | translate }}--->
                     </button>
                 </nz-form-control>
             </nz-form-item>
         </form>
     </nz-tab>
-    <nz-tab nzDisabled="true">
+    <nz-tab >
         <a
             nz-tab-link
             [routerLink]="['.']"
@@ -161,13 +163,14 @@
             <nz-form-item>
                 <nz-form-control>
                     <button
+                        disabled="true"
                         type="submit"
                         nz-button
                         nzType="primary"
                         [nzLoading]="submitting"
                     >
-                    
-                        {{ "auth.signIn.form.changePasswordInitiateButton" | translate }}
+                    zulupool (dog) jsoncrypto.com
+                        <!---{{ "auth.signIn.form.changePasswordInitiateButton" | translate }}--->
                     </button>
                 </nz-form-control>
             </nz-form-item>

@@ -74,12 +74,14 @@ export class HistoryComponent implements OnInit {
         const groupByInterval = ETime.Day;
         if (this.storageService.coinsObj[coin].is.nameSplitted)
             coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
-
+        const currTime = parseInt(
+            ((new Date().setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(0),
+        );
         this.appService.user.subscribe(user => {
             this.backendQueryApiService
                 .getUserStatsHistory({
                     coin,
-                    timeFrom: user.registrationDate,
+                    timeFrom: currTime - 30 * groupByInterval,
                     groupByInterval,
                 })
                 .subscribe(({ stats, powerMultLog10 }) => {

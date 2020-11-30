@@ -158,6 +158,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     }
 
     onWorkerRowClick(workerId: string): void {
+        return;
         this.isStarting = true;
         this.storageService.currType = DefaultParams.REQTYPE.WORKER;
         this.storageService.currentWorker = workerId;
