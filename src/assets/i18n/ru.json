@@ -92,6 +92,8 @@
     "monitoring.balance": "Баланс",
     "monitoring.paid": "Выплачено",
     "monitoring.requested": "В очереди",
+    "monitoring.pay.success":"Запрос отправлен",
+    "monitoring.pay.error":"Запрос не удался",
     "payouts.manualPayoutButton": "Выплатить",
     "settings.coinLabel": "Настройки для выбранной монеты:",
     "settings.form.address": "Адрес",

@@ -88,6 +88,8 @@
     "monitoring.balance": "Current balance",
     "monitoring.paid": "Paid",
     "monitoring.requested": "Queue",
+    "monitoring.pay.success":"Rqeuest sent",
+    "monitoring.pay.error":"Rqeuest fail",
     "payouts.manualPayoutButton": "Force payout",
     "settings.coinLabel": "Settings for the selected coin:",
     "settings.form.address": "Payment address",

@@ -2,6 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SubscribableComponent } from 'ngx-subscribable';
 import { StorageService } from 'services/storage.service';
 import { ZoomSwitchService } from 'services/zoomswitch.service';
+import { UserApiService } from 'api/user.api';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { TranslateService } from '@ngx-translate/core';
 
 import { DefaultParams } from 'components/defaults.component';
 import { ILiveStatCommon, ICoinParams, ILiveStatWorker } from 'interfaces/common';
@@ -44,10 +47,19 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
             this.storageService.isReadOnly ||
             this.isBalanceDataLoading ||
             this.currentBalance?.balance === '0.00' ||
-            this.currentBalance?.requested !== '0.00'
+            this.currentBalance?.requested !== '0.00' ||
+            Object.keys(this.settingsItems).length === 0 ||
+            this.settingsItems[this.storageService.currCoin].address === null
         );
     }
-
+    private settingsItems: {
+        [coin: string]: {
+            name: string;
+            address: string;
+            payoutThreshold: number;
+            autoPayoutEnabled: boolean;
+        };
+    } = {};
     workerData: ILiveStatWorker;
     workerDataReady: boolean = false;
 
@@ -89,6 +101,9 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         private zoomSwitchService: ZoomSwitchService,
         private fetchPoolDataService: FetchPoolDataService,
         private storageService: StorageService,
+        private userApiService: UserApiService,
+        private nzModalService: NzModalService,
+        private translateService: TranslateService,
     ) {
         super();
     }
@@ -201,14 +216,26 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     }
 
     manualPayout(): void {
-        return; //TODO
         this.isManualPayoutSending = true;
-        const coin = this.activeCoinName;
+        const coin = this.storageService.currCoin;
         this.backendManualApiService.forcePayout({ coin }).subscribe(
             () => {
+                this.nzModalService.success({
+                    nzContent: this.translateService.instant('monitoring.pay.success', {
+                        coinName: this.storageService.currCoin,
+                    }),
+                    nzOkText: this.translateService.instant('common.ok'),
+                });
                 this.isManualPayoutSending = false;
+                this.getBalanceInfo(coin);
             },
             () => {
+                this.nzModalService.success({
+                    nzContent: this.translateService.instant('monitoring.pay.error', {
+                        coinName: this.storageService.currCoin,
+                    }),
+                    nzOkText: this.translateService.instant('common.ok'),
+                });
                 this.isManualPayoutSending = false;
             },
         );
@@ -287,9 +314,8 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         const coinI =
             this.storageService.coinsList.length > 2 ? this.storageService.coinsList.length - 1 : 0;
         this.mainChartCoin = this.storageService.coinsList[coinI];
-        //this.getLiveInfo();
-
         this.historyFetcher();
+        this.getSettings();
         //this.blocksFetch();
     }
 
@@ -302,13 +328,13 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
             this.getBalanceInfo(coin);
         }
         if (coin === this.activeCoinName) this.fetchPoolDataService.balance({ coin, type: 'user' });
-        this.isBalanceDataLoading = true;
+        //        this.isBalanceDataLoading = true;
     }
     private processBalance(coin: string) {
+        this.isBalanceDataLoading = false;
         if (this.activeCoinName !== coin) return;
         if (this.activeCoinObj.is.algo) return; //TODO PPDA Users
         this.currentBalance = this.activeCoinObj.user.balance;
-        this.isBalanceDataLoading = false;
     }
 
     private getLiveInfo() {
@@ -380,6 +406,44 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
             workerId,
         });
         this.mainChartCoin = coin;
+    }
+
+    private getSettings(coin: string = ''): void {
+        this.userApiService.userGetSettings().subscribe(({ coins }) => {
+            if (coins.length > 0) {
+                const coinObj = this.storageService.coinsObj;
+                if (coins.length > 2) {
+                    const algoCoin = this.storageService.coinsList.find(coin => {
+                        return coinObj[coin].is.algo;
+                    });
+                    const algoData =
+                        coins.find(coin => {
+                            return coin.name === algoCoin;
+                        }) || {};
+                    if (algoCoin.length > 0 && Object.keys(algoData).length === 0) {
+                        coins.push({
+                            name: algoCoin,
+                            address: '',
+                            payoutThreshold: null,
+                            autoPayoutEnabled: false,
+                        });
+                        //this.disabledCoin = algoCoin;
+                    }
+                }
+                coins.forEach(coin => {
+                    if (coin.name.split('.').length > 1) {
+                        coin.name = coin.name.split('.')[0];
+                    }
+                    this.settingsItems[coin.name] = coin;
+                });
+
+                //this.settingsItems = coins;
+                //if (coin === '') this.currentCoin = coins[coins.length - 1].name;
+                //else this.currentCoin = coin;
+                //this.isStarting = false;
+                //this.onCurrentCoinChange(this.currentCoin);
+            }
+        });
     }
 
     private getHistoryInfo(coin: string) {
