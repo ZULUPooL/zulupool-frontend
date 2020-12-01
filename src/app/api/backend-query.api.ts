@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 
-import { RestService } from "services/rest.service";
+import { RestService } from 'services/rest.service';
 import {
     IUserBalanceItem,
     IFoundBlock,
@@ -12,65 +12,60 @@ import {
     IUserStatsItem,
     IPoolCoinsItem,
     IPoolStatsHistoryItem,
-} from "interfaces/backend-query";
-import { TCoinName } from "interfaces/coin";
+    IInstances,
+} from 'interfaces/backend-query';
+import { TCoinName } from 'interfaces/coin';
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class BackendQueryApiService {
     constructor(private restService: RestService) {}
 
-    getUserBalance(
-        params: IGetUserBalanceParams = {},
-    ): Observable<IGetUserBalanceResponse> {
-        return this.restService.post("/backendQueryUserBalance", params);
+    getUserBalance(params: IGetUserBalanceParams = {}): Observable<IGetUserBalanceResponse> {
+        return this.restService.post('/backendQueryUserBalance', params);
     }
 
-    getFoundBlocks(
-        params: IGetFoundBlocksParams,
-    ): Observable<IGetFoundBlocksResponse> {
-        return this.restService.post("/backendQueryFoundBlocks", params);
+    getFoundBlocks(params: IGetFoundBlocksParams): Observable<IGetFoundBlocksResponse> {
+        return this.restService.post('/backendQueryFoundBlocks', params);
     }
 
-    getUserPayouts(
-        params: IGetUserPayoutsParams,
-    ): Observable<IGetUserPayoutsResponse> {
-        return this.restService.post("/backendQueryPayouts", params);
+    getUserPayouts(params: IGetUserPayoutsParams): Observable<IGetUserPayoutsResponse> {
+        return this.restService.post('/backendQueryPayouts', params);
     }
 
-    getPoolStats(
-        params: IGetPoolStatsParams = {},
-    ): Observable<IGetPoolStatsResponse> {
-        return this.restService.post("/backendQueryPoolStats", params);
+    getPoolStats(params: IGetPoolStatsParams = {}): Observable<IGetPoolStatsResponse> {
+        return this.restService.post('/backendQueryPoolStats', params);
     }
 
     getPoolCoins(): Observable<IGetPoolCoinsResponse> {
-        return this.restService.post("/backendQueryCoins");
+        return this.restService.post('/backendQueryCoins');
     }
 
     getPoolStatsHistory(
         params: IGetPoolStatsHistoryParams,
     ): Observable<IGetPoolStatsHistoryResponse> {
-        return this.restService.post("/backendQueryPoolStatsHistory", params);
+        return this.restService.post('/backendQueryPoolStatsHistory', params);
     }
 
-    getUserStats(
-        params: IGetUserStatsParams,
-    ): Observable<IGetUserStatsResponse> {
-        return this.restService.post("/backendQueryUserStats", params);
+    getUserStats(params: IGetUserStatsParams): Observable<IGetUserStatsResponse> {
+        return this.restService.post('/backendQueryUserStats', params);
     }
 
     getUserStatsHistory(
         params: IGetUserStatsHistoryParams,
     ): Observable<IGetUserStatsHistoryResponse> {
-        return this.restService.post("/backendQueryUserStatsHistory", params);
+        return this.restService.post('/backendQueryUserStatsHistory', params);
     }
 
     getWorkerStatsHistory(
         params: IGetWorkerStatsHistoryParams,
     ): Observable<IGetWorkerStatsHistoryResponse> {
-        return this.restService.post("/backendQueryWorkerStatsHistory", params);
+        return this.restService.post('/backendQueryWorkerStatsHistory', params);
+    }
+
+    instanceEnumerateAll(): Observable<IInstances | null> {
+        return this.restService.post('/instanceEnumerateAll');
     }
 }
 /*

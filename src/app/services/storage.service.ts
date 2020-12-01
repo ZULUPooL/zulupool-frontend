@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { DefaultParams } from 'components/defaults.component';
 import { ICoinsData, ICoinParams } from 'interfaces/common';
+import { ICredentials } from 'interfaces/userapi-query';
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
@@ -19,6 +20,7 @@ export class StorageService {
     private coinsData: ICoinsData = {};
     private currentZoom = DefaultParams.ZOOM[this.type];
     private currentZoomList = DefaultParams.ZOOMSLIST[this.type];
+    private userData: ICredentials;
 
     private zoomParams = DefaultParams.ZOOMPARAMS;
 
@@ -132,6 +134,15 @@ export class StorageService {
     set coinsObj(data: ICoinsData) {
         if (data) this.coinsData = data;
         else this.coinsData = {} as ICoinsData;
+    }
+
+    get activeUserData(): ICredentials | null {
+        return this.userData;
+    }
+
+    set activeUserData(user: ICredentials | null) {
+        if (user) this.userData = user;
+        else this.userData = null;
     }
 
     get isReadOnly(): boolean {

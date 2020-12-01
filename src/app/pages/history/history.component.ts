@@ -81,7 +81,7 @@ export class HistoryComponent implements OnInit {
             this.backendQueryApiService
                 .getUserStatsHistory({
                     coin,
-                    timeFrom: currTime - 30 * groupByInterval,
+                    timeFrom: this.storageService.activeUserData.registrationDate,
                     groupByInterval,
                 })
                 .subscribe(({ stats, powerMultLog10 }) => {

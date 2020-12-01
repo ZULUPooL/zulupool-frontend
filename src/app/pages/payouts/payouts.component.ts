@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { UserApiService } from 'api/user.api';
+//import { UserApiService } from 'api/user.api';
 import { BackendQueryApiService } from 'api/backend-query.api';
-import { BackendManualApiService } from 'api/backend-manual.api';
+//import { BackendManualApiService } from 'api/backend-manual.api';
 import { IUserPayouts } from 'interfaces/backend-query';
 import { IUserSettings } from 'interfaces/user';
 import { TCoinName } from 'interfaces/coin';
@@ -28,9 +28,9 @@ export class PayoutsComponent implements OnInit {
     private explorersLinks = DefaultParams.TXLINKS;
 
     constructor(
-        private userApiService: UserApiService,
+        //private userApiService: UserApiService,
         private backendQueryApiService: BackendQueryApiService,
-        private backendManualApiService: BackendManualApiService,
+        //private backendManualApiService: BackendManualApiService,
         private storageService: StorageService,
         private fetchPoolDataService: FetchPoolDataService,
     ) {}

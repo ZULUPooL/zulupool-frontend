@@ -24,6 +24,7 @@ import { SettingsComponent } from 'pages/settings/settings.component';
 import { CreateUserComponent } from 'pages/createuser/createuser.component';
 import { LandingComponent } from 'pages/landing/landing.component';
 import { ProfitSettingsComponent } from 'pages/profit-settings/profit-settings.component';
+import { ConnectComponent } from 'pages/connect/connect.component';
 
 const routes: Routes = [
     {
@@ -70,6 +71,14 @@ const routes: Routes = [
         path: '',
         component: UserLayoutComponent,
         children: [
+            {
+                path: EAppRoutes.Connect,
+                component: ConnectComponent,
+                data: {
+                    accessFor: EUserRoles.User,
+                    disabledFor: 'none',
+                },
+            },
             {
                 path: EAppRoutes.Monitoring,
                 component: MonitoringComponent,

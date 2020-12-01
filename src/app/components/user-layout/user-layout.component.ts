@@ -31,6 +31,13 @@ export class UserLayoutComponent extends SubscribableComponent implements OnInit
 
     readonly navigationItems: INavigationItem[] = patchTrackIds([
         {
+            route: EAppRoutes.Connect,
+            title: 'components.userLayout.nav.connet',
+            icon: 'api',
+            access: EUserRoles.User,
+            ROaccess: true,
+        },
+        {
             route: EAppRoutes.Monitoring,
             title: 'components.userLayout.nav.monitoring',
             icon: 'fund-projection-screen',

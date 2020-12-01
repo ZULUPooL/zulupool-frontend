@@ -1,0 +1,69 @@
+<nz-alert
+    style="padding: 2px; text-align: center; font-weight: bold;"
+    *ngIf="instancesReady"
+    nzType="warning"
+    [nzMessage]="'connect.instances.message2'| translate"
+></nz-alert>
+<nz-alert
+    style="padding: 2px"
+    *ngIf="instancesReady"
+    nzType="success"
+    [nzMessage]="'connect.instances.message1'| translate: { coins: instance.backends, port:instance.port, login:userName }"
+></nz-alert>
+<nz-alert
+style="padding: 2px"
+*ngIf="instancesReady && !ppdaMode"
+    nzType="success"
+    [nzMessage]="'connect.instances.message2'| translate"
+></nz-alert>
+<nz-alert
+style="padding: 2px"
+*ngIf="instancesReady"
+    nzType="success"
+    [nzMessage]="'connect.instances.message4'| translate"
+></nz-alert>
+
+
+<nz-table *ngIf="instancesReady" class="instances-table" nzBordered
+    [nzTemplateMode]="true">
+    <thead>
+        <tr>
+            <th *ngFor="let title of instancesKeys" style="text-align: center;padding: 6px 6px 6px;">
+                {{ "connect.instancesKeys.title." + title | translate }}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let instance of instancesItems" (click)="onInstanceClick(instance)">
+            <td *ngFor="let key of instancesKeys" style="text-align: center;padding: 5px 5px 5px;">
+                <ng-container *ngTemplateOutlet="
+                instancesDataTemplate;
+                        context: {
+                            key: key,
+                            value: instance[key]
+                        }
+                    "></ng-container>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+
+<ng-template #instancesDataTemplate let-key="key" let-value="value">
+    <ng-container [ngSwitch]="key">
+        <!--        <ng-container *ngSwitchCase="'hash'">
+            <span class="found-blocks-hash">
+                {{ value }}
+            </span>
+        </ng-container>
+        <ng-container *ngSwitchCase="'time'">
+            {{ value * 1000 | date: "dd MMM HH:mm" | async }}
+        </ng-container>
+    -->
+
+        <ng-container *ngSwitchDefault>
+            <span>
+                {{ value }}
+            </span>
+        </ng-container>
+    </ng-container>
+</ng-template>

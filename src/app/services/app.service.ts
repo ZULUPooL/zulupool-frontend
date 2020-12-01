@@ -37,6 +37,7 @@ export class AppService {
             switchMap<IApi.IUserGetCredentialsResponse, Observable<void>>(user => {
                 this.storageService.sessionId = sessionId;
                 this.storageService.isReadOnly = isReadOnly;
+                this.storageService.activeUserData = user;
                 //const state = isReadOnly ? EUsersState.ReadOnly : EUsersState.Regular;
                 return this.userApiService.userEnumerateAll({ id: sessionId }).pipe(
                     map(({ users }) => {

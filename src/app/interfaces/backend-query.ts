@@ -1,5 +1,5 @@
-import { TCoinName } from "interfaces/coin";
-import { EPowerUnit } from "enums/power-unit";
+import { TCoinName } from 'interfaces/coin';
+import { EPowerUnit } from 'enums/power-unit';
 
 export interface IUserBalanceItem {
     coin: TCoinName;
@@ -228,4 +228,15 @@ export interface ICoinFullData {
             chartSata?: IWorkerStatsHistoryItem[];
         };
     };
+}
+
+export interface IInstanceItem {
+    protocol: string;
+    type: string;
+    port: number;
+    backends: string[];
+    shareDiff: number;
+}
+export interface IInstances {
+    instances: IInstanceItem[];
 }

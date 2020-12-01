@@ -12,6 +12,7 @@ export enum EAppRoutes {
     Settings = 'settings',
     CreateUser = 'create-user',
     ProfitSettings = 'profit-settings',
+    Connect = 'connect',
 }
 
 export enum EActionsRoutes {

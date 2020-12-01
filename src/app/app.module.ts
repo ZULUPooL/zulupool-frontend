@@ -50,6 +50,7 @@ import {
     UserAddOutline,
     PullRequestOutline,
     RestOutline,
+    ApiOutline,
 } from '@ant-design/icons-angular/icons';
 
 import { ChartsModule } from 'ng2-charts';
@@ -66,6 +67,7 @@ import { HelpComponent } from 'pages/help/help.component';
 import { UsersComponent } from 'pages/users/users.component';
 import { PayoutsComponent } from 'pages/payouts/payouts.component';
 import { SettingsComponent } from 'pages/settings/settings.component';
+import { ConnectComponent } from 'pages/connect/connect.component';
 import { ProfitSettingsComponent } from 'pages/profit-settings/profit-settings.component';
 
 //import { DefaultParams } from "components/defaults.component";
@@ -155,6 +157,7 @@ export function HttpLoaderFactory(http: HttpClient) {
             UserAddOutline,
             PullRequestOutline,
             RestOutline,
+            ApiOutline,
         ]),
 
         ChartsModule,
@@ -201,6 +204,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         TargetLoginBadgeComponent,
         CoinSwitcherComponent,
         ZoomSwitcherComponent,
+        ConnectComponent,
         //CoinsFetcherComponent,
 
         ChartComponent,
