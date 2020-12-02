@@ -81,6 +81,8 @@
     "connect.warning":"Warning!",
     "connect.nicehashYes":"Instance is compatible with NiceHash.",
     "connect.nicehashNo":"Unfortunately, instance is not compatible with NiceHash.",
+    "connect.asicBoostYes":"AsicBoost enabled",
+    "connect.asicBoostNo":"No AsicBoost",
     "connect.mrrYes":"Instance is compatible with Miningrigrentals.",
     "connect.mrrNo":"Unfortunately, instance is not compatible with some Miningrigrentals rigs. You can use them at your own risk.",
     "connect.payments.head":"Payments",

@@ -36,13 +36,20 @@
     [nzDescription]="'connect.toStart' | translate: {url:urlTarget}"
 ></nz-alert>
 
+<nz-alert *ngIf="algoIsAsicBoost && canAsicBoost" style="padding: 3px;" nzType="success" nzShowIcon
+    [nzMessage]="'connect.asicBoostYes' | translate"
+></nz-alert>
+<nz-alert *ngIf="algoIsAsicBoost && !canAsicBoost" style="padding: 3px;" nzType="error" nzShowIcon
+    [nzMessage]="'connect.asicBoostNo' | translate"
+></nz-alert>
+
 <nz-alert *ngIf="!isPPDA && canNiceHash" style="padding: 3px;" nzType="success" nzShowIcon
     [nzMessage]="'connect.nicehashYes' | translate"
-    ></nz-alert>
+></nz-alert>
     
-    <nz-alert *ngIf="!isPPDA && !canNiceHash" style="padding: 3px;" nzType="warning" nzShowIcon
+<nz-alert *ngIf="!isPPDA && !canNiceHash" style="padding: 3px;" nzType="warning" nzShowIcon
     [nzMessage]="'connect.nicehashNo' | translate"
-    ></nz-alert>
+></nz-alert>
     
     <nz-alert *ngIf="!isPPDA && canMRR" style="padding: 3px;" nzType="success" nzShowIcon
     [nzMessage]="'connect.mrrYes' | translate"

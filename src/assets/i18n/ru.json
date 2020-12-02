@@ -78,6 +78,9 @@
     "connect.toStart.head":"Чтобы начать работать {{mode}} - настройте своё устройство на подключение к нашему серверу:",
     "connect.toStart":"{{url}} Имя пользователя: <Ваш_логин>.<любой_работник> Пароль:<что_нибудь>",
 
+    "connect.asicBoostYes":"AsicBoost активирован",
+    "connect.asicBoostNo":"AsicBoost не поддерживается",
+
 
     "connect.toStart.ppdaMode":"с алгоритмом {{ppdaAlgo}} в режиме PPDA (Pay per difficulty accepted) и получать оплату за выполненную работу",
     "connect.toStart.smartMode":"c монетами {{coins}} в режиме умного пула",

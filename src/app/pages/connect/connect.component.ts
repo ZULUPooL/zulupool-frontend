@@ -35,6 +35,8 @@ export class ConnectComponent implements OnInit {
     port: number;
     canNiceHash: boolean;
     canMRR: boolean;
+    canAsicBoost: boolean;
+    algoIsAsicBoost: boolean;
     emailAddr: string;
     username = '';
     pwd = '';
@@ -66,6 +68,8 @@ export class ConnectComponent implements OnInit {
         this.instancesReady = false;
         this.port = 0;
         this.canNiceHash = true;
+        this.algoIsAsicBoost = true;
+        this.canAsicBoost = true;
         this.canMRR = false;
         this.instances = [];
     }
