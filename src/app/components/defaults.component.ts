@@ -27,6 +27,10 @@ export class DefaultParams {
     static readonly MULTIPLYHISTORYDATAFORCHART: number = 3;
     static readonly FETCHRESPONCE: IFetchResponce = { status: false, coin: '', type: '' };
     static readonly DEFAULTTYPE = 'pool';
+    static readonly DNSNAME = 'zulupool.com';
+    static readonly SUPPORTMAIL = 'XXXXXXXXXXXXXXXXXXXXXXX';
+    static readonly PPDAALGO = 'sha256d';
+    static readonly STRATUM = 'sha256.';
     static readonly REQTYPE = {
         POOL: 'pool',
         USER: 'user',

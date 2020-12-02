@@ -1,52 +1,72 @@
-<nz-alert
-    style="padding: 2px; text-align: center; font-weight: bold;"
-    *ngIf="instancesReady"
-    nzType="warning"
-    [nzMessage]="'connect.instances.message2'| translate"
+<nz-alert *ngIf="isBeta" style="font-weight: bold; padding: 3px;"  nzType="warning" nzShowIcon
+    [nzMessage]="'connect.beta.head'| translate"
+    [nzDescription]="'connect.beta'| translate"
 ></nz-alert>
-<nz-alert
-    style="padding: 2px"
-    *ngIf="instancesReady"
-    nzType="success"
-    [nzMessage]="'connect.instances.message1'| translate: { coins: instance.backends, port:instance.port, login:userName }"
-></nz-alert>
-<nz-alert
-style="padding: 2px"
-*ngIf="instancesReady && !ppdaMode"
-    nzType="success"
-    [nzMessage]="'connect.instances.message2'| translate"
-></nz-alert>
-<nz-alert
-style="padding: 2px"
-*ngIf="instancesReady"
-    nzType="success"
-    [nzMessage]="'connect.instances.message4'| translate"
+<nz-alert *ngIf="instancesReady" style="font-weight: bold; padding: 3px;" nzType="success"
+    [nzDescription]="'connect.select'| translate"
 ></nz-alert>
 
-
-<nz-table *ngIf="instancesReady" class="instances-table" nzBordered
+<nz-table class="instances-table" *ngIf="instancesReady" nzBordered 
     [nzTemplateMode]="true">
     <thead>
         <tr>
-            <th *ngFor="let title of instancesKeys" style="text-align: center;padding: 6px 6px 6px;">
+            <th *ngFor="let title of instancesKeys" >
                 {{ "connect.instancesKeys.title." + title | translate }}
             </th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let instance of instancesItems" (click)="onInstanceClick(instance)">
-            <td *ngFor="let key of instancesKeys" style="text-align: center;padding: 5px 5px 5px;">
+        <tr *ngFor="let item of instances" (click)="setInstanceParams(item)">
+            <td *ngFor="let key of instancesKeys">
                 <ng-container *ngTemplateOutlet="
                 instancesDataTemplate;
                         context: {
                             key: key,
-                            value: instance[key]
+                            value: item[key]
                         }
                     "></ng-container>
             </td>
         </tr>
     </tbody>
 </nz-table>
+
+
+<nz-alert nzType="success" style="padding: 3px;"
+    [nzMessage]="'connect.toStart.head' | translate: {mode:modeString}"
+    [nzDescription]="'connect.toStart' | translate: {url:urlTarget}"
+></nz-alert>
+
+<nz-alert *ngIf="!isPPDA && canNiceHash" style="padding: 3px;" nzType="success" nzShowIcon
+    [nzMessage]="'connect.nicehashYes' | translate"
+    ></nz-alert>
+    
+    <nz-alert *ngIf="!isPPDA && !canNiceHash" style="padding: 3px;" nzType="warning" nzShowIcon
+    [nzMessage]="'connect.nicehashNo' | translate"
+    ></nz-alert>
+    
+    <nz-alert *ngIf="!isPPDA && canMRR" style="padding: 3px;" nzType="success" nzShowIcon
+    [nzMessage]="'connect.mrrYes' | translate"
+    ></nz-alert>
+    
+    <nz-alert *ngIf="!isPPDA && !canMRR" style="padding: 3px;"nzType="warning" nzShowIcon
+    [nzMessage]="'connect.mrrNo' | translate"
+    ></nz-alert>
+
+    <nz-alert *ngIf="!isPPDA" style="padding: 3px;" nzType="info" nzShowIcon
+        [nzMessage]="'connect.payments.head' | translate"
+        [nzDescription]="'connect.payments.smartMode' | translate"
+    ></nz-alert>
+
+    <nz-alert *ngIf="isPPDA" style="padding: 3px;" nzType="info" nzShowIcon
+        [nzMessage]="'connect.payments.head' | translate"
+        [nzDescription]="'connect.payments.ppdaMode' | translate"
+    ></nz-alert>
+
+<nz-alert *ngIf="!isPPDA" style="padding: 3px;" nzType="info" nzShowIcon
+[nzMessage]="'connect.getSupport.smart.head' | translate"
+[nzDescription]="'connect.getSupport.smart' | translate: {mail:emailAddr}"
+></nz-alert>
+
 
 <ng-template #instancesDataTemplate let-key="key" let-value="value">
     <ng-container [ngSwitch]="key">

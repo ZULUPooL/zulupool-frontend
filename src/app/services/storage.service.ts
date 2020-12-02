@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { DefaultParams } from 'components/defaults.component';
 import { ICoinsData, ICoinParams } from 'interfaces/common';
 import { ICredentials } from 'interfaces/userapi-query';
+import { IUser } from 'interfaces/user';
+import { ETime } from 'enums/time';
+import { EUserRoles } from 'enums/role';
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
@@ -21,6 +24,7 @@ export class StorageService {
     private currentZoom = DefaultParams.ZOOM[this.type];
     private currentZoomList = DefaultParams.ZOOMSLIST[this.type];
     private userData: ICredentials;
+    private trgUserData: IUser[];
 
     private zoomParams = DefaultParams.ZOOMPARAMS;
 
@@ -143,6 +147,29 @@ export class StorageService {
     set activeUserData(user: ICredentials | null) {
         if (user) this.userData = user;
         else this.userData = null;
+    }
+
+    get targetUserRegDate(): number | null {
+        if (this.targetLogin === null) return this.userData.registrationDate;
+        if (this.targetLogin === EUserRoles.Admin || this.targetLogin === EUserRoles.Observer) {
+            const groupByInterval = ETime.Day;
+            const currTime = parseInt(
+                ((new Date().setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(0),
+            );
+            return currTime - 30 * groupByInterval;
+        } else
+            return this.trgUserData.find(el => {
+                return el.login === this.targetLogin;
+            }).registrationDate;
+    }
+
+    get allUsersData(): IUser[] | null {
+        return this.trgUserData;
+    }
+
+    set allUsersData(user: IUser[] | null) {
+        if (user) this.trgUserData = user;
+        else this.trgUserData = null;
     }
 
     get isReadOnly(): boolean {

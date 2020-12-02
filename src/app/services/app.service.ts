@@ -32,6 +32,8 @@ export class AppService {
         this.init();
     }
 
+    private getUsersCredentials(user: string) {}
+
     authorize(sessionId: string, isReadOnly: boolean): Observable<void> {
         return this.userApiService.userGetCredentials({ id: sessionId }).pipe(
             switchMap<IApi.IUserGetCredentialsResponse, Observable<void>>(user => {
@@ -71,6 +73,7 @@ export class AppService {
                             ...user,
                         });
                         this.storageService.targetUser = null;
+
                         return of(void 0);
                     }),
                 );
@@ -127,6 +130,7 @@ export class AppService {
 
         if (users.length > 0) {
             this.storageService.targetUser = users[0].login;
+            this.storageService.allUsersData = users;
         }
     }
 
@@ -134,6 +138,7 @@ export class AppService {
         this.storageService.sessionId = null;
         this.storageService.isReadOnly = null;
         this.storageService.targetUser = null;
+        this.storageService.allUsersData = null;
         userStore.next(null);
     }
 }

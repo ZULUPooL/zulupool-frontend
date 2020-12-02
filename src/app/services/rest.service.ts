@@ -58,6 +58,7 @@ export class RestService {
                 if (status === 'unknown_id' && tmpUrl !== '/userEnumerateAll') {
                     this.storageService.sessionId = null;
                     this.storageService.targetUser = null;
+                    this.storageService.activeUserData = null;
                     this.storageService.isReadOnly = null;
                     this.router.navigate([authRoute]);
                     throw new InvalidDataError(status);

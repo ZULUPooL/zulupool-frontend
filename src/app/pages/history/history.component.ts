@@ -6,10 +6,10 @@ import { TCoinName } from 'interfaces/coin';
 import { IWorkerStatsHistoryItem } from 'interfaces/backend-query';
 import { AppService } from 'services/app.service';
 import { ESuffix } from 'pipes/suffixify.pipe';
-import { ETime } from 'enums/time';
 import { StorageService } from 'services/storage.service';
 import { DefaultParams } from 'components/defaults.component';
 import { FetchPoolDataService } from 'services/fetchdata.service';
+import { ETime } from 'enums/time';
 
 @Component({
     selector: 'app-history',
@@ -71,17 +71,14 @@ export class HistoryComponent implements OnInit {
 */
     public onCurrentCoinChange(coin: TCoinName): void {
         this.currentCoin = coin;
-        const groupByInterval = ETime.Day;
         if (this.storageService.coinsObj[coin].is.nameSplitted)
             coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
-        const currTime = parseInt(
-            ((new Date().setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(0),
-        );
+        const groupByInterval = ETime.Day;
         this.appService.user.subscribe(user => {
             this.backendQueryApiService
                 .getUserStatsHistory({
                     coin,
-                    timeFrom: this.storageService.activeUserData.registrationDate,
+                    timeFrom: this.storageService.targetUserRegDate,
                     groupByInterval,
                 })
                 .subscribe(({ stats, powerMultLog10 }) => {

@@ -8,6 +8,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
 import { BackendQueryApiService } from 'api/backend-query.api';
 import { FetchPoolDataService } from 'services/fetchdata.service';
+import { DefaultParams } from 'components/defaults.component';
 
 @Component({
     selector: 'app-connect',
@@ -15,12 +16,28 @@ import { FetchPoolDataService } from 'services/fetchdata.service';
     styleUrls: ['./connect.component.less'],
 })
 export class ConnectComponent implements OnInit {
-    instancesItems: IInstanceItem[];
-    instance: IInstanceItem;
+    instances: IInstanceItem[];
+    instanceItem: IInstanceItem;
     instancesReady: boolean;
-    ppdaMode: boolean;
-    userName: string;
+    //ppdaMode: boolean;
+    //userName: string;
     instancesKeys: (keyof IInstanceItem)[] = ['protocol', 'type', 'port', 'backends', 'shareDiff'];
+    //modeString: boolean;
+
+    isReady: boolean;
+
+    isBeta: boolean;
+    isPPDA: boolean;
+    //ppdaAlgo: string;
+    //coins: string;
+    modeString: string;
+    urlTarget: string;
+    port: number;
+    canNiceHash: boolean;
+    canMRR: boolean;
+    emailAddr: string;
+    username = '';
+    pwd = '';
 
     constructor(
         private backendQueryApiService: BackendQueryApiService,
@@ -30,34 +47,69 @@ export class ConnectComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.setupStart();
+        this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
+            if (data.status && data.type === 'connect') this.getInstances();
+        });
         this.fetchPoolDataService.coins({ coin: '', type: 'connect', forceUpdate: true });
-        this.instancesItems = [];
-        this.instancesReady = false;
-        this.ppdaMode = false;
-        this.getInstances();
     }
-    onInstanceClick(instance): void {
-        this.instance = instance;
+    /*
+    ngOnDestroy(): void {
+        this.fetchPoolDataService.apiGetListOfCoins.unsubscribe();
+    }*/
+
+    private setupStart() {
+        this.emailAddr = DefaultParams.SUPPORTMAIL;
+        this.isBeta = true;
+        this.isPPDA = false;
+        this.isReady = false;
+        this.instancesReady = false;
+        this.port = 0;
+        this.canNiceHash = true;
+        this.canMRR = false;
+        this.instances = [];
+    }
+
+    setInstanceParams(item: IInstanceItem): void {
+        if (this.instancesReady && this.port === item.port) return;
+        this.isReady = false;
+
+        if (this.isPPDA) {
+            this.modeString = this.translateService.instant('connect.toStart.ppdaMode', {
+                ppdaAlgo: DefaultParams.PPDAALGO,
+            });
+        } else {
+            const coins = createCoinString(item.backends);
+            this.modeString = this.translateService.instant('connect.toStart.smartMode', { coins });
+        }
+        this.port = item.port;
+        this.urlTarget = DefaultParams.STRATUM + DefaultParams.DNSNAME + ':' + item.port;
+        if (!this.instancesReady) this.instancesReady = true;
+
+        //this.username = this.translateService.instant('connect.toStart.pwd');
+        //this.pwd = this.translateService.instant('connect.toStart.username');
+
+        this.isReady = true;
+
+        function createCoinString(coins: string[]): string {
+            let str = '';
+            coins.forEach(coin => {
+                if (str !== '') {
+                    str = str + ', ' + coin;
+                } else str = coin;
+            });
+            return str;
+        }
     }
 
     private getInstances(): void {
         this.backendQueryApiService.instanceEnumerateAll().subscribe(({ instances }) => {
-            //debugger;
-            instances.forEach(el => {
-                this.instancesItems.push(el);
-            });
-            this.instance = this.instancesItems[0];
-            if (
-                true ||
-                (this.storageService.coinsList.length === 1 &&
-                    this.storageService.currCoin === 'sha256')
-            ) {
-                this.instance.backends = this.translateService.instant('sha256.PPDA');
-                this.ppdaMode = true;
-            }
-            this.userName = this.storageService.activeUserData.name;
-
-            this.instancesReady = true;
+            const store = this.storageService;
+            if (store.coinsList.length === 1 && store.currCoin === 'sha256') {
+                this.isPPDA = true;
+                this.instances.push(instances.find(el => el.port === 5010));
+            } else this.instances = instances;
+            this.setInstanceParams(this.instances[0]);
         });
     }
 }

@@ -27,6 +27,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
@@ -131,6 +132,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         NzTableModule,
         NzSelectModule,
         NzRadioModule,
+        NzDescriptionsModule,
         NzDrawerModule,
         NzDropDownModule,
         NzAlertModule,

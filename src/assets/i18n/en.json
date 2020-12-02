@@ -59,17 +59,39 @@
     "components.userLayout.nav.profitswitch": "Profit SW",
     "components.userLayout.nav.payouts": "Payouts",
     "components.userLayout.nav.settings": "Settings",
-    "components.userLayout.nav.connet": "Start mine",
+    "components.userLayout.nav.connect": "Start work",
     "components.userLayout.menu.changePassword": "Change password",
     "components.userLayout.menu.logOut": "Log out",
     "components.userLayout.changePassword.passwordPlaceholder": "New password",
     "components.emptyContent.text": "No data",
     "components.targetLoginBadge.message": "Current user: {{login}}",
     "components.chartPower.title": "Hashrate (Ph/s)",
-    "connect.instances.message1":"То start mine {{coins}} - point your device to sha256.zulupool.com:{{port}}, user: {{login}}.<worker>, password:not an empty field",
-    "connect.instances.message2":"We are still beta, let us know if your device cannot connect or unstable",
-    "connect.instances.message3":"To receive payments, you need to configure the addresses and the threshold of payments for all coins of the instance which you are connecting to.",
-    "connect.instances.message4":"You can get support in our Discord channel, or email to zulupool@XXXXXXXXXXX",
+
+    "connect.select":"Select instance:",
+    "connect.beta.head":"Still beta!",
+    "connect.beta":"We are still beta, let us know if your device cannot connect or unstable",
+    "connect.toStart.head":"To start work with {{mode}}, configure your device to connect to our server:",
+    "connect.toStart":"{{url}} Username: <login>.<any-worker-name> Password: <not-an-empty-field>",
+    "connect.toStart.ppdaMode":"{{ppdaAlgo}} algorithm in PPDA (Pay per difficulty accepted) mode and receive payment for the work performed",
+    "connect.toStart.smartMode":"{{coins}} coins in smart pool mode",
+
+    "connect.getSupport.smart.head":"Support information",
+    "connect.getSupport.smart":"You can get support in Discord, or by email: {{mail}}",
+
+    "connect.warning":"Warning!",
+    "connect.nicehashYes":"Instance is compatible with NiceHash.",
+    "connect.nicehashNo":"Unfortunately, instance is not compatible with NiceHash.",
+    "connect.mrrYes":"Instance is compatible with Miningrigrentals.",
+    "connect.mrrNo":"Unfortunately, instance is not compatible with some Miningrigrentals rigs. You can use them at your own risk.",
+    "connect.payments.head":"Payments",
+    "connect.payments.ppdaMode":"At the moment, charges and payments in this mode are made manually!",
+    "connect.payments.smartMode":"To receive payments, you need to configure the addresses and the threshold for payments for all backends which you are connecting to. There is no way to choose a particular coin for mining: switching between coins presented on the backend happens automatically based on our algo. In the case of Merged coins, mining is performed using all algorithms compatible with the presented merged coin.",
+
+
+
+
+
+
     "connect.instancesKeys.title.protocol":"Protocol",
     "connect.instancesKeys.title.type":"Type",
     "connect.instancesKeys.title.port":"Port",

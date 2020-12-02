@@ -59,6 +59,7 @@ export class UsersComponent implements OnInit {
     onUserClick(user: IUser): void {
         if (user.login !== this.targetLogin) {
             this.storageService.targetUser = user.login;
+            //this.storageService.targetUserData = user;
 
             this.router.navigate([userRootRoute]);
         }
