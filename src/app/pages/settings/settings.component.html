@@ -1,5 +1,4 @@
-<app-target-login-badge></app-target-login-badge>
-
+<app-target-login-badge style="padding-bottom: 5px;" (onTargetChange)=changeTarget($event)></app-target-login-badge>
 <div class="coin-select-block">
     <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
 </div>
@@ -23,8 +22,13 @@
     </nz-select>
 </div>
 -->
+<nz-alert *ngIf="isNeedAddressInfoWarning" style="padding-bottom: 3px;" nzType="warning" nzShowIcon
+[nzMessage]="'settings.addressesFormats'| translate: {addresses:addrFormats}"
+></nz-alert>
+
 <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="form" (submit)="save()">
     <nz-form-item>
+
         <nz-form-label nzFor="address">
             {{ "settings.form.address" | translate }}
         </nz-form-label>

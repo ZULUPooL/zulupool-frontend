@@ -52,6 +52,8 @@ import {
     PullRequestOutline,
     RestOutline,
     ApiOutline,
+    InfoCircleOutline,
+    LinkOutline,
 } from '@ant-design/icons-angular/icons';
 
 import { ChartsModule } from 'ng2-charts';
@@ -70,6 +72,9 @@ import { PayoutsComponent } from 'pages/payouts/payouts.component';
 import { SettingsComponent } from 'pages/settings/settings.component';
 import { ConnectComponent } from 'pages/connect/connect.component';
 import { ProfitSettingsComponent } from 'pages/profit-settings/profit-settings.component';
+import { MathComponent } from 'pages/math/math.component';
+import { TermsComponent } from 'pages/terms/terms.component';
+import { PolicyComponent } from 'pages/policy/policy.component';
 
 //import { DefaultParams } from "components/defaults.component";
 import { CreateUserComponent } from 'pages/createuser/createuser.component';
@@ -160,6 +165,8 @@ export function HttpLoaderFactory(http: HttpClient) {
             PullRequestOutline,
             RestOutline,
             ApiOutline,
+            InfoCircleOutline,
+            LinkOutline,
         ]),
 
         ChartsModule,
@@ -196,6 +203,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         SettingsComponent,
         CreateUserComponent,
         ProfitSettingsComponent,
+        MathComponent,
+        TermsComponent,
+        PolicyComponent,
         //DefaultParams,
 
         FooterComponent,

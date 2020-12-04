@@ -27,10 +27,50 @@ export class DefaultParams {
     static readonly MULTIPLYHISTORYDATAFORCHART: number = 3;
     static readonly FETCHRESPONCE: IFetchResponce = { status: false, coin: '', type: '' };
     static readonly DEFAULTTYPE = 'pool';
-    static readonly DNSNAME = 'zulupool.com';
-    static readonly SUPPORTMAIL = 'XXXXXXXXXXXXXXXXXXXXXXX';
+    static readonly DNSNAME = 'xxx';
+    static readonly SUPPORTMAIL = 'xxx';
+    static readonly DISCORDSERVER = 'xxx';
     static readonly PPDAALGO = 'sha256d';
     static readonly STRATUM = 'sha256.';
+    static readonly FASTJOBCOINS = ['DGB.sha256'];
+    static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'BSV', 'DGB', 'FCH', 'HTR'];
+    static readonly ADDREXAMPLES = {
+        BTC: ['BTC legacy - 13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
+        BCHN: ['BTC legacy - 13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
+        BCHABC: ['BTC legacy - 13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
+        BSV: ['BTC legacy - 13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
+        DGB: ['DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc'],
+        FCH: ['FCHPooLNgZZXXbwdEPnYGuUCaLb7XWpBNk'],
+        HTR: ['HTjxTEAUSwZf34nK4YuicfDPocT7JsQwJi'],
+    };
+
+    static readonly TARGETLOGINIGNORE = [
+        '/userChangePassword',
+        '/userChangePasswordInitiate',
+        '/userCreate',
+        '/userResendEmail',
+        '/userAction',
+        '/userLogin',
+        '/userLogout',
+        '/userEnumerateAll',
+        '/backendQueryCoins',
+        '/backendQueryFoundBlocks',
+        '/backendQueryPoolStats',
+        '/backendQueryPoolStatsHistory',
+        '/backendQueryProfitSwitchCoeff',
+        '/backendUpdateProfitSwitchCoeff',
+        '/instanceEnumerateAll',
+    ];
+    static readonly SESSIONIDIGNORE = [
+        '/userChangePasswordInitiate',
+        '/userResendEmail',
+        '/userLogin',
+        '/backendQueryCoins',
+        '/backendQueryFoundBlocks',
+        '/backendQueryPoolStats',
+        '/backendQueryPoolStatsHistory',
+        '/instanceEnumerateAll',
+    ];
     static readonly REQTYPE = {
         POOL: 'pool',
         USER: 'user',

@@ -25,6 +25,8 @@ export class ConnectComponent implements OnInit {
     //modeString: boolean;
 
     isReady: boolean;
+    fastJobWarning: boolean;
+    fastCoinName: string;
 
     isBeta: boolean;
     isPPDA: boolean;
@@ -62,6 +64,7 @@ export class ConnectComponent implements OnInit {
 
     private setupStart() {
         this.emailAddr = DefaultParams.SUPPORTMAIL;
+        this.fastJobWarning = false;
         this.isBeta = true;
         this.isPPDA = false;
         this.isReady = false;
@@ -88,6 +91,19 @@ export class ConnectComponent implements OnInit {
         }
         this.port = item.port;
         this.urlTarget = DefaultParams.STRATUM + DefaultParams.DNSNAME + ':' + item.port;
+        this.fastJobWarning = false;
+        this.fastCoinName = '';
+        item.backends.forEach(coin => {
+            if (
+                !this.fastJobWarning &&
+                DefaultParams.FASTJOBCOINS.includes(coin) &&
+                item.backends.length < 4
+            ) {
+                this.fastJobWarning = true;
+                this.fastCoinName = coin;
+            }
+        });
+
         if (!this.instancesReady) this.instancesReady = true;
 
         //this.username = this.translateService.instant('connect.toStart.pwd');
@@ -111,8 +127,10 @@ export class ConnectComponent implements OnInit {
             const store = this.storageService;
             if (store.coinsList.length === 1 && store.currCoin === 'sha256') {
                 this.isPPDA = true;
-                this.instances.push(instances.find(el => el.port === 5010));
+                this.instances.push(instances.find(el => el.port === 5010 || el.port === 25010));
+                this.instances[0].backends = ['sha256d'];
             } else this.instances = instances;
+
             this.setInstanceParams(this.instances[0]);
         });
     }

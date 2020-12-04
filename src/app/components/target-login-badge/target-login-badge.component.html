@@ -1,8 +1,12 @@
-<nz-alert
-    *ngIf="targetLogin"
-    nzType="success"
-    [nzMessage]="
-        'components.targetLoginBadge.message'
-            | translate: { login: targetLogin }
-    "
-></nz-alert>
+
+<nz-select
+style="display: inline;"
+[(ngModel)]="selectedIndex"
+(ngModelChange)="onUserChange()"
+>
+<nz-option
+    *ngFor="let item of usersItems; index as i"
+    [nzLabel]="item.login"
+    [nzValue]="i"
+></nz-option>
+</nz-select>

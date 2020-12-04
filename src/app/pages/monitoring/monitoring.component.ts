@@ -5,7 +5,7 @@ import { ZoomSwitchService } from 'services/zoomswitch.service';
 import { UserApiService } from 'api/user.api';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
-
+import { TargetLoginBadgeComponent } from 'components/target-login-badge/target-login-badge.component';
 import { DefaultParams } from 'components/defaults.component';
 import { ILiveStatCommon, ICoinParams, ILiveStatWorker } from 'interfaces/common';
 
@@ -49,6 +49,14 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
             this.currentBalance?.balance === '0.00' ||
             this.currentBalance?.requested !== '0.00' ||
             Object.keys(this.settingsItems).length === 0 ||
+            this.settingsItems[this.storageService.currCoin].address === null
+        );
+    }
+    get isNeedInfoActive(): boolean {
+        return (
+            Object.keys(this.settingsItems).length !== 0 &&
+            this.currentBalance?.balance !== '0.00' &&
+            this.activeCoinObj.info.algorithm !== this.activeCoinObj.info.name &&
             this.settingsItems[this.storageService.currCoin].address === null
         );
     }
@@ -104,22 +112,21 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         private userApiService: UserApiService,
         private nzModalService: NzModalService,
         private translateService: TranslateService,
+        private targetLoginBadgeComponent: TargetLoginBadgeComponent,
     ) {
         super();
     }
 
     ngOnInit(): void {
+        this.subs();
+        this.startPage();
+    }
+
+    private startPage() {
         this.isStarting = true;
-        //this.storageService.resetChartsData = true;
         this.storageService.currType = DefaultParams.REQTYPE.USER;
         this.storageService.currentWorker = '';
-        this.subs();
         this.fetchPoolDataService.coins({ coin: '', type: 'user', forceUpdate: true });
-
-        //this.haveBalanceData = false;
-        //this.isLiveLoading = true;
-        //this.isBalanceDataLoading = false;
-        //this.storageService.currType = DefaultParams.REQTYPE.USER;
     }
 
     ngOnDestroy(): void {
@@ -464,7 +471,9 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
             this.historyFetcher();
         }, timer * 1000);
     }
-
+    changeTarget(target: string) {
+        this.startPage();
+    }
     private subs(): void {
         this.subscrip = [
             this.zoomSwitchService.zoomSwitch.subscribe(zoom => {

@@ -36,40 +36,12 @@ export class HistoryComponent implements OnInit {
     ngOnInit(): void {
         this.storageService.currType = 'history';
         this.fetchPoolDataService.coins({ coin: '', type: 'history', forceUpdate: true });
-        //this.getCoinsList();
-        /*this.backendQueryApiService
-            .getUserBalance()
-            .subscribe(({ balances }) => {
-                balances = balances.filter(item => item.coin === "sha256");
-
-                this.coins = balances.map(item => item.coin);
-
-                if (this.coins.length > 0) {
-                    this.onCurrentCoinChange(this.coins[0]);
-                }
-            });*/
     }
-    /*
-    private getCoinsList(): void {
-        this.backendQueryApiService.getPoolCoins().subscribe(({ coins }) => {
-            if (coins.length >= 2) {
-                coins.push({
-                    name: coins[0].algorithm,
-                    fullName: coins[0].algorithm,
-                    algorithm: coins[0].algorithm,
-                });
-            }
-            this.coins = coins.map(item => item.name);
-            if (this.coins.length > 0) {
-                const coin = this.coins.includes(coins[0].algorithm)
-                    ? coins[0].algorithm
-                    : this.coins[0];
-                this.onCurrentCoinChange(coin);
-            }
-        });
+    changeTarget(target: string) {
+        this.onCurrentCoinChange(this.currentCoin);
     }
-*/
-    public onCurrentCoinChange(coin: TCoinName): void {
+
+    onCurrentCoinChange(coin: TCoinName): void {
         this.currentCoin = coin;
         if (this.storageService.coinsObj[coin].is.nameSplitted)
             coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;

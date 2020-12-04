@@ -25,14 +25,14 @@
     "common.theme": "Theme",
     "common.theme.light": "Light",
     "common.theme.dark": "Dark",
-    "common.date.day.one": "day",
-    "common.date.day.other": "days",
-    "common.date.hour.one": "hour",
-    "common.date.hour.other": "hours",
-    "common.date.minute.one": "minute",
-    "common.date.minute.other": "minutes",
-    "common.date.second.one": "second",
-    "common.date.second.other": "seconds",
+    "common.date.day.one": "d",
+    "common.date.day.other": "d",
+    "common.date.hour.one": "h",
+    "common.date.hour.other": "h",
+    "common.date.minute.one": "m",
+    "common.date.minute.other": "m",
+    "common.date.second.one": "s",
+    "common.date.second.other": "s",
     "validation.clientError.required": "Required field",
     "validation.clientError.minlength": "Min {{requiredLength}} symbols",
     "validation.clientError.maxlength": "Max {{requiredLength}} symbols",
@@ -60,6 +60,7 @@
     "components.userLayout.nav.payouts": "Payouts",
     "components.userLayout.nav.settings": "Settings",
     "components.userLayout.nav.connect": "Start work",
+    "components.userLayout.nav.math":"Rewards & fee",
     "components.userLayout.menu.changePassword": "Change password",
     "components.userLayout.menu.logOut": "Log out",
     "components.userLayout.changePassword.passwordPlaceholder": "New password",
@@ -74,6 +75,8 @@
     "connect.toStart":"{{url}} Username: <login>.<any-worker-name> Password: <not-an-empty-field>",
     "connect.toStart.ppdaMode":"{{ppdaAlgo}} algorithm in PPDA (Pay per difficulty accepted) mode and receive payment for the work performed",
     "connect.toStart.smartMode":"{{coins}} coins in smart pool mode",
+    "connect.toStart.fastJobWarning.head":"Fast job switch!",
+    "connect.toStart.fastJobWarning":"This backend, as the main one, uses a fast blockchain: {{coin}}. This negatively affects device performance and the number of rejects.",
 
     "connect.getSupport.smart.head":"Support information",
     "connect.getSupport.smart":"You can get support in Discord, or by email: {{mail}}",
@@ -88,10 +91,19 @@
     "connect.payments.head":"Payments",
     "connect.payments.ppdaMode":"At the moment, charges and payments in this mode are made manually!",
     "connect.payments.smartMode":"To receive payments, you need to configure the addresses and the threshold for payments for all backends which you are connecting to. There is no way to choose a particular coin for mining: switching between coins presented on the backend happens automatically based on our algo. In the case of Merged coins, mining is performed using all algorithms compatible with the presented merged coin.",
+    "monitoring.payments.smartMode":"To receive {{coin}} payments, you need to configure addresses and the threshold in settings section.",
+
+    "users.longAgo":"long ago",
 
 
-
-
+    "users.usersTable.title.login": "Login / public name",
+    "users.usersTable.title.loginM": "Login",
+    "users.usersTable.title.email": "Email",
+    "users.usersTable.title.registrationDate": "Registration Date",
+    "users.usersTable.title.workers": "Workers",
+    "users.usersTable.title.shareRate": "Sharerate",
+    "users.usersTable.title.power": "Power",
+    "users.usersTable.title.lastShareTime": "Last Seen",
 
 
     "connect.instancesKeys.title.protocol":"Protocol",
@@ -126,7 +138,7 @@
     "monitoring.pay.success":"Rqeuest sent",
     "monitoring.pay.error":"Rqeuest fail",
     "payouts.manualPayoutButton": "Force payout",
-    "settings.coinLabel": "Settings for the selected coin:",
+    "settings.addressesFormats": "An example of supported address formats: {{addresses}}",
     "settings.form.address": "Payment address",
     "settings.form.payoutThreshold": "Automatic payout threshold",
     "settings.form.autoPayoutEnabled": "Auto payout enabled",
@@ -135,5 +147,57 @@
     "createuser.form.isUserActive": "User activated",
     "createuser.form.isUserReadOnly": "Read-only user",
     "createuser.form.addUser": "Create user",
-    "createuser.form.success": "User successfully created"
+    "createuser.form.success": "User successfully created",
+   
+    "math.head":"Rewards & Fees",
+    "math.modes":"You can work in two modes:",
+    "math.modes.and":"and",
+    "math.modes.PPDALN":"PPDALN+ (Pay Per Difficulty Accepted for Last N rounds + fee).",
+    "math.modes.PPDA.under":"Under",
+    "math.modes.PPDALN.profits": "mode, whenever a block is found, profits are calculated based on accepted difficulty miners contributed to ",
+    "math.modes.PPDALN.in.the.last": "in the last",
+    "math.modes.PPDALN.rounds":"rounds. Meanwhile, miner fees will be allocated to miners, too.",
+    "math.modes.PPDALN.accepted.difficulty.is.calculated": "Accepted difficulty is calculated as the sum of all accepted valid jobs (shares) multiplied by the target of that job (share target).",
+    "math.modes.PPDALN.withPPDALN":"With",
+    "math.modes.PPDALN.withPPDALN.miners.payout":"miners’ payout is related to the blocks mined out. Therefore, miners may face unstable yields, but they will enjoy higher profits in the long term.",
+    "math.modes.PPDALN.if.several.coins":"If several coins are activated on the instance used (excluding coin merged), there is an automatic distribution of computing power between coins, based on our switching algorithm. In this mode, there may be more prolonged unstable yields, but the utilization of the hashrate occurs as efficiently as possible, which also has a positive effect for profits in the long term.",
+    "math.modes.PPDALN.the.payment.network.fee": "The payment network fee is",
+    "math.modes.PPDALN.the.payment.network.fee.deducted": "deducted from the amount sent",
+    "math.modes.PPDALN.to.provide.mining.service":"To provide mining service in",
+    "math.modes.PPDALN.to.provide.mining.service.mode":"mode",
+    "math.modes.PPDALN.to.provide.mining.service.charges":"charges a fee for daily operation and maintenance.",
+    "math.modes.PPDALN.the.following.fees":"The following fees are currently applied:",
+    "math.modes.PPDALN.the.following.fees.for":"for all backends.",
+    "math.modes.PPDA":"PPDA (Pay Per Difficulty Accepted).",
+    "math.modes.PPDA.at.the.moment1":"At the moment, for this mode, we are debugging our mathematical basis.",
+    "math.modes.PPDA.at.the.moment2":"For now, this is not a public mode of operation, however, if you are interested in participating and earning light higher than the average profitability of the",
+    "math.modes.PPDA.at.the.moment.contact.us": "network, feel free to contact us.",
+
+    "math.modes.PPDA.pays.the.miners":"pays the miners according to each valid share they submit.",
+    "math.modes.PPDA.this.is.equivalent":"This is equivalent to working with NiceHash and similar services.",
+    "math.modes.PPDA.the.work1":"The work is performed on an instance with the maximum available number of backends (coins), but in this mode we save you from the risks associated with mining a coin other than",
+    "math.modes.PPDA.the.work2":"be it rate fluctuations, attacks on the coin network, an attack on your favorite exchange, and other troubles.",
+    "math.modes.PPDA.payment.rate":"The payment rate is calculated in",
+    "math.modes.PPDA.payment.rate.satoshi.and.evaluates":"satoshi and evaluates the submitted work with difficulty",
+    "math.modes.PPDA.payment.rate.which.is.equivalent":"which is equivalent to the rate for",
+    "math.modes.PPDA.payment.rate.which.is.equivalent.thpd":"1 Th/s per day.",
+
+    "math.modes.PPDA.in.the.beta":"In the beta version: the pool determines the payment rate for the previos calendar day at",
+    "math.modes.PPDA.in.the.beta.based.on":"based on the actual profitability of the",
+    "math.modes.PPDA.in.the.beta.network.over":"network over the last calendar day (from",
+    "math.modes.PPDA.in.the.beta.network.over.to":"to",
+    "math.modes.PPDA.subsequently":"Subsequently, the period for rate calculation will tied to the actual",
+    "math.modes.PPDA.subsequently.network":"network and will dynamically change with every new",
+    "math.modes.PPDA.subsequently.block":"block.",
+
+    "math.modes.сontact.us":"Contact us if you need any help."
+
+
+
+    
+
+
+     
+
+
 }

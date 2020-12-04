@@ -25,18 +25,18 @@
     "common.theme": "Вид",
     "common.theme.light": "Светлый",
     "common.theme.dark": "Темный",
-    "common.date.day.one": "день",
-    "common.date.day.few": "дня",
-    "common.date.day.many": "дней",
-    "common.date.hour.one": "час",
-    "common.date.hour.few": "часа",
-    "common.date.hour.many": "часов",
-    "common.date.minute.one": "минута",
-    "common.date.minute.few": "минуты",
-    "common.date.minute.many": "минут",
-    "common.date.second.one": "секунда",
-    "common.date.second.few": "секунды",
-    "common.date.second.many": "секунд",
+    "common.date.day.one": "д",
+    "common.date.day.few": "д",
+    "common.date.day.many": "д",
+    "common.date.hour.one": "ч",
+    "common.date.hour.few": "ч",
+    "common.date.hour.many": "ч",
+    "common.date.minute.one": "м",
+    "common.date.minute.few": "м",
+    "common.date.minute.many": "м",
+    "common.date.second.one": "с",
+    "common.date.second.few": "с",
+    "common.date.second.many": "с",
     "validation.clientError.required": "Поле обязательно для заполнения",
     "validation.clientError.minlength": "Минимум {{requiredLength}} символов",
     "validation.clientError.maxlength": "Максимум {{requiredLength}} символов",
@@ -64,6 +64,7 @@
     "components.userLayout.nav.payouts": "Выплаты",
     "components.userLayout.nav.settings": "Настройки",
     "components.userLayout.nav.connect": "Подключение",
+    "components.userLayout.nav.math":"Награда и комиссия",
     "components.userLayout.menu.changePassword": "Сменить пароль",
     "components.userLayout.menu.logOut": "Выйти",
     "components.userLayout.changePassword.passwordPlaceholder": "Введите новый пароль",
@@ -73,10 +74,14 @@
 
     "connect.select":"Выберите инстанс:",
     "connect.beta.head":"Бета версия!",
-    "connect.beta":"Мы все ёще beta! Дайте нам знать, если Ваше устройство не может подключится или работает не стабильно.",
+    "connect.beta":"Мы всё ещё beta! Дайте нам знать, если Ваше устройство не может подключится или работает не стабильно.",
 
     "connect.toStart.head":"Чтобы начать работать {{mode}} - настройте своё устройство на подключение к нашему серверу:",
     "connect.toStart":"{{url}} Имя пользователя: <Ваш_логин>.<любой_работник> Пароль:<что_нибудь>",
+
+    "connect.toStart.fastJobWarning.head":"Быстрая смена заданий!",
+    "connect.toStart.fastJobWarning":"Этот бекэкнд, в качестве основной, используют монету с быстрым блокчейном: {{coin}}. Это негативно сказывается на производительности устройств и количестве отклонённых заданий.",
+
 
     "connect.asicBoostYes":"AsicBoost активирован",
     "connect.asicBoostNo":"AsicBoost не поддерживается",
@@ -88,15 +93,28 @@
     "connect.getSupport.smart.head":"Техническая поддержка",
     "connect.getSupport.smart":"Вы можете получить поддержку в нашем канале Дискорда, или по электронной почте:{{mail}}",
 
-    "connect.warning":"Warning!",
+    "connect.warning":"Внамание!",
     "connect.nicehashYes":"Инстанс совместим с NiceHash.",
     "connect.nicehashNo":"К сожалению, инстанс не совместим с NiceHash.",
     "connect.mrrYes":"Инстанс совместим с Miningrigrentals.",
     "connect.mrrNo":"К сожалению, инстанс совместим не со всеми Miningrigrentals ригами. Вы можете использовать его на свой страх и риск.",
     "connect.payments.head":"Выплаты",
     "connect.payments.ppdaMode":"В настоящий момент, начисления и выплаты в данном режиме производятся вручную!",
-    "connect.payments.smartMode":"Для получения выплат, Вам необходимо настроить адреса и порог выплат для всех монет инстанса к которму Вы подключаетесь. Нет пути выбрать каую-то отдельную монету для добычи. Переключение между монетами представленными на бэкенде происходит автоматически на основе нашего алгоритма. В случае Merged-монет - добыча производится на всех совместимых с представленной merged-монетой алгоритмах.",
+    "connect.payments.smartMode":"Для получения выплат, Вам необходимо настроить адреса и порог выплат для всех монет инстанса к которому Вы подключаетесь. Нет пути выбрать какую-то отдельную монету для добычи. Переключение между монетами представленными на бэкенде происходит автоматически на основе нашего алгоритма. В случае Merged-монет - добыча производится на всех совместимых с представленной merged-монетой алгоритмах.",
     
+
+    "users.usersTable.title.login": "Логин / публичное имя",
+    "users.usersTable.title.loginM": "Логин",
+    "users.usersTable.title.email": "Email",
+    "users.usersTable.title.registrationDate": "Дата Регистрации",
+    "users.usersTable.title.workers": "Работники",
+    "users.usersTable.title.shareRate": "Шарарейт",
+    "users.usersTable.title.power": "Хешрейт",
+    "users.usersTable.title.lastShareTime": "Видели",
+
+
+
+
     "connect.instancesKeys.title.protocol":"Протокол",
     "connect.instancesKeys.title.type":"Тип",
     "connect.instancesKeys.title.port":"Порт",
@@ -127,15 +145,75 @@
     "monitoring.requested": "В очереди",
     "monitoring.pay.success":"Запрос отправлен",
     "monitoring.pay.error":"Запрос не удался",
+    "monitoring.payments.smartMode":"Для получения {{coin}} выплат, Вам нужно настроить адрес и порог выплат в разделе настройки.",
+
+    "users.longAgo":"давно",
+
     "payouts.manualPayoutButton": "Выплатить",
-    "settings.coinLabel": "Настройки для выбранной монеты:",
+    "settings.addressesFormats": "Пример поддерживаемых форматов адресов: {{addresses}}",
     "settings.form.address": "Адрес",
     "settings.form.payoutThreshold": "Мин. платёж",
-    "settings.form.autoPayoutEnabled": "Автовыплаты",
+    "settings.form.autoPayoutEnabled": "Авто-выплаты",
     "settings.form.success":"Данные для {{coinName}} успешно сохранены",
     "settings.form.profitSwitchCoeff":"Коэффициент доходности",
     "createuser.form.isUserActive": "Пользователь активирован",
     "createuser.form.isUserReadOnly": "Read-only пользователь",
     "createuser.form.addUser": "Создать",
-    "createuser.form.success": "Пользователь успешно создан"
+    "createuser.form.success": "Пользователь успешно создан",
+   
+    "math.head":"Вознаграждения и комиссии",
+    "math.modes":"Вы можете работать в двух режимах:",
+    "math.modes.and":"и",
+    "math.modes.PPDALN":"PPDALN+ (Pay Per Difficulty Accepted for Last N rounds + fee) (оплата за выполненную работу за последние N раундов + TX комиссии)",
+    "math.modes.PPDA.under":"В режиме",
+    "math.modes.PPDALN.profits": "доход вычисляется при обнаружении блока, по выполненной работе полученной",
+    "math.modes.PPDALN.in.the.last": "за последние",
+    "math.modes.PPDALN.rounds":"раундов. Комиссии транзакций, включённые в блок, также распределяются между майнерами.",
+    "math.modes.PPDALN.accepted.difficulty.is.calculated": "Выполненная работа это сумма всех принятых валидных решений (share), помноженных на цель этой работы (share target).",
+    "math.modes.PPDALN.withPPDALN":"В режиме",
+    "math.modes.PPDALN.withPPDALN.miners.payout":"выплаты майнерам связаны с добытыми блоками. Таким образом, майнеры могут столкнуться с неравномерной доходностью, но в долгосрочной перспективе они получат более высокую прибыль.",
+    "math.modes.PPDALN.if.several.coins":"Если на выбранном инстансе активировано несколько монет (не считая merged-монеты), распределение вычислительной мощности между монетами происходит автоматически, на основе нашего алгоритма переключения. В этом режиме неравномерность доходности может выражаться более явно, но использование хешрейта происходит максимально эффективно, что также положительно влияет на прибыль в долгосрочной перспективе.",
+    "math.modes.PPDALN.the.payment.network.fee": "Комиссия за транзакцию",
+    "math.modes.PPDALN.the.payment.network.fee.deducted": "вычитается из суммы транзакции",
+    "math.modes.PPDALN.to.provide.mining.service":"Для предоставления услуги майнинга в",
+    "math.modes.PPDALN.to.provide.mining.service.mode":"режиме",
+    "math.modes.PPDALN.to.provide.mining.service.charges":"взимает комиссию за ежедневную эксплуатацию и техническое обслуживание.",
+    "math.modes.PPDALN.the.following.fees":"В настоящее время размер комиссии:",
+    "math.modes.PPDALN.the.following.fees.for":"для всех бэкендов (монет).",
+    "math.modes.PPDA":"PPDA (Pay Per Difficulty Accepted) (Оплата за выполненную работу).",
+    "math.modes.PPDA.at.the.moment1":"На данный момент, для этого режима мы отлаживаем нашу математическую основу.",
+    "math.modes.PPDA.at.the.moment2":"Пока это не публичный режим работы, однако, если вы заинтересованы в участии на данном этапе и вам интересно зарабатывать несколько выше, чем средняя прибыльность сети",
+    "math.modes.PPDA.at.the.moment.contact.us": "не стесняйтесь с нами связаться.",
+
+    "math.modes.PPDA.pays.the.miners":"оплачивает майнерам за каждое присланное валидное решение (share).",
+    "math.modes.PPDA.this.is.equivalent":"Это эквивалентно работе с NiceHash и подобными сервисами.",
+    "math.modes.PPDA.the.work1":"Работа производится на инстансе с максимально доступным количеством бэкендов (монет), но в этом режиме мы избавляем Вас от рисков, связанных с добычей монеты отличной от",
+    "math.modes.PPDA.the.work2":"будь то колебание курса, атака на сеть монеты, атака на любимую биржу, и прочих неприятностей.",
+    "math.modes.PPDA.payment.rate":"Ставка оплаты рассчитывается в",
+    "math.modes.PPDA.payment.rate.satoshi.and.evaluates":"сатоши, и оценивает принятую работу сложностью",
+    "math.modes.PPDA.payment.rate.which.is.equivalent":"что эквивалентно работе",
+    "math.modes.PPDA.payment.rate.which.is.equivalent.thpd":"1 Тх в течении суток.",
+    "math.modes.PPDA.in.the.beta":"В бета-версии: платёжная ставка за предыдущий календарный день вычисляется в",
+    "math.modes.PPDA.in.the.beta.based.on":"исходя из фактической прибыльности сети",
+    "math.modes.PPDA.in.the.beta.network.over":"за последний календарный день (с",
+    "math.modes.PPDA.in.the.beta.network.over.to":"по",
+    "math.modes.PPDA.subsequently":"Впоследствии, период для расчета ставки станет динамическим, будет привязан к фактической сети",
+    "math.modes.PPDA.subsequently.network":"и будет изменяться с каждым новым блоком сети",
+    "math.modes.PPDA.subsequently.block":".",
+
+    "math.modes.сontact.us":"Свяжитесь с нами, если вам понадобится помощь."
+
+
+
+
+
+
+    
+
+
+
+    
+
+
+
 }

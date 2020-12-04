@@ -15,8 +15,26 @@ import { ESuffix } from 'pipes/suffixify.pipe';
 })
 export class UsersComponent implements OnInit {
     readonly ESuffix = ESuffix;
+
+    isReady: boolean;
+
+    usersKeys = [
+        'login',
+        'email',
+        'registrationDate',
+        'workers',
+        'shareRate',
+        'power',
+        'lastShareTime',
+    ];
+    usersMKeys = ['loginM', 'workers', 'power', 'lastShareTime'];
+
     users: IUser[];
+    userItem: IUser;
+    usersReady: boolean;
+
     powerMultLog10: number = 6;
+    longAgo: boolean;
 
     get targetLogin(): string {
         return this.storageService.targetUser;
@@ -29,7 +47,9 @@ export class UsersComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.isReady = false;
         this.userApiService.userEnumerateAll().subscribe(({ users }) => {
+            this.longAgo = false;
             /*users = users.filter(function (item) {
                 return (
                     item.login !== DefaultParams.ADMINNAME &&
@@ -39,28 +59,27 @@ export class UsersComponent implements OnInit {
             //            users.forEach(item => {
             //                item.lastShareTime = currentTime - item.lastShareTime;
             //            });
-            const nullDate = (new Date(1).valueOf() / 1000) as any;
+            const nullDate = (new Date().setHours(0, 0, 0, 0).valueOf() / 1000 - 86400) as any;
             const tNow = parseInt(((new Date().valueOf() / 1000) as any).toFixed(0));
-            //debugger;
             users.forEach(item => {
-                if (item.lastShareTime === 0) item.lastShareTime = parseInt(nullDate.toFixed(0));
-                item.lastShareTime = tNow - item.lastShareTime;
-                if (item.registrationDate > tNow) {
-                    //default accounts
-                    item.registrationDate = nullDate;
-                    item.lastShareTime = 0;
+                if (item.lastShareTime < nullDate) item['longAgo'] = true;
+                if (
+                    item.login === DefaultParams.ADMINNAME ||
+                    item.login === DefaultParams.GAZERNAME
+                ) {
+                    item['longAgo'] = true;
+                    item.registrationDate = 1577836800;
                 }
+                item.lastShareTime = tNow - item.lastShareTime;
             });
-
             this.users = users;
+            this.isReady = true;
         });
     }
 
     onUserClick(user: IUser): void {
         if (user.login !== this.targetLogin) {
             this.storageService.targetUser = user.login;
-            //this.storageService.targetUserData = user;
-
             this.router.navigate([userRootRoute]);
         }
     }

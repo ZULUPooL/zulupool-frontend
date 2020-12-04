@@ -2,7 +2,7 @@
     [nzMessage]="'connect.beta.head'| translate"
     [nzDescription]="'connect.beta'| translate"
 ></nz-alert>
-<nz-alert *ngIf="instancesReady" style="font-weight: bold; padding: 3px;" nzType="success"
+<nz-alert style="font-weight: bold; padding: 3px;" nzType="success"
     [nzDescription]="'connect.select'| translate"
 ></nz-alert>
 
@@ -30,10 +30,15 @@
     </tbody>
 </nz-table>
 
-
+<div *ngIf="instancesReady">
 <nz-alert nzType="success" style="padding: 3px;"
     [nzMessage]="'connect.toStart.head' | translate: {mode:modeString}"
     [nzDescription]="'connect.toStart' | translate: {url:urlTarget}"
+></nz-alert>
+
+<nz-alert *ngIf="fastJobWarning" style="padding: 3px;" nzType="warning" nzShowIcon
+[nzMessage]="'connect.toStart.fastJobWarning.head' | translate"
+[nzDescription]="'connect.toStart.fastJobWarning' | translate: {coin:fastCoinName}"
 ></nz-alert>
 
 <nz-alert *ngIf="algoIsAsicBoost && canAsicBoost" style="padding: 3px;" nzType="success" nzShowIcon
@@ -73,6 +78,7 @@
 [nzMessage]="'connect.getSupport.smart.head' | translate"
 [nzDescription]="'connect.getSupport.smart' | translate: {mail:emailAddr}"
 ></nz-alert>
+</div>
 
 
 <ng-template #instancesDataTemplate let-key="key" let-value="value">

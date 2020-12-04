@@ -13,6 +13,9 @@ export enum EAppRoutes {
     CreateUser = 'create-user',
     ProfitSettings = 'profit-settings',
     Connect = 'connect',
+    Terms = 'terms',
+    Policy = 'policy',
+    Math = 'math',
 }
 
 export enum EActionsRoutes {

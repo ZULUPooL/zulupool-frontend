@@ -6,6 +6,7 @@ import { TCoinName } from 'interfaces/coin';
 import { StorageService } from 'services/storage.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
+import { DefaultParams } from 'components/defaults.component';
 
 @Component({
     selector: 'app-settings',
@@ -17,6 +18,10 @@ export class SettingsComponent implements OnInit {
     selectedIndex: number;
     currentCoin: TCoinName;
     isStarting: boolean;
+
+    isNeedAddressInfoWarning: boolean;
+    addrFormats: string;
+
     form = this.formBuilder.group({
         address: [],
         payoutThreshold: [],
@@ -44,12 +49,20 @@ export class SettingsComponent implements OnInit {
     onCurrentCoinChange(coin: TCoinName): void {
         if (this.isStarting) return;
         this.currentCoin = coin;
+        if (DefaultParams.DEFCOINS.includes(coin)) {
+            this.isNeedAddressInfoWarning = true;
+            this.addrFormats = DefaultParams.ADDREXAMPLES[coin];
+        } else this.isNeedAddressInfoWarning = false;
         let index = this.settingsItems.findIndex(el => el.name === coin);
         this.form.patchValue(this.settingsItems[index]);
     }
 
     changeCoin(): void {
         this.form.patchValue(this.settingsItems[this.selectedIndex]);
+    }
+
+    changeTarget(target: string) {
+        this.onCurrentCoinChange(this.currentCoin);
     }
 
     save(): void {

@@ -19,7 +19,9 @@ export class AuthGuard implements CanActivate {
                 return user
                     ? true
                     : this.router.parseUrl(
-                          `${EAppRoutes.Auth}?to=${state.url}`,
+                          state.url === '/terms' || state.url === '/policy'
+                              ? `${state.url}`
+                              : `${EAppRoutes.Auth}?to=${state.url}`,
                       );
             }),
         );

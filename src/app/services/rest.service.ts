@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { EAppRoutes, authRoute } from 'enums/routing';
 import { Router } from '@angular/router';
+import { DefaultParams } from 'components/defaults.component';
 
 import { Observable } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
@@ -39,13 +40,13 @@ export class RestService {
         const tmpUrl = url;
         params = { id: this.storageService.sessionId, ...params };
 
-        if (not(params.id)) {
+        if (not(params.id) || DefaultParams.SESSIONIDIGNORE.includes(url)) {
             delete params.id;
         }
 
         const { targetUser } = this.storageService;
 
-        if (targetUser && tmpUrl !== '/backendUpdateProfitSwitchCoeff') {
+        if (targetUser && !DefaultParams.TARGETLOGINIGNORE.includes(url)) {
             params.targetLogin = targetUser;
         }
 
@@ -60,8 +61,8 @@ export class RestService {
                     this.storageService.targetUser = null;
                     this.storageService.activeUserData = null;
                     this.storageService.isReadOnly = null;
-                    this.router.navigate([authRoute]);
-                    throw new InvalidDataError(status);
+                    //this.router.navigate([authRoute]);
+                    //throw new InvalidDataError(status);
                 } else if (tmpUrl === '/backendQueryProfitSwitchCoeff') {
                     response['status'] = 'ok';
                 } else if (status !== OKStatus) throw new InvalidDataError(status);

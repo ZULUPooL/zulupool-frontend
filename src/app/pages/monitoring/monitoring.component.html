@@ -1,4 +1,7 @@
-<app-target-login-badge></app-target-login-badge>
+<app-target-login-badge style="padding-bottom: 5px;" (onTargetChange)=changeTarget($event)></app-target-login-badge>
+<nz-alert *ngIf="isNeedInfoActive" style="padding-bottom: 3px;" nzType="info" nzShowIcon
+    [nzMessage]="'monitoring.payments.smartMode' | translate: {coin:activeCoinName}"
+></nz-alert>
 
 <div class="main">
     <div class="info">

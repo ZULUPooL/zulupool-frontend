@@ -38,27 +38,15 @@ export class PayoutsComponent implements OnInit {
     ngOnInit(): void {
         this.storageService.currType = 'payouts';
         this.fetchPoolDataService.coins({ coin: '', type: 'payouts', forceUpdate: true });
-        /*
-        this.userApiService.userGetSettings().subscribe(({ coins: settings }) => {
-            this.settings = settings;
-            if (settings.length > 0) {
-                this.selectedIndex = 0;
-                this.onCurrentCoinChange(this.settings[0].name);
-            }
-        });*/
+    }
+
+    changeTarget(target: string) {
+        this.onCurrentCoinChange(this.currentCoin);
     }
 
     onCurrentCoinChange(coin: TCoinName): void {
         this.currentCoin = coin;
-
         this.getUserStat(coin);
-        //this.backendQueryApiService
-        //.getUserStatsHistory({ coin })
-        //.subscribe(({ stats, powerMultLog10 }) => {
-        // this.setAcceptedDifficulty(stats);
-
-        //this.userStatsHistory = { stats, powerMultLog10 };
-        //});
     }
 
     getUserStat(coin: TCoinName): void {

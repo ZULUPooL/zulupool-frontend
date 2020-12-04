@@ -25,6 +25,9 @@ import { CreateUserComponent } from 'pages/createuser/createuser.component';
 import { LandingComponent } from 'pages/landing/landing.component';
 import { ProfitSettingsComponent } from 'pages/profit-settings/profit-settings.component';
 import { ConnectComponent } from 'pages/connect/connect.component';
+import { PolicyComponent } from 'pages/policy/policy.component';
+import { TermsComponent } from 'pages/terms/terms.component';
+import { MathComponent } from 'pages/math/math.component';
 
 const routes: Routes = [
     {
@@ -47,6 +50,16 @@ const routes: Routes = [
                 path: EAppRoutes.Help,
                 pathMatch: 'full',
                 component: HelpComponent,
+            },
+            {
+                path: EAppRoutes.Policy,
+                pathMatch: 'full',
+                component: PolicyComponent,
+            },
+            {
+                path: EAppRoutes.Terms,
+                pathMatch: 'full',
+                component: TermsComponent,
             },
         ],
     },
@@ -71,6 +84,14 @@ const routes: Routes = [
         path: '',
         component: UserLayoutComponent,
         children: [
+            {
+                path: EAppRoutes.Math,
+                component: MathComponent,
+                data: {
+                    accessFor: EUserRoles.User,
+                    disabledFor: 'none',
+                },
+            },
             {
                 path: EAppRoutes.Connect,
                 component: ConnectComponent,
