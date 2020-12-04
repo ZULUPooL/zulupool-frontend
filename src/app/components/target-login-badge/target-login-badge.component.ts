@@ -1,4 +1,5 @@
 import { Injectable, Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { timeUnits } from 'ng-zorro-antd/core/time';
 import { StorageService } from 'services/storage.service';
 
 @Injectable({
@@ -15,14 +16,19 @@ export class TargetLoginBadgeComponent implements OnInit {
 
     usersItems: any;
     selectedIndex: number;
+    isReady: boolean;
     constructor(private storageService: StorageService) {}
 
     ngOnInit() {
-        if (this.storageService.allUsersData?.length === 0) return;
+        if (this.storageService.allUsersData?.length === 0) {
+            this.isReady = false;
+            return;
+        }
         this.usersItems = this.storageService.allUsersData;
         this.selectedIndex = this.storageService.allUsersData.findIndex(
             user => user.login === this.storageService.targetUser,
         );
+        this.isReady = true;
     }
 
     onUserChange(): void {

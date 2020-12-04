@@ -1,5 +1,6 @@
 
 <nz-select
+*ngIf="isReady"
 style="display: inline;"
 [(ngModel)]="selectedIndex"
 (ngModelChange)="onUserChange()"
