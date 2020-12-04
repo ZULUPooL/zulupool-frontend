@@ -7,14 +7,27 @@ import { DefaultParams } from 'components/defaults.component';
     templateUrl: './math.component.html',
     styleUrls: ['./math.component.less'],
 })
-export class MathComponent implements OnInit {
-    constructor(private translateService: TranslateService) {}
+export class MathComponent {
+    constructor() {}
 
-    discordLink: string;
-    emailAddr: string;
+    emailAddr = DefaultParams.SUPPORTMAIL;
 
-    ngOnInit(): void {
-        this.discordLink = DefaultParams.DISCORDSERVER;
-        this.emailAddr = DefaultParams.SUPPORTMAIL;
+    onClick(type: string): void {
+        switch (type) {
+            case 'wiki':
+                window.open(DefaultParams.BTCWIKI, '_system');
+                break;
+            case 'ppda':
+                window.open(DefaultParams.PPDA + DefaultParams.DNSNAME, '_system');
+                break;
+            case 'ppdaln':
+                window.open(DefaultParams.PPDALN + DefaultParams.DNSNAME, '_system');
+                break;
+            case 'discord':
+                window.open(DefaultParams.DISCORDSERVER, '_system');
+                break;
+            default:
+                break;
+        }
     }
 }

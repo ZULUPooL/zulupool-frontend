@@ -27,9 +27,13 @@ export class DefaultParams {
     static readonly MULTIPLYHISTORYDATAFORCHART: number = 3;
     static readonly FETCHRESPONCE: IFetchResponce = { status: false, coin: '', type: '' };
     static readonly DEFAULTTYPE = 'pool';
-    static readonly DNSNAME = 'xxx';
-    static readonly SUPPORTMAIL = 'xxx';
-    static readonly DISCORDSERVER = 'xxx';
+    static readonly DNSNAME = 'zulupool.com';
+    static readonly BTCWIKI =
+        'https://en.bitcoin.it/wiki/Difficulty#What_is_the_minimum_difficulty.3F';
+    static readonly PPDA = 'https://ppda.';
+    static readonly PPDALN = 'https://beta.';
+    static readonly SUPPORTMAIL = '';
+    static readonly DISCORDSERVER = '';
     static readonly PPDAALGO = 'sha256d';
     static readonly STRATUM = 'sha256.';
     static readonly FASTJOBCOINS = ['DGB.sha256'];

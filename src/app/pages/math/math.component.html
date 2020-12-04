@@ -8,9 +8,9 @@
 
     <span style="padding: 2px; text-align: center; font-size: 14px; font-weight: bold;">
         {{ "math.modes" | translate }}
-        <a nzType="button" href="https://beta.zulupool.com">PPDALN+</a>
+        <a nzType="link" (click)="onClick('ppdaln')">PPDALN+</a>
         {{ "math.modes.and" | translate }}
-        <a nzType="button" href="https://ppda.zulupool.com">PPDA</a>.
+        <a nzType="link" (click)="onClick('ppda')">PPDA</a>.
     </span>
 
     <div style="font-size: 14px;">
@@ -76,7 +76,7 @@
     {{ "math.modes.PPDA.payment.rate" | translate }}
     <span style="font-weight: bold;">BTC</span>
     {{ "math.modes.PPDA.payment.rate.satoshi.and.evaluates" | translate }}
-    <span style="font-weight: bold;"><a nzType="link" href="https://en.bitcoin.it/wiki/Difficulty#What_is_the_minimum_difficulty.3F">20116567</a></span>,
+    <span style="font-weight: bold;"><a nzType="link" (click)="onClick('wiki')">20116567</a></span>,
     {{ "math.modes.PPDA.payment.rate.which.is.equivalent" | translate }}
     <span style="font-weight: bold;">{{ "math.modes.PPDA.payment.rate.which.is.equivalent.thpd" | translate }}</span>
     <br>
@@ -99,7 +99,7 @@
     <br>
     {{ "math.modes.сontact.us" | translate }}
     <br>
-    <a nzType="link" href="discordLink">Discord</a>
+    <a nzType="link" (click)="onClick('discord')">Discord</a>
     <br>
     <span>email: {{ emailAddr }}</span> 
 
