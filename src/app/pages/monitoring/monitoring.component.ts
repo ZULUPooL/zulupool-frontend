@@ -180,12 +180,15 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     }
 
     onWorkerRowClick(workerId: string): void {
-        return;
+        //        return;
         this.isStarting = true;
         this.storageService.currType = DefaultParams.REQTYPE.WORKER;
         this.storageService.currentWorker = workerId;
-        this.fetchPoolDataService.coins({ coin: '', type: 'worker', forceUpdate: true, workerId });
-        //TODO
+        this.storageService.coinsObj[this.activeCoinName].is.chartRefresh = true;
+        this.mainChartCoin = this.activeCoinName;
+        this.processZoomChange(this.storageService.currZoom);
+        this.onCurrentCoinChange(this.activeCoinName);
+        //this.fetchPoolDataService.coins({ coin: '', type: 'worker', forceUpdate: true, workerId });
     }
 
     getWorkerState(time: number): EWorkerState {
@@ -200,11 +203,15 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         return EWorkerState.Normal;
     }
     clearWorker(): void {
-        this.isStarting = true;
-        this.storageService.currType = DefaultParams.REQTYPE.USER;
         this.workerDataReady = false;
-        this.storageService.currentWorker = '';
-        this.fetchPoolDataService.coins({ coin: '', type: 'user', forceUpdate: true });
+        //this.isStarting = true;
+        this.storageService.currType = DefaultParams.REQTYPE.USER;
+        this.storageService.currentWorker = null;
+        this.storageService.coinsObj[this.activeCoinName].is.chartRefresh = true;
+        this.mainChartCoin = this.activeCoinName;
+        this.processZoomChange(this.storageService.currZoom);
+        this.onCurrentCoinChange(this.activeCoinName);
+        //this.fetchPoolDataService.coins({ coin: '', type: 'user', forceUpdate: true });
 
         //TODO
         /*
@@ -474,10 +481,14 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     changeTarget(target: string) {
         this.startPage();
     }
+    plus(num: number) {
+        return num + 1;
+    }
     private subs(): void {
         this.subscrip = [
             this.zoomSwitchService.zoomSwitch.subscribe(zoom => {
-                if (zoom !== '') this.processZoomChange(zoom);
+                if (zoom !== '' && this.storageService.currentWorker === '')
+                    this.processZoomChange(zoom);
             }),
             this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
                 if (data.status && data.type === this.storageService.currType) this.processCoins();

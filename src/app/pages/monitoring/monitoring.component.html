@@ -162,7 +162,7 @@
 <nz-table class="workers-table" nzBordered [nzTemplateMode]="true" [nzLoading]="isLiveLoading">
     <thead>
         <tr>
-            <th nzWidth="1px"></th>
+            <th nzWidth="1px">N</th>
             <th>
                 {{ "common.dictionary.worker" | translate }}
             </th>
@@ -178,7 +178,10 @@
         </tr>
     </thead>
     <tbody *ngIf="liveStatsWorkers">
-        <tr *ngFor="let item of liveStatsWorkers" className="_clickable" (click)="onWorkerRowClick(item.name)">
+        <tr *ngFor="let item of liveStatsWorkers; index as i" className="_clickable" (click)="onWorkerRowClick(item.name)">
+            <td>
+                {{ plus(i) }}
+            </td>
             <td>
                 <ng-container [ngSwitch]="getWorkerState(item.lastShareTime)">
                     <i *ngSwitchCase="EWorkerState.Normal" class="worker-state _normal" nz-icon nzType="check-circle"
@@ -188,8 +191,8 @@
                     <i *ngSwitchCase="EWorkerState.Error" class="worker-state _error" nz-icon nzType="minus-circle"
                         nzTheme="outline"></i>
                 </ng-container>
+                {{ item.name }}
             </td>
-            <td>{{ item.name }}</td>
             <td>
                 {{ item.shareRate | suffixify: ESuffix.ShareRate }}
             </td>
@@ -214,6 +217,7 @@
 <nz-table class="workers-mobile" nzBordered [nzTemplateMode]="true" [nzLoading]="isLiveLoading">
     <thead>
         <tr>
+            <th nzWidth="1px">N</th>
             <th>
                 {{ "common.dictionary.worker" | translate }}
             </th>
@@ -226,7 +230,10 @@
         </tr>
     </thead>
     <tbody *ngIf="liveStatsWorkers">
-        <tr *ngFor="let item of liveStatsWorkers" className="_clickable" (click)="onWorkerRowClick(item.name)">
+        <tr *ngFor="let item of liveStatsWorkers; index as i" className="_clickable" (click)="onWorkerRowClick(item.name)">
+            <td>
+                {{ plus(i) }}
+            </td>
             <td>
                 <ng-container [ngSwitch]="getWorkerState(item.lastShareTime)">
                     <i *ngSwitchCase="EWorkerState.Normal" class="worker-state _normal" nz-icon nzType="check-circle"
@@ -236,7 +243,6 @@
                     <i *ngSwitchCase="EWorkerState.Error" class="worker-state _error" nz-icon nzType="minus-circle"
                         nzTheme="outline"></i>
                 </ng-container>
-
                 {{ item.name }}</td>
             <td>
                 {{

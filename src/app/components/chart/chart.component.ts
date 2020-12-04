@@ -29,6 +29,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     @ViewChild(BaseChartDirective)
     chartDirective: BaseChartDirective;
 
+    zoom = true;
     chart: IChartSettings;
     private mainCoin: string = '';
     private currWorker: string = '';
@@ -65,7 +66,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
 
     constructor(
         //private translateService: TranslateService,
-        private zoomSwitchService: ZoomSwitchService,
+        //private zoomSwitchService: ZoomSwitchService,
         private fetchPoolDataService: FetchPoolDataService,
         private storageService: StorageService,
         private langService: LangService,
@@ -92,6 +93,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
         );
     }
     private processHistory(coin: string) {
+        this.zoom = this.storageService.currentWorker === '';
         if (
             this.isStarting ||
             this.chart.labels.length === 0 ||
