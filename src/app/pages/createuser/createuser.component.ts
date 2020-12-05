@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { UserApiService } from 'api/user.api';
 import { IUserCreateByAdminParams } from 'interfaces/userapi-query';
 import { FormService } from 'services/form.service';

@@ -198,13 +198,14 @@ export class FetchPoolDataService {
                                 this.storageService.locatTimeDelta = data;
                             }
                             const delta = this.storageService.locatTimeDelta.delta;
-
-                            workers.forEach(item => {
-                                item.lastShareTime = delta + currentTime - item.lastShareTime;
-                            });
-                            workers.sort((a, b) => {
-                                return b.lastShareTime - a.lastShareTime;
-                            });
+                            if (workers?.length > 0) {
+                                workers.forEach(item => {
+                                    item.lastShareTime = delta + currentTime - item.lastShareTime;
+                                });
+                                workers.sort((a, b) => {
+                                    return b.lastShareTime - a.lastShareTime;
+                                });
+                            }
                             const stats: ILiveStatCommon = {
                                 powerMultLog10: powerMultLog10,
                                 clients: total.clients,

@@ -155,12 +155,19 @@
     "users.longAgo":"давно",
 
     "payouts.manualPayoutButton": "Выплатить",
-    "settings.addressesFormats": "Пример поддерживаемых форматов адресов: {{addresses}}",
+    "settings.addressesFormats": "Пример поддерживаемых форматов адресов для {{coin}}:",
+    "settings.htrWarning":"Внимание! Наш механизм выплат HTR всё ещё далёк от совершенства.",
+    "settings.htrAmount":"Для уменьшения нагрузки на модуль выплат HTR, не рекомендуется устанавливать порог для выплат более {{amount}} HTR.",
     "settings.form.address": "Адрес",
-    "settings.form.payoutThreshold": "Мин. платёж",
+    "settings.form.payoutThreshold": "Минимальный платёж",
     "settings.form.autoPayoutEnabled": "Авто-выплаты",
     "settings.form.success":"Данные для {{coinName}} успешно сохранены",
     "settings.form.profitSwitchCoeff":"Коэффициент доходности",
+
+    "settings.form.registrationDate":"Дата регистрации:",
+    "settings.form.publicName":"Публичное имя",
+    "settings.form.email":"Email:",
+
     "createuser.form.isUserActive": "Пользователь активирован",
     "createuser.form.isUserReadOnly": "Read-only пользователь",
     "createuser.form.addUser": "Создать",

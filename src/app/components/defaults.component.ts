@@ -39,14 +39,23 @@ export class DefaultParams {
     static readonly FASTJOBCOINS = ['DGB.sha256'];
     static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'BSV', 'DGB', 'FCH', 'HTR'];
     static readonly PPDALNREWARD = '91.12%';
+    static readonly RECOMMENDEDHTR = '1600';
     static readonly ADDREXAMPLES = {
-        BTC: ['BTC legacy - 13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
-        BCHN: ['BTC legacy - 13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
-        BCHABC: ['BTC legacy - 13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
-        BSV: ['BTC legacy - 13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
-        DGB: ['DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc'],
-        FCH: ['FCHPooLNgZZXXbwdEPnYGuUCaLb7XWpBNk'],
-        HTR: ['HTjxTEAUSwZf34nK4YuicfDPocT7JsQwJi'],
+        BTC: [
+            ' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f',
+            ' PS2H:3H28N5WuREZ93CNmhWcRcrnykWrMqkhFyWN',
+            ' Bech32:bc1uf5tdn87k2uz7r2kl5zrfww362ch3746lq5vse7',
+        ],
+        BCHN: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
+        BCHABC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
+        BSV: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
+        DGB: [
+            ' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc',
+            ' PS2H:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc',
+            ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9',
+        ],
+        FCH: [' P2PKH:FV4WF4rRUvqD3ekQudccGGCFHqTTHnpMhu'],
+        HTR: [' P2PKH:HTjxTEAUSwZf34nK4YuicfDPocT7JsQwJi'],
     };
 
     static readonly TARGETLOGINIGNORE = [

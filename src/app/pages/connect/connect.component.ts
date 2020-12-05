@@ -125,10 +125,11 @@ export class ConnectComponent implements OnInit {
     private getInstances(): void {
         this.backendQueryApiService.instanceEnumerateAll().subscribe(({ instances }) => {
             const store = this.storageService;
-            if (store.coinsList.length === 1 && store.currCoin === 'sha256') {
+            if (store.coinsList.length === 1) {
                 this.isPPDA = true;
                 this.instances.push(instances.find(el => el.port === 5010 || el.port === 25010));
                 this.instances[0].backends = ['sha256d'];
+                this.instances = [this.instances[0]];
             } else this.instances = instances;
 
             this.setInstanceParams(this.instances[0]);

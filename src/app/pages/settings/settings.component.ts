@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { FormService } from 'services/form.service';
 import { UserApiService } from 'api/user.api';
 import { IUserSettings } from 'interfaces/user';
 import { TCoinName } from 'interfaces/coin';
@@ -7,6 +8,7 @@ import { StorageService } from 'services/storage.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
 import { DefaultParams } from 'components/defaults.component';
+import { Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-settings',
@@ -14,6 +16,17 @@ import { DefaultParams } from 'components/defaults.component';
     styleUrls: ['./settings.component.less'],
 })
 export class SettingsComponent implements OnInit {
+    readonly formUser = this.formService.createFormManager(
+        {
+            name: {
+                validators: [Validators.maxLength(64)],
+            },
+        },
+        {
+            onSubmit: () => this.saveUser(),
+        },
+    );
+    regDate: number;
     settingsItems: IUserSettings[];
     selectedIndex: number;
     currentCoin: TCoinName;
@@ -21,12 +34,16 @@ export class SettingsComponent implements OnInit {
 
     isNeedAddressInfoWarning: boolean;
     addrFormats: string;
+    isNeedHTRWarning: boolean;
+    readonly htrAmount = DefaultParams.RECOMMENDEDHTR;
 
     form = this.formBuilder.group({
         address: [],
         payoutThreshold: [],
         autoPayoutEnabled: [],
     } as Record<keyof IUserSettings, any>);
+
+    email: string;
     isSubmitting = false;
     private disabledCoin: string;
 
@@ -40,14 +57,21 @@ export class SettingsComponent implements OnInit {
         private storageService: StorageService,
         private nzModalService: NzModalService,
         private translateService: TranslateService,
+        private formService: FormService,
     ) {}
 
     ngOnInit(): void {
         this.isStarting = true;
-        this.getSettings();
     }
     onCurrentCoinChange(coin: TCoinName): void {
-        if (this.isStarting) return;
+        if (coin === 'HTR') this.isNeedHTRWarning = true;
+        else this.isNeedHTRWarning = false;
+        if (this.isStarting) {
+            this.getSettings(coin);
+            this.getCredentials();
+            this.currentCoin = coin;
+            return;
+        }
         this.currentCoin = coin;
         if (DefaultParams.DEFCOINS.includes(coin)) {
             this.isNeedAddressInfoWarning = true;
@@ -62,7 +86,9 @@ export class SettingsComponent implements OnInit {
     }
 
     changeTarget(target: string) {
-        this.onCurrentCoinChange(this.currentCoin);
+        this.getSettings(this.currentCoin);
+        //this.onCurrentCoinChange(this.currentCoin);
+        this.getCredentials();
     }
 
     save(): void {
@@ -94,6 +120,18 @@ export class SettingsComponent implements OnInit {
                 this.isSubmitting = false;
             },
         );
+    }
+
+    saveUser() {
+        return;
+    }
+
+    private getCredentials(): void {
+        this.userApiService.userGetCredentials().subscribe(credentials => {
+            this.formUser.formData.controls['name'].setValue(credentials.name);
+            this.email = credentials.email;
+            this.regDate = credentials.registrationDate;
+        });
     }
 
     private getSettings(coin: string = ''): void {

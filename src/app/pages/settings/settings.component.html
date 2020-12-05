@@ -2,33 +2,13 @@
 <div class="coin-select-block">
     <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
 </div>
-<!--
-<div>
-
-    <span class="coin-label">
-        {{ "settings.coinLabel" | translate }}
-    </span>
-
-    <nz-select
-        class="coin-select"
-        [(ngModel)]="selectedIndex"
-        (ngModelChange)="changeCoin()"
-    >
-        <nz-option
-            *ngFor="let item of settingsItems; index as i"
-            [nzLabel]="item.name"
-            [nzValue]="i"
-        ></nz-option>
-    </nz-select>
-</div>
--->
-<nz-alert *ngIf="isNeedAddressInfoWarning" style="padding-bottom: 3px;" nzType="warning" nzShowIcon
-[nzMessage]="'settings.addressesFormats'| translate: {addresses:addrFormats}"
-></nz-alert>
-
+            
 <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="form" (submit)="save()">
     <nz-form-item>
-
+        <nz-alert *ngIf="isNeedAddressInfoWarning" style="padding-bottom: 3px; max-width: 100%;" nzType="warning" 
+            [nzMessage]="'settings.addressesFormats'| translate: {coin: currentCoin}"
+            [nzDescription]="addrFormats"
+        ></nz-alert>
         <nz-form-label nzFor="address">
             {{ "settings.form.address" | translate }}
         </nz-form-label>
@@ -36,7 +16,13 @@
             <input nz-input formControlName="address" id="address" />
         </nz-form-control>
     </nz-form-item>
+
     <nz-form-item>
+        <nz-alert *ngIf="isNeedHTRWarning" style="padding-bottom: 3px; max-width: 100%;" nzType="warning" 
+            [nzMessage]="'settings.htrWarning'| translate"
+            [nzDescription]="'settings.htrAmount'| translate: {amount:htrAmount}"
+        ></nz-alert>
+
         <nz-form-label nzFor="payoutThreshold">
             {{ "settings.form.payoutThreshold" | translate }}
         </nz-form-label>
@@ -44,17 +30,88 @@
             <input nz-input formControlName="payoutThreshold" id="payoutThreshold" />
         </nz-form-control>
     </nz-form-item>
+
     <nz-form-item>
         <nz-form-label nzFor="autoPayoutEnabled">
             <nz-switch [formControl]="form.get('autoPayoutEnabled')"></nz-switch>
-
             <span class="autoPayoutLabel">
                 {{ "settings.form.autoPayoutEnabled" | translate }}
             </span>
         </nz-form-label>
     </nz-form-item>
-
+            
     <button [disabled]="isDisabled" nz-button nzType="primary" [nzLoading]="isSubmitting">
         {{ "common.save" | translate }}
     </button>
 </form>
+
+<br>            
+
+<form class="settings-form"
+nz-form
+nzLayout="vertical"
+[formGroup]="formUser.formData"
+(submit)="saveUser()"
+>
+    <nz-form-item>
+        <nz-form-label nzFor="name">
+            <span style="font-weight: bold;">
+                {{ "settings.form.publicName" | translate }}
+            </span>
+        </nz-form-label>
+        <nz-form-control>
+            <input nz-input formControlName="name" id="name" />
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+            <span style="font-weight: bold;">
+                {{ "settings.form.email" | translate }}
+            </span>
+            {{ email }}
+        </nz-form-item>
+
+    <nz-form-item>
+        <span style="font-weight: bold;">
+            {{ "settings.form.registrationDate" | translate }}
+        </span>
+        {{
+                    regDate * 1000
+                        | date: "dd.MM.yy HH:mm"
+                        | async
+                }}
+    </nz-form-item>
+            
+    <button disabled="true" nz-button nzType="primary" >
+        {{ "common.save" | translate }}
+    </button>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
