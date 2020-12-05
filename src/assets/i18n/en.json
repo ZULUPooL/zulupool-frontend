@@ -70,7 +70,7 @@
 
     "connect.select":"Select instance:",
     "connect.beta.head":"Still beta!",
-    "connect.beta":"We are still beta, let us know if your device cannot connect or unstable",
+    "connect.beta":"We are still beta. Make sure you have a spare pool configured! Let us know if your device cannot connect or unstable.",
     "connect.toStart.head":"To start work with {{mode}}, configure your device to connect to our server:",
     "connect.toStart":"{{url}} Username: <login>.<any-worker-name> Password: <not-an-empty-field>",
     "connect.toStart.ppdaMode":"{{ppdaAlgo}} algorithm in PPDA (Pay per difficulty accepted) mode and receive payment for the work performed",
