@@ -20,7 +20,10 @@ export class TargetLoginBadgeComponent implements OnInit {
     constructor(private storageService: StorageService) {}
 
     ngOnInit() {
-        if (this.storageService.allUsersData?.length === 0) {
+        if (
+            this.storageService.allUsersData === null ||
+            this.storageService.allUsersData.length === 0
+        ) {
             this.isReady = false;
             return;
         }

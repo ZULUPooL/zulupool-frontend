@@ -56,14 +56,14 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         'time',
     ];
     foundBlockKeysMobile: (keyof IBlockItem)[] = ['height', 'hash', 'confirmations', 'foundBy'];
-
+    /*
     signUpLink = {
         href: `/${EAppRoutes.Auth}`,
         params: {
             to: decodeURIComponent(`/${userRootRoute}`),
             registration: true,
         },
-    };
+    };*/
     private subscrip: any;
     private explorersLinks = DefaultParams.BLOCKSLINKS;
     private historyFetcherTimeoutId: number;

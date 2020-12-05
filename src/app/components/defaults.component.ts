@@ -18,7 +18,7 @@ import {
 export class DefaultParams {
     static readonly ADMINNAME: string = 'admin';
     static readonly GAZERNAME: string = 'observer';
-    static readonly BASECOINSWITCHTIMER: number = 900;
+    static readonly BASECOINSWITCHTIMER: number = 300;
     static readonly BLOCKSFETCHTIMER: number = 120;
     static readonly DATAUPDATETIMER: number = 29;
     static readonly LIVESTATCACHE: number = 15;
@@ -38,6 +38,7 @@ export class DefaultParams {
     static readonly STRATUM = 'sha256.';
     static readonly FASTJOBCOINS = ['DGB.sha256'];
     static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'BSV', 'DGB', 'FCH', 'HTR'];
+    static readonly PPDALNREWARD = '91.12%';
     static readonly ADDREXAMPLES = {
         BTC: ['BTC legacy - 13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
         BCHN: ['BTC legacy - 13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],

@@ -54,6 +54,10 @@ import {
     ApiOutline,
     InfoCircleOutline,
     LinkOutline,
+    LoginOutline,
+    LogoutOutline,
+    CloudUploadOutline,
+    ToolOutline,
 } from '@ant-design/icons-angular/icons';
 
 import { ChartsModule } from 'ng2-charts';
@@ -65,6 +69,7 @@ import { MonitoringComponent } from 'pages/monitoring/monitoring.component';
 import { HistoryComponent } from 'pages/history/history.component';
 import { AuthComponent } from 'pages/auth/auth.component';
 import { UserActivateComponent } from 'pages/actions/user-activate/user-activate.component';
+import { NewPassowrdComponent } from 'pages/actions/new-password/new-password.component';
 import { UserResendEmailComponent } from 'pages/user-resend-email/user-resend-email.component';
 import { HelpComponent } from 'pages/help/help.component';
 import { UsersComponent } from 'pages/users/users.component';
@@ -167,6 +172,10 @@ export function HttpLoaderFactory(http: HttpClient) {
             ApiOutline,
             InfoCircleOutline,
             LinkOutline,
+            LoginOutline,
+            LogoutOutline,
+            CloudUploadOutline,
+            ToolOutline,
         ]),
 
         ChartsModule,
@@ -196,6 +205,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         HistoryComponent,
         AuthComponent,
         UserActivateComponent,
+        NewPassowrdComponent,
         UserResendEmailComponent,
         HelpComponent,
         UsersComponent,

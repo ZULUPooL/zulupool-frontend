@@ -56,7 +56,11 @@ export class RestService {
             }),
             tap(response => {
                 const { status } = response as IResponse;
-                if (status === 'unknown_id' && tmpUrl !== '/userEnumerateAll') {
+                if (
+                    status === 'unknown_id' &&
+                    tmpUrl !== '/userEnumerateAll' &&
+                    tmpUrl !== '/userChangePassword'
+                ) {
                     this.storageService.sessionId = null;
                     this.storageService.targetUser = null;
                     this.storageService.activeUserData = null;

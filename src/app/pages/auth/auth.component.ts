@@ -43,18 +43,17 @@ export class AuthComponent {
         },
     );
 
-    readonly lostPassForm = this.formService.createFormManager<IAuthSignInParams>(
+    readonly lostPassForm = this.formService.createFormManager<{ login: string }>(
         {
             login: {
                 validators: [Validators.required, Validators.maxLength(64)],
-            },
-            password: {
-                validators: [
-                    Validators.required,
-                    Validators.minLength(8),
-                    Validators.maxLength(64),
+                errors: [
+                    'login_format_invalid',
+                    'user_not_active',
+                    'unknown_id',
+                    'smtp_client_create_error',
+                    'email_send_error',
                 ],
-                errors: ['invalid_password', 'user_not_active', 'unknown'],
             },
         },
         {
@@ -93,13 +92,7 @@ export class AuthComponent {
     );
 
     submitting = false;
-    private lostPassword: boolean;
-    setLostPassword() {
-        this.lostPassword = !this.lostPassword || true;
-    }
-    get isLostPassword() {
-        return this.lostPassword;
-    }
+
 
     constructor(
         private formService: FormService,
@@ -164,5 +157,26 @@ export class AuthComponent {
             },
         );
     }
-    onLostPassword(): void {}
+
+    onLostPassword(): void {
+        this.submitting = true;
+
+        const params = this.lostPassForm.formData.value;
+
+        this.authApiService.changePWD(params).subscribe(
+            () => {
+                this.nzModalService.success({
+                    nzContent: this.translateService.instant('auth.changePWD.success'),
+                    nzOkText: this.translateService.instant('common.ok'),
+                });
+
+                this.router.navigate([routeToUrl(EAppRoutes.Home)]);
+            },
+            error => {
+                this.signUpForm.onError(error);
+
+                this.submitting = false;
+            },
+        );
+    }
 }

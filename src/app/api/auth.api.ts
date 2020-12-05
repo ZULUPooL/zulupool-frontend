@@ -19,6 +19,10 @@ export class AuthApiService {
         return this.restService.post('/userCreate', user);
     }
 
+    changePWD(login: string): Observable<any> {
+        return this.restService.post('/userChangePasswordInitiate', login);
+    }
+
     logOut(): Observable<void> {
         return this.restService.post('/userLogout');
     }

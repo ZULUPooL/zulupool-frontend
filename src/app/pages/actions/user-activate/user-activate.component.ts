@@ -3,9 +3,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 import { authRoute, homeRoute } from 'enums/routing';
-import { AppService } from 'services/app.service';
 import { UserApiService } from 'api/user.api';
 
 @Component({
@@ -16,6 +16,8 @@ export class UserActivateComponent implements OnInit {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         // private appService: AppService,
+        private nzModalService: NzModalService,
+
         private nzMessageService: NzMessageService,
         private translateService: TranslateService,
         private userApiService: UserApiService,
@@ -25,9 +27,10 @@ export class UserActivateComponent implements OnInit {
         const { id } = this.activatedRoute.snapshot.queryParams;
         this.userApiService.userAction({ id }).subscribe(
             () => {
-                this.nzMessageService.success(
-                    this.translateService.instant('actions.useractivate.success'),
-                );
+                this.nzModalService.success({
+                    nzContent: this.translateService.instant('actions.useractivate.success'),
+                    nzOkText: this.translateService.instant('common.ok'),
+                });
                 this.router.navigate([authRoute]);
             },
             () => {

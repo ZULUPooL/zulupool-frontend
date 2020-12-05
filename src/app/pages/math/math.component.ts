@@ -11,7 +11,7 @@ export class MathComponent {
     constructor() {}
 
     emailAddr = DefaultParams.SUPPORTMAIL;
-
+    ppdalnReward = DefaultParams.PPDALNREWARD;
     onClick(type: string): void {
         switch (type) {
             case 'wiki':

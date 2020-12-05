@@ -33,6 +33,14 @@ export class UserApiService {
         if (not(params.login) || not(params.password) || not(params.email)) return of(null);
         return this.restService.post('/userResendEmail', params);
     }
+
+    userChangePassword(
+        params: IApi.IUserChangePassword,
+    ): Observable<IApi.IUserActionResponse | null> {
+        //if (not(params.id)) return of(null);
+        return this.restService.post('/userChangePassword', params);
+    }
+
     userAction(
         params: IApi.IUserActionParams = {} as IApi.IUserActionParams,
     ): Observable<IApi.IUserActionResponse | null> {

@@ -61,6 +61,7 @@
 
                     <nz-dropdown-menu #menu="nzDropdownMenu">
                         <ul nz-menu>
+                            <!--
                             <li
                                 [nzDisabled]="true"
                                 nz-menu-item
@@ -70,7 +71,7 @@
                                     "components.userLayout.menu.changePassword"
                                         | translate
                                 }}
-                            </li>
+                            </li> -->
                             <li nz-menu-divider></li>
                             <li nz-menu-item (click)="logOut()">
                                 {{
@@ -122,9 +123,10 @@
             </ng-template>
         </ul>
         <div>
+            <!---
             <button nz-button nzType="link" disabled="true" (click)="showChangePasswordModal()">
                     {{ "components.userLayout.menu.changePassword" | translate }}
-            </button>
+            </button> -->
             <button nz-button nzType="link" (click)="logOut()">
                     {{ "components.userLayout.menu.logOut" | translate }}
             </button>

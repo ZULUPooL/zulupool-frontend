@@ -20,6 +20,7 @@ export enum EAppRoutes {
 
 export enum EActionsRoutes {
     UserActivate = 'user-acivate',
+    NewPassword = 'new-password',
 }
 
 export const userRootRoute = EAppRoutes.Monitoring;

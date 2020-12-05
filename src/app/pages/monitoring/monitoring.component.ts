@@ -182,6 +182,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     onWorkerRowClick(workerId: string): void {
         //        return;
         this.isStarting = true;
+        //this.currentWorker = workerId;
         this.storageService.currType = DefaultParams.REQTYPE.WORKER;
         this.storageService.currentWorker = workerId;
         this.storageService.coinsObj[this.activeCoinName].is.chartRefresh = true;
@@ -204,6 +205,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     }
     clearWorker(): void {
         this.workerDataReady = false;
+        //this.currentWorker = '';
         //this.isStarting = true;
         this.storageService.currType = DefaultParams.REQTYPE.USER;
         this.storageService.currentWorker = null;

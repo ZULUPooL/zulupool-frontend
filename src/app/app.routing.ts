@@ -28,6 +28,7 @@ import { ConnectComponent } from 'pages/connect/connect.component';
 import { PolicyComponent } from 'pages/policy/policy.component';
 import { TermsComponent } from 'pages/terms/terms.component';
 import { MathComponent } from 'pages/math/math.component';
+import { NewPassowrdComponent } from 'pages/actions/new-password/new-password.component';
 
 const routes: Routes = [
     {
@@ -77,6 +78,10 @@ const routes: Routes = [
             {
                 path: EActionsRoutes.UserActivate,
                 component: UserActivateComponent,
+            },
+            {
+                path: EActionsRoutes.NewPassword,
+                component: NewPassowrdComponent,
             },
         ],
     },
