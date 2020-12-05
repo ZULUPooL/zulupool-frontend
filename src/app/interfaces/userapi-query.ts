@@ -80,6 +80,7 @@ export interface IUserCreateParams {
     login: string; // Unique user identifier (up to 64 characters)
     password: string; // Password (8-64 characters length)
     email: string; // User email, can be omitted, if isActive=true
+    publicname: string;
 }
 export interface IUserCreateByAdminParams {
     login: string; // Unique user identifier (up to 64 characters)

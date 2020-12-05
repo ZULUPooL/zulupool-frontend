@@ -9,8 +9,8 @@ import { AuthApiService, IAuthSignInParams } from 'api/auth.api';
 import { IUserCreateParams } from 'interfaces/userapi-query';
 import { FormService } from 'services/form.service';
 import { EAppRoutes, userRootRoute } from 'enums/routing';
-import { userCreateResp } from 'enums/api-enums';
 import { StorageService } from 'services/storage.service';
+import { DefaultParams } from 'components/defaults.component';
 
 import { routeToUrl } from 'tools/route-to-url';
 import { AppService } from 'services/app.service';
@@ -67,6 +67,9 @@ export class AuthComponent {
                 validators: [Validators.required, Validators.maxLength(64)],
                 errors: ['login_format_invalid', 'duplicate_login'],
             },
+            publicname: {
+                validators: [Validators.required, Validators.maxLength(256)],
+            },
             password: {
                 validators: [
                     Validators.required,
@@ -93,7 +96,6 @@ export class AuthComponent {
 
     submitting = false;
 
-
     constructor(
         private formService: FormService,
         private router: Router,
@@ -103,7 +105,9 @@ export class AuthComponent {
         private authApiService: AuthApiService,
         private appService: AppService,
         private storageService: StorageService,
-    ) {}
+    ) {
+        this.signUpForm.formData.controls['publicname'].setValue(this.generateName());
+    }
 
     onSignIn(): void {
         this.submitting = true;
@@ -139,7 +143,10 @@ export class AuthComponent {
     onSignUp(): void {
         this.submitting = true;
 
-        const params = this.signUpForm.formData.value as IUserCreateParams;
+        let params = this.signUpForm.formData.value as IUserCreateParams;
+        if (params.publicname === '') params.publicname = this.generateName();
+        params['name'] = params.publicname;
+        delete params.publicname;
 
         this.authApiService.signUp(params).subscribe(
             () => {
@@ -158,6 +165,16 @@ export class AuthComponent {
         );
     }
 
+    private generateName() {
+        let randI = Math.floor(Math.random() * DefaultParams.STATES.length);
+        const state = DefaultParams.STATES[randI];
+        randI = Math.floor(Math.random() * DefaultParams.ANIMALS.length);
+        const animal = DefaultParams.ANIMALS[randI];
+        return state + ' ' + animal;
+    }
+    genName() {
+        this.signUpForm.formData.controls['publicname'].setValue(this.generateName());
+    }
     onLostPassword(): void {
         this.submitting = true;
 

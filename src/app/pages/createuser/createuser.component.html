@@ -17,7 +17,8 @@ nzLayout="vertical"
 </nz-form-item>
 <nz-form-item>
     <nz-form-label nzFor="password" (click)="genPWD()">
-        {{ "common.password" | translate }} <span style="font-weight: bold;"> &nbsp; {{ "common.passwordgen" | translate }}</span>
+        {{ "common.password" | translate }} 
+        <span style="font-weight: bold;"> &nbsp; {{ "common.click" | translate }}</span>
     </nz-form-label>
     <nz-form-control
         [nzValidateStatus]="addUserForm.errors.password.status | async"
@@ -42,8 +43,9 @@ nzLayout="vertical"
     </nz-form-control>
 </nz-form-item>
 <nz-form-item>
-    <nz-form-label nzFor="name">
+    <nz-form-label nzFor="name" (click)="genName()">
         {{ "common.name" | translate }}
+        <span style="font-weight: bold;"> &nbsp; {{ "common.click" | translate }}</span>
     </nz-form-label>
     <nz-form-control
         [nzValidateStatus]="addUserForm.errors.name.status | async"

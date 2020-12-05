@@ -6,7 +6,7 @@
     "common.name": "Публичное имя",
     "common.registrationDate": "Дата регистрации",
     "common.password": "Пароль",
-    "common.passwordgen": "(другой)",
+    "common.click": "(другой)",
     "common.email": "e-mail",
     "common.save": "Сохранить",
     "common.api.unhandledError": "При обращении к серверу произошла ошибка, сервис может работать некорректно",

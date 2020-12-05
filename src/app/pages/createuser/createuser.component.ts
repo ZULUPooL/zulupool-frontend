@@ -5,6 +5,7 @@ import { FormService } from 'services/form.service';
 import { Validators } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
+import { DefaultParams } from 'components/defaults.component';
 
 @Component({
     selector: 'app-createuser',
@@ -68,6 +69,7 @@ export class CreateUserComponent implements OnInit {
         private nzModalService: NzModalService,
     ) {
         this.addUserForm.formData.controls['password'].setValue(this.generatePassword());
+        this.addUserForm.formData.controls['name'].setValue(this.generateName());
         this.addUserForm.formData.controls['isActive'].setValue(true);
         this.addUserForm.formData.controls['isReadOnly'].setValue(true);
     }
@@ -77,8 +79,19 @@ export class CreateUserComponent implements OnInit {
         window.crypto.getRandomValues(buf);
         return btoa(String.fromCharCode.apply(null, buf)).slice(0, -2);
     }
+    private generateName() {
+        let randI = Math.floor(Math.random() * DefaultParams.STATES.length);
+        const state = DefaultParams.STATES[randI];
+        randI = Math.floor(Math.random() * DefaultParams.ANIMALS.length);
+        const animal = DefaultParams.ANIMALS[randI];
+        return state + ' ' + animal;
+    }
+
     genPWD() {
         this.addUserForm.formData.controls['password'].setValue(this.generatePassword());
+    }
+    genName() {
+        this.addUserForm.formData.controls['name'].setValue(this.generateName());
     }
 
     ngOnInit() {}

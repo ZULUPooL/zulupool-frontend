@@ -70,6 +70,20 @@
                     <input formControlName="login" nz-input id="login" />
                 </nz-form-control>
             </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label nzFor="publicname" (click)="genName()">
+                    {{ "common.name" | translate }}
+                    <span style="font-weight: bold;"> &nbsp; {{ "common.click" | translate }}</span>
+                </nz-form-label>
+                <nz-form-control
+                    [nzValidateStatus]="signUpForm.errors.publicname.status | async"
+                >
+                    <input formControlName="publicname" nz-input id="publicname" />
+                </nz-form-control>
+            </nz-form-item>
+
+
             <nz-form-item>
                 <nz-form-label nzFor="password">
                     {{ "common.password" | translate }}
