@@ -7,15 +7,14 @@ import {
     ILiveStatWorker,
     IFetchResponce,
     ILocalTimeDelta,
-    ILiveStatUser,
     ILiveStatCommon,
 } from 'interfaces/common';
-//import { Injectable } from "@angular/core";
 
-//@Injectable({
-//providedIn: "root",
-//})
 export class DefaultParams {
+    static readonly GUIVERSION: string = 'v1.10b';
+    static readonly SUPPORTMAIL = '';
+    static readonly DISCORDSERVER = '';
+
     static readonly ADMINNAME: string = 'admin';
     static readonly GAZERNAME: string = 'observer';
     static readonly BASECOINSWITCHTIMER: number = 300;
@@ -32,8 +31,6 @@ export class DefaultParams {
         'https://en.bitcoin.it/wiki/Difficulty#What_is_the_minimum_difficulty.3F';
     static readonly PPDA = 'https://ppda.';
     static readonly PPDALN = 'https://beta.';
-    static readonly SUPPORTMAIL = '';
-    static readonly DISCORDSERVER = '';
     static readonly PPDAALGO = 'sha256d';
     static readonly STRATUM = 'sha256.';
     static readonly FASTJOBCOINS = ['DGB.sha256'];

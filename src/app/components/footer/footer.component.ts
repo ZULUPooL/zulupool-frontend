@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { EAppRoutes } from 'enums/routing';
+import { DefaultParams } from 'components/defaults.component';
 
 @Component({
     selector: 'app-footer',
@@ -7,4 +8,5 @@ import { EAppRoutes } from 'enums/routing';
 })
 export class FooterComponent {
     readonly EAppRoutes = EAppRoutes;
+    readonly guiVersion = DefaultParams.GUIVERSION;
 }
