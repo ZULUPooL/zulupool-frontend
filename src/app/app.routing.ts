@@ -57,12 +57,12 @@ const routes: Routes = [
                 pathMatch: 'full',
                 component: PolicyComponent,
             },
-            {
-                path: EAppRoutes.Terms,
-                pathMatch: 'full',
-                component: TermsComponent,
-            },
         ],
+    },
+    {
+        path: EAppRoutes.Terms,
+        pathMatch: 'full',
+        component: TermsComponent,
     },
     {
         path: EAppRoutes.Auth,

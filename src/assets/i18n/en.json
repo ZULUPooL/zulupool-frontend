@@ -60,7 +60,7 @@
     "components.userLayout.nav.payouts": "Payouts",
     "components.userLayout.nav.settings": "Settings",
     "components.userLayout.nav.connect": "Start work",
-    "components.userLayout.nav.math":"Rewards & fee",
+    "components.userLayout.nav.math":"Rewards",
     "components.userLayout.menu.changePassword": "Change password",
     "components.userLayout.menu.logOut": "Log out",
     "components.userLayout.changePassword.passwordPlaceholder": "New password",

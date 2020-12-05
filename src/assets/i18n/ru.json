@@ -64,7 +64,7 @@
     "components.userLayout.nav.payouts": "Выплаты",
     "components.userLayout.nav.settings": "Настройки",
     "components.userLayout.nav.connect": "Подключение",
-    "components.userLayout.nav.math":"Награда и комиссия",
+    "components.userLayout.nav.math":"Вознаграждения",
     "components.userLayout.menu.changePassword": "Сменить пароль",
     "components.userLayout.menu.logOut": "Выйти",
     "components.userLayout.changePassword.passwordPlaceholder": "Введите новый пароль",

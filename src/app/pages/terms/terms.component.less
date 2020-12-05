@@ -1,22 +1,31 @@
-.info {
+:host {
+    display: flex;
+    min-height: 100vh;
+}
+
+.header {
     display: flex;
     justify-content: space-between;
+    max-width: initial;
 }
 
-.info-item {
-    width: 32%;
-}
-
-.pools {
+.header-controls {
     display: flex;
+
+    & > *:not(:first-child) {
+        margin-left: 15px;
+    }
 }
 
-.pools-item {
-    width: 50%;
-    text-align: center;
-    font-size: 32px;
-    font-weight: bold;
+.help-link {
+    font-size: 1.1em;
+    margin-right: 18px;
 }
 
-.news {
+.enter-link {
+    display: block;
+    background: #0b779e;
+    color: white;
+    text-shadow: 1px 1px 3px black;
+    padding: 0 20px;
 }

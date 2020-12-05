@@ -14,6 +14,7 @@ export class AuthGuard implements CanActivate {
     constructor(private router: Router, private appService: AppService) {}
 
     canActivate(_, state: RouterStateSnapshot): Observable<true | UrlTree> {
+        //if (state.url === '/terms') return true as any;
         return this.appService.user.pipe(
             map(user => {
                 return user

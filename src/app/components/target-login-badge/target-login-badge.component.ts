@@ -22,6 +22,7 @@ export class TargetLoginBadgeComponent implements OnInit {
     ngOnInit() {
         if (
             this.storageService.allUsersData === null ||
+            this.storageService.allUsersData === undefined ||
             this.storageService.allUsersData.length === 0
         ) {
             this.isReady = false;
