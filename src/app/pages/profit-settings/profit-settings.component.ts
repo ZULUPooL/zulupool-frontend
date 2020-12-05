@@ -13,13 +13,15 @@ import { TranslateService } from '@ngx-translate/core';
     styleUrls: ['./profit-settings.component.less'],
 })
 export class ProfitSettingsComponent implements OnInit {
+    profitKeys: (keyof IProfitSett)[] = ['name', 'profitSwitchCoeff'];
+
     profitItems: IProfitSett[];
     selectedIndex: number;
     currentCoin: TCoinName;
-    isStarting: boolean;
-    form = this.formBuilder.group({
-        profitSwitchCoeff: [],
-    });
+    profitsReady: boolean;
+    form: {
+        [name: string]: any;
+    };
     isSubmitting = false;
 
     private disabledCoin: string;
@@ -37,53 +39,54 @@ export class ProfitSettingsComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.isStarting = true;
+        this.profitsReady = false;
+        this.form = {};
         this.getSettings();
     }
-    onCurrentCoinChange(coin: TCoinName): void {
-        if (this.isStarting) return;
-        this.currentCoin = coin;
-        let index = this.profitItems.findIndex(el => el.name === coin);
-        this.form.patchValue(this.profitItems[index]);
+
+    save(item: IProfitSett) {
+        if (item.name === '' || item.name === null || item.name === undefined) return;
+        if (item.name === 'HTR' || item.name === 'sha256') {
+            this.nzModalService.error({
+                nzContent: this.translateService.instant('profit.form.cannot', {
+                    coin: item.name,
+                }),
+                nzOkText: this.translateService.instant('common.ok'),
+            });
+        } else {
+            const coinObj = this.storageService.coinsObj[item.name];
+            const value: string = this.form[item.name].value.profitSwitchCoeff;
+            if (coinObj.is.nameSplitted)
+                item.name = coinObj.info.name + '.' + coinObj.info.algorithm;
+            const data = {
+                profitSwitchCoeff: parseFloat(value.replace(',', '.')),
+                coin: item.name,
+            };
+
+            this.userApiService.updateProfitSwitchCoeff(data).subscribe(
+                () => {
+                    this.nzModalService.success({
+                        nzContent: this.translateService.instant('profit.form.success', {
+                            coin: item.name,
+                        }),
+                        nzOkText: this.translateService.instant('common.ok'),
+                    });
+                    this.getSettings();
+                },
+                () => {
+                    this.nzModalService.error({
+                        nzContent: this.translateService.instant('profit.form.error', {
+                            coin: item.name,
+                        }),
+                        nzOkText: this.translateService.instant('common.ok'),
+                    });
+                    this.isSubmitting = false;
+                    this.profitsReady = true;
+                },
+            );
+        }
     }
-
-    changeCoin(): void {
-        this.form.patchValue(this.profitItems[this.selectedIndex]);
-    }
-
-    save(): void {
-        if (this.form.value.payoutThreshold === null || this.form.value.address === null) return;
-        this.isSubmitting = true;
-
-        const index = this.profitItems.findIndex(el => el.name === this.currentCoin);
-        let coinName = this.profitItems[index].name;
-        const coinObj = this.storageService.coinsObj[coinName];
-        if (coinObj.is.nameSplitted) coinName = coinObj.info.name + '.' + coinObj.info.algorithm;
-        const value: string = this.form.value.profitSwitchCoeff;
-        const data = {
-            profitSwitchCoeff: parseFloat(value.replace(',', '.')),
-            coin: coinName,
-        };
-
-        this.userApiService.updateProfitSwitchCoeff(data).subscribe(
-            () => {
-                this.nzModalService.success({
-                    nzContent: this.translateService.instant('settings.form.success', {
-                        coinName: this.currentCoin,
-                    }),
-                    nzOkText: this.translateService.instant('common.ok'),
-                });
-                this.isSubmitting = false;
-                this.isStarting = true;
-                this.getSettings(coinName);
-            },
-            () => {
-                this.isSubmitting = false;
-            },
-        );
-    }
-
-    private getSettings(coin: string = ''): void {
+    private getSettings(): void {
         this.userApiService.queryProfitSwitchCoeff().subscribe((data: IProfitSett[]) => {
             if (data.length > 0) {
                 const coinObj = this.storageService.coinsObj;
@@ -107,13 +110,16 @@ export class ProfitSettingsComponent implements OnInit {
                     if (coin.name.split('.').length > 1) {
                         coin.name = coin.name.split('.')[0];
                     }
+                    this.form[coin.name] = this.formBuilder.group({
+                        profitSwitchCoeff: [coin.profitSwitchCoeff.toString()],
+                    });
                 });
             }
             this.profitItems = data;
-            if (coin === '') this.currentCoin = data[data.length - 1].name;
-            else this.currentCoin = coin;
-            this.isStarting = false;
-            this.onCurrentCoinChange(this.currentCoin);
+            //if (coin === '') this.currentCoin = data[data.length - 1].name;
+            //else this.currentCoin = coin;
+            this.profitsReady = true;
+            //this.onCurrentCoinChange(this.currentCoin);
         });
     }
 }

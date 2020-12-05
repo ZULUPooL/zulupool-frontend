@@ -112,6 +112,12 @@
     "users.usersTable.title.power": "Хешрейт",
     "users.usersTable.title.lastShareTime": "Видели",
 
+    "profit.profitKeys.title.name":"Монета",
+    "profit.profitKeys.title.profitSwitchCoeff":"Коэффициент",
+
+    "profit.form.success":"Настройки для {{coin}} успешно сохранены.",
+    "profit.form.cannot":"Настройки для {{coin}} не могут быть изменены.",
+    "profit.form.err":"При обновлении настроек монеты {{coin}}, произошла ошибка.",
 
 
 
@@ -163,6 +169,9 @@
     "settings.form.autoPayoutEnabled": "Авто-выплаты",
     "settings.form.success":"Данные для {{coinName}} успешно сохранены",
     "settings.form.profitSwitchCoeff":"Коэффициент доходности",
+
+
+
 
     "settings.form.registrationDate":"Дата регистрации:",
     "settings.form.publicName":"Публичное имя",

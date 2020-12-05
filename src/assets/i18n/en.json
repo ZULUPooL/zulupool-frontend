@@ -106,6 +106,12 @@
     "users.usersTable.title.lastShareTime": "Last Seen",
 
 
+    "profit.profitKeys.title.name":"Coin",
+    "profit.profitKeys.title.profitSwitchCoeff":"Сoefficient",
+    "profit.form.success":"Settings for {{coin}} successfully saved.",
+    "profit.form.cannot":"Settings for {{coin}} cannot be updated.",
+    "profit.form.err":"An error occurred while updating settings for {{coin}}",
+
     "connect.instancesKeys.title.protocol":"Protocol",
     "connect.instancesKeys.title.type":"Type",
     "connect.instancesKeys.title.port":"Port",
