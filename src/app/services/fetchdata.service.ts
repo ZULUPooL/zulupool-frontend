@@ -317,7 +317,7 @@ export class FetchPoolDataService {
                     api.getWorkerStatsHistory(apiReq as any).subscribe(
                         (historyResponce: IHistoryResp) => {
                             if (historyResponce.stats.length > 1) historyResponce.stats.shift();
-                            processChartsData(historyResponce);
+                            processChartsData(historyResponce, params.workerId);
                         },
                         () => {
                             processErr();
@@ -347,7 +347,7 @@ export class FetchPoolDataService {
                         },
                     );
             }
-            function processChartsData(historyResponce: IHistoryResp): void {
+            function processChartsData(historyResponce: IHistoryResp, workerId: string = ''): void {
                 if (!storage.locatTimeDelta.isUpdated) {
                     const ts = getTs();
                     const delta = ts - historyResponce.currentTime;
@@ -360,7 +360,13 @@ export class FetchPoolDataService {
                 const lastItem = historyResponce.stats.length - 1;
                 if (lastItem >= 0 && historyResponce.stats[lastItem].time > time) {
                     historyResponce.stats[lastItem].time = time;
-                    historyResponce.stats[lastItem].power = coinObj.live.data.power;
+                    let lastPowerData = coinObj.live.data.power;
+                    if (workerId !== '') {
+                        lastPowerData = coinObj.live.data.miners.filter(
+                            miner => miner.name === workerId,
+                        )[0].power;
+                    }
+                    historyResponce.stats[lastItem].power = lastPowerData;
                 }
                 historyResponce.stats.forEach(el => {
                     el.power = el.power / Math.pow(10, 15 - historyResponce.powerMultLog10);
