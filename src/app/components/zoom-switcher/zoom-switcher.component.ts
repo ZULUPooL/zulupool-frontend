@@ -39,7 +39,7 @@ export class ZoomSwitcherComponent implements OnInit {
         if (newZoom === '') debugger;
         if (newZoom === undefined) debugger;
         if (newZoom === null) debugger;
-        if (this.storageService.currentWorker !== '') return;
+        //if (this.storageService.currentWorker !== '') return;
         if (this.storageService.currZoom !== newZoom) this.storageService.currZoom = newZoom;
         this.zoomSwitchService.setZoom(newZoom);
         this.onChange.emit(newZoom);

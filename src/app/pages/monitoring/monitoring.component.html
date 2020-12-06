@@ -1,8 +1,4 @@
 <app-target-login-badge style="padding-bottom: 5px;" (onTargetChange)=changeTarget($event)></app-target-login-badge>
-<nz-alert *ngIf="isNeedInfoActive" style="padding-bottom: 3px;" nzType="info" nzShowIcon
-    [nzMessage]="'monitoring.payments.smartMode' | translate: {coin:activeCoinName}"
-></nz-alert>
-
 <div class="main">
     <div class="info">
         <div class="coin-select-block">
@@ -122,13 +118,16 @@
                     </td>
                 </tr>
                 <tr style="padding: 3px 4px 0px; text-align: center;">
-                    <button [disabled]="isPayBttnActive" nz-button nzType="primary" [nzLoading]="isSending" (click)="manualPayout()">
+                    <button [disabled]="!isPayBttnActive" nz-button nzType="primary" [nzLoading]="isSending" (click)="manualPayout()">
                         {{ "payouts.manualPayoutButton" | translate }}
                     </button>
                 </tr>
-        </tbody>
-        </nz-table>
-    </div>
+    </tbody>
+</nz-table>
+<nz-alert *ngIf="isNeedInfoActive" style="padding-bottom: 3px;" nzType="info" nzShowIcon
+[nzMessage]="'monitoring.payments.smartMode' | translate: {coin:activeCoinName}"
+></nz-alert>
+</div>
        <!-- <nz-table *ngIf="currentCoin && currentCoin !== 'sha256'" class="info-table-mobile _table-mobile" nzBordered [nzTemplateMode]="true"
             [nzLoading]="tableData.isLoading">
             <thead>
@@ -152,6 +151,7 @@
     -->
     </div>
 
+    
     <app-chart class="coin-chart"  [mainCoinForChart]="mainChartCoin" ></app-chart>
 
 <!--
@@ -269,8 +269,8 @@
  
 
 
-<nz-modal nzWidth="100%" [nzVisible]="workerDataReady" [nzTitle]="workerData?.name"
+<nz-modal nzWrapClassName="vertical-center-modal" [nzVisible]="workerDataReady" [nzTitle]="workerData?.name"
     [nzFooter]="null" (nzOnCancel)="clearWorker()">
-    <app-chart class="coin-chart" [mainCoinForChart]="mainChartCoin" ></app-chart>
+    <app-chart  [mainCoinForChart]="mainChartCoin" ></app-chart>
 </nz-modal>
 

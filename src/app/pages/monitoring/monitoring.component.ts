@@ -43,19 +43,25 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     isManualPayoutSending: boolean;
 
     get isPayBttnActive(): boolean {
-        return (
-            this.storageService.isReadOnly ||
-            this.isBalanceDataLoading ||
-            this.currentBalance?.balance === '0.00' ||
-            this.currentBalance?.requested !== '0.00' ||
+        if (this.storageService.isReadOnly || this.isBalanceDataLoading) return false;
+        if (
             Object.keys(this.settingsItems).length === 0 ||
             this.settingsItems[this.storageService.currCoin].address === null
-        );
+        )
+            return false;
+        if (
+            this.currentBalance?.balance !== '0' &&
+            this.currentBalance?.balance !== '0.00' &&
+            (this.currentBalance?.requested === '0.00' || this.currentBalance?.requested === '0')
+        )
+            return true;
+        return false;
     }
     get isNeedInfoActive(): boolean {
         return (
             Object.keys(this.settingsItems).length !== 0 &&
             this.currentBalance?.balance !== '0.00' &&
+            this.currentBalance?.balance !== '0' &&
             this.activeCoinObj.info.algorithm !== this.activeCoinObj.info.name &&
             this.settingsItems[this.storageService.currCoin].address === null
         );
@@ -489,8 +495,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     private subs(): void {
         this.subscrip = [
             this.zoomSwitchService.zoomSwitch.subscribe(zoom => {
-                if (zoom !== '' && this.storageService.currentWorker === '')
-                    this.processZoomChange(zoom);
+                if (zoom !== '') this.processZoomChange(zoom);
             }),
             this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
                 if (data.status && data.type === this.storageService.currType) this.processCoins();
