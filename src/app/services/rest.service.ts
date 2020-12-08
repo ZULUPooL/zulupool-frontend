@@ -34,9 +34,8 @@ export class RestService {
     constructor(
         private http: HttpClient,
         private storageService: StorageService,
-        private router: Router,
-    ) //private appService: AppService,
-    {}
+        private router: Router, 
+    ) {}
 
     post<T>(url: string, params: any = {}): Observable<T> {
         const options = { headers: this.headers };
@@ -59,14 +58,8 @@ export class RestService {
             }),
             tap(response => {
                 const { status } = response as IResponse;
-                /*
-                if (status === 'unknown_id' && tmpUrl !== '/userEnumerateAll') {
-                    
-                    this.router.navigate([homeRoute]);
-                    //throw new InvalidDataError(status);
-                } else */ if (
-                    tmpUrl === '/backendQueryProfitSwitchCoeff'
-                ) {
+                if (tmpUrl === '/backendQueryProfitSwitchCoeff' && Array.isArray(response)) {
+                    response['coins'] = response;
                     response['status'] = 'ok';
                 } else if (status !== OKStatus) throw new InvalidDataError(status);
             }),
