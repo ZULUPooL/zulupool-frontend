@@ -87,41 +87,80 @@ export class ProfitSettingsComponent implements OnInit {
         }
     }
     private getSettings(): void {
-        this.userApiService.queryProfitSwitchCoeff().subscribe((data: IProfitSett[]) => {
-            if (data.length > 0) {
-                const coinObj = this.storageService.coinsObj;
-                if (data.length > 2) {
-                    const algoCoin = this.storageService.coinsList.find(coin => {
-                        return coinObj[coin].is.algo;
-                    });
-                    const algoData =
-                        data.find(coin => {
-                            return coin.name === algoCoin;
-                        }) || {};
-                    if (algoCoin.length > 0 && Object.keys(algoData).length === 0) {
-                        data.push({
-                            name: algoCoin,
-                            profitSwitchCoeff: 0.0,
+        this.userApiService.queryProfitSwitchCoeff().subscribe(data => {
+            if (Object.keys(data).length === 0) {
+                if (data.length > 0) {
+                    const coinObj = this.storageService.coinsObj;
+                    if (data.length > 2) {
+                        const algoCoin = this.storageService.coinsList.find(coin => {
+                            return coinObj[coin].is.algo;
                         });
-                        this.disabledCoin = algoCoin;
+                        const algoData =
+                            data.find(coin => {
+                                return coin.name === algoCoin;
+                            }) || {};
+                        if (algoCoin.length > 0 && Object.keys(algoData).length === 0) {
+                            data.push({
+                                name: algoCoin,
+                                profitSwitchCoeff: 0.0,
+                            });
+                            this.disabledCoin = algoCoin;
+                        }
                     }
-                }
-                data.forEach(coin => {
-                    if (coin.name.split('.').length > 1) {
-                        coin.name = coin.name.split('.')[0];
-                    }
-                    this.form[coin.name] = this.formBuilder.group({
-                        profitSwitchCoeff: [coin.profitSwitchCoeff.toString()],
+                    data.forEach(coin => {
+                        if (coin.name.split('.').length > 1) {
+                            coin.name = coin.name.split('.')[0];
+                        }
+                        this.form[coin.name] = this.formBuilder.group({
+                            profitSwitchCoeff: [coin.profitSwitchCoeff.toString()],
+                        });
                     });
-                });
+                }
+                this.profitItems = data;
+                //if (coin === '') this.currentCoin = data[data.length - 1].name;
+                //else this.currentCoin = coin;
+                this.profitsReady = true;
+                //this.onCurrentCoinChange(this.currentCoin);
+            } else {
+                if (data.coins.length > 0) {
+                    const coinObj = this.storageService.coinsObj;
+                    if (data.coins.length > 2) {
+                        const algoCoin = this.storageService.coinsList.find(coin => {
+                            return coinObj[coin].is.algo;
+                        });
+                        const algoData =
+                            data.coins.find(coin => {
+                                return coin.name === algoCoin;
+                            }) || {};
+                        if (algoCoin.length > 0 && Object.keys(algoData).length === 0) {
+                            data.coins.push({
+                                name: algoCoin,
+                                profitSwitchCoeff: 0.0,
+                            });
+                            this.disabledCoin = algoCoin;
+                        }
+                    }
+                    data.coins.forEach(coin => {
+                        if (coin.name.split('.').length > 1) {
+                            coin.name = coin.name.split('.')[0];
+                        }
+                        this.form[coin.name] = this.formBuilder.group({
+                            profitSwitchCoeff: [coin.profitSwitchCoeff.toString()],
+                        });
+                    });
+                }
+                this.profitItems = data.coins;
+                //if (coin === '') this.currentCoin = data[data.length - 1].name;
+                //else this.currentCoin = coin;
+                this.profitsReady = true;
+                //this.onCurrentCoinChange(this.currentCoin);
             }
-            this.profitItems = data;
-            //if (coin === '') this.currentCoin = data[data.length - 1].name;
-            //else this.currentCoin = coin;
-            this.profitsReady = true;
-            //this.onCurrentCoinChange(this.currentCoin);
         });
     }
+}
+
+export interface IProfitData {
+    coins: IProfitSett[];
 }
 
 export interface IProfitSett {

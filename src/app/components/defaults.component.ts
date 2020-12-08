@@ -147,13 +147,13 @@ export class DefaultParams {
     //static readonly zoom: string = "15M";
     //static readonly zoomList: string[] = ["1M","5M","30M","H1","H4","D","W",];
     static readonly ZOOM: IZoom = {
-        pool: '1M',
+        pool: '3M',
         user: '5M',
         worker: '5M',
         history: 'D',
     };
     static readonly ZOOMSLIST: IZoomList = {
-        pool: ['1M', '15M', 'H1', 'H4', 'D'],
+        pool: ['3M', '15M', '30M', 'H1', 'H4', 'D'],
         user: ['5M', '15M', 'H1', 'H4', 'D'],
         worker: ['5M', '30M', 'H1', 'H4', 'D'],
         history: ['D', 'W', 'M'],
@@ -167,18 +167,34 @@ export class DefaultParams {
             labelText: 'HH:mm',
             lastLabelText: 'HH:mm:ss',
         },
+        '2M': {
+            groupByInterval: 2 * 60,
+            statsWindow: 50,
+            maxStatsWindow: 60,
+            refreshTimer: 20,
+            labelText: 'HH:mm',
+            lastLabelText: 'HH:mm:ss',
+        },
+        '3M': {
+            groupByInterval: 3 * 60,
+            statsWindow: 50,
+            maxStatsWindow: 60,
+            refreshTimer: 20,
+            labelText: 'HH:mm',
+            lastLabelText: 'HH:mm:ss',
+        },
         '5M': {
             groupByInterval: 5 * 60,
-            statsWindow: 80,
-            maxStatsWindow: 90,
+            statsWindow: 50,
+            maxStatsWindow: 60,
             refreshTimer: 60,
             labelText: 'HH:mm',
             lastLabelText: 'HH:mm:ss',
         },
         '10M': {
             groupByInterval: 10 * 60,
-            statsWindow: 80,
-            maxStatsWindow: 90,
+            statsWindow: 50,
+            maxStatsWindow: 60,
             refreshTimer: 60,
             labelText: 'HH:mm',
             lastLabelText: 'HH:mm:ss',
