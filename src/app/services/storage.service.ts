@@ -11,6 +11,7 @@ import { EUserRoles } from 'enums/role';
 export class StorageService {
     constructor() {}
 
+    private ppdaMode: boolean = false;
     private localTimeD = DefaultParams.LOCALTIMEDELTA;
     private coin: string = '';
     private user: string = '';
@@ -27,6 +28,13 @@ export class StorageService {
     private trgUserData: IUser[];
 
     private zoomParams = DefaultParams.ZOOMPARAMS;
+
+    get isPPDA(): boolean {
+        return this.ppdaMode;
+    }
+    set isPPDA(ppda: boolean) {
+        this.ppdaMode = ppda;
+    }
 
     get locatTimeDelta(): { delta: number; isUpdated: boolean } {
         return this.localTimeD;

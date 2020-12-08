@@ -34,12 +34,11 @@ export class AppService {
 
     private getUsersCredentials(user: string) {}
 
-    authorize(sessionId: string, isReadOnly: boolean): Observable<void> {
+    authorize(sessionId: string): Observable<void> {
         return this.userApiService.userGetCredentials({ id: sessionId }).pipe(
             switchMap<IApi.IUserGetCredentialsResponse, Observable<void>>(user => {
-                this.storageService.sessionId = sessionId;
-                this.storageService.isReadOnly = isReadOnly;
-                this.storageService.activeUserData = user;
+                //this.storageService.sessionId = sessionId;
+                //this.storageService.isReadOnly = isReadOnly;
                 //const state = isReadOnly ? EUsersState.ReadOnly : EUsersState.Regular;
                 return this.userApiService.userEnumerateAll({ id: sessionId }).pipe(
                     map(({ users }) => {
@@ -104,14 +103,13 @@ export class AppService {
 
     private init(): void {
         const initialSessionId = this.storageService.sessionId;
-        const isReadOnly = this.storageService.isReadOnly;
+        //const isReadOnly = this.storageService.isReadOnly;
 
         if (not(initialSessionId)) {
             userStore.next(null);
-
             this.isReady.next(true);
         } else {
-            this.authorize(initialSessionId, isReadOnly)
+            this.authorize(initialSessionId)
                 .pipe(
                     finalize(() => {
                         this.isReady.next(true);

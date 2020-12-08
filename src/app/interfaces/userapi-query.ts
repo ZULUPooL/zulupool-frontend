@@ -37,6 +37,8 @@ export interface IUserGetCredentialsResponse {
     name: string; // Unique user identifier
     email: string; //User email
     registrationDate: number; // User registration date. Uses unix time format.
+    isReadOnly?: boolean;
+    login?: string;
 }
 export interface ICredentials {
     name: string; // Unique user identifier

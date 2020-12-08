@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Validators, NgControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import { FormService } from 'services/form.service';
 import { EAppRoutes, userRootRoute } from 'enums/routing';
 import { StorageService } from 'services/storage.service';
 import { DefaultParams } from 'components/defaults.component';
+import { FetchPoolDataService } from 'services/fetchdata.service';
 
 import { routeToUrl } from 'tools/route-to-url';
 import { AppService } from 'services/app.service';
@@ -20,7 +21,7 @@ import { AppService } from 'services/app.service';
     templateUrl: './auth.component.html',
     styleUrls: ['./auth.component.less'],
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit {
     readonly EAppRoutes = EAppRoutes;
     readonly routeToUrl = routeToUrl;
 
@@ -95,6 +96,8 @@ export class AuthComponent {
     );
 
     submitting = false;
+    isPPDA: boolean = false;
+    isReady: boolean = false;
 
     constructor(
         private formService: FormService,
@@ -105,10 +108,24 @@ export class AuthComponent {
         private authApiService: AuthApiService,
         private appService: AppService,
         private storageService: StorageService,
-    ) {
-        this.signUpForm.formData.controls['publicname'].setValue(this.generateName());
+        private fetchPoolDataService: FetchPoolDataService,
+    ) {}
+
+    ngOnInit() {
+        this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
+            if (data.status && data.type === 'auth') {
+                this.signUpForm.formData.controls['publicname'].setValue(this.generateName());
+                this.isPPDA = this.storageService.isPPDA;
+                if (this.isPPDA) this.signUpForm.formData.controls.email.disable();
+                this.isReady = true;
+            }
+        }),
+            this.fetchPoolDataService.coins({ coin: '', type: 'auth', forceUpdate: true });
     }
 
+    ngOnDestroy() {
+        //this.fetchPoolDataService.apiGetListOfCoins.unsubscribe();
+    }
     onSignIn(): void {
         this.submitting = true;
 
@@ -116,7 +133,9 @@ export class AuthComponent {
 
         this.authApiService.sigIn(params).subscribe(
             ({ sessionid, isReadOnly }) => {
-                this.appService.authorize(sessionid, isReadOnly).subscribe(
+                this.storageService.sessionId = sessionid;
+                this.storageService.isReadOnly = isReadOnly;
+                this.appService.authorize(sessionid).subscribe(
                     () => {
                         const target =
                             (this.activatedRoute.snapshot.queryParams.to as string) ||

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EAppRoutes, authRoute } from 'enums/routing';
+import { EAppRoutes, homeRoute } from 'enums/routing';
 import { Router } from '@angular/router';
 import { DefaultParams } from 'components/defaults.component';
+import { AppService } from 'services/app.service';
 
 import { Observable } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
@@ -34,7 +35,8 @@ export class RestService {
         private http: HttpClient,
         private storageService: StorageService,
         private router: Router,
-    ) {}
+    ) //private appService: AppService,
+    {}
 
     post<T>(url: string, params: any = {}): Observable<T> {
         const options = { headers: this.headers };
@@ -57,18 +59,14 @@ export class RestService {
             }),
             tap(response => {
                 const { status } = response as IResponse;
-                if (
-                    status === 'unknown_id' &&
-                    tmpUrl !== '/userEnumerateAll' &&
-                    tmpUrl !== '/userChangePassword'
-                ) {
-                    this.storageService.sessionId = null;
-                    this.storageService.targetUser = null;
-                    this.storageService.activeUserData = null;
-                    this.storageService.isReadOnly = null;
-                    //this.router.navigate([authRoute]);
+                /*
+                if (status === 'unknown_id' && tmpUrl !== '/userEnumerateAll') {
+                    
+                    this.router.navigate([homeRoute]);
                     //throw new InvalidDataError(status);
-                } else if (tmpUrl === '/backendQueryProfitSwitchCoeff') {
+                } else */ if (
+                    tmpUrl === '/backendQueryProfitSwitchCoeff'
+                ) {
                     response['status'] = 'ok';
                 } else if (status !== OKStatus) throw new InvalidDataError(status);
             }),

@@ -11,7 +11,7 @@ import {
 } from 'interfaces/common';
 
 export class DefaultParams {
-    static readonly GUIVERSION: string = 'v1.14b';
+    static readonly GUIVERSION: string = 'v1.17b';
     static readonly SUPPORTMAIL = '';
     static readonly DISCORDSERVER = '';
 

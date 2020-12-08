@@ -91,6 +91,11 @@ export class FetchPoolDataService {
                     storage.coinsList = [];
                     sort(coins);
                     storage.coinsListTs = getTs();
+                    if (
+                        storage.coinsList.length === 1 &&
+                        storage.coinsObj[storage.coinsList[0]].is.algo
+                    )
+                        storage.isPPDA = true;
                     this.apiGetListOfCoins.next({ status: true, coin: '', type: params.type });
                 },
                 () => {
@@ -107,7 +112,7 @@ export class FetchPoolDataService {
 
         function sort(coins: IPoolCoinsItem[]): void {
             let algo = true;
-            const ts = getTs();
+            //const ts = getTs();
             coins.forEach(coin => {
                 addCoinToList(coin, coin.name === 'BTC');
                 algo ? algo && coins[0].algorithm === coin.algorithm : true;
@@ -188,6 +193,10 @@ export class FetchPoolDataService {
             switch (params.type) {
                 case 'worker':
                 case 'user':
+                    //apiRequest['offset'] = 0;
+                    //apiRequest['size'] = 500;
+                    //apiRequest['sortBy'] = 'lastShareTime';
+                    //apiRequest['sortDescending'] = false;
                     api.getUserStats(apiRequest).subscribe(
                         ({ total, powerMultLog10, workers, currentTime }) => {
                             if (!this.storageService.locatTimeDelta.isUpdated) {

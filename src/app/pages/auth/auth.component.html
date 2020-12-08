@@ -1,3 +1,4 @@
+<div *ngIf="isReady"> 
 <nz-tabset>
     <nz-tab [nzTitle]="'auth.tabs.signIn' | translate">
       <ng-template nz-tab>
@@ -51,7 +52,7 @@
     </form>
 </ng-template>
     </nz-tab>
-    <nz-tab [nzTitle]="'auth.tabs.signUp' | translate">
+    <nz-tab [nzDisabled]="isPPDA" [nzTitle]="'auth.tabs.signUp' | translate">
         <ng-template nz-tab>
             <form
             nz-form
@@ -107,6 +108,7 @@
                     {{ "common.email" | translate }}
                 </nz-form-label>
                 <nz-form-control
+                
                     [nzValidateStatus]="signUpForm.errors.email.status | async"
                     [nzErrorTip]="signUpForm.errors.email.error | async"
                 >
@@ -132,7 +134,7 @@
 
         </ng-template>
       </nz-tab>
-      <nz-tab [nzTitle]="'auth.tabs.lostPassword' | translate">
+      <nz-tab [nzDisabled]="isPPDA" [nzTitle]="'auth.tabs.lostPassword' | translate">
         <ng-template nz-tab>
 
             <form
@@ -172,7 +174,7 @@
         </ng-template>
       </nz-tab>
       </nz-tabset>
-
+</div>
 
 
 <!--

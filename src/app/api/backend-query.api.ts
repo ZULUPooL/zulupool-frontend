@@ -132,6 +132,10 @@ export interface IGetPoolStatsHistoryResponse {
 
 export interface IGetUserStatsParams {
     coin: TCoinName;
+    offset?: number;
+    size?: number;
+    sortBy?: string;
+    sortDescending?: boolean;
 }
 
 export interface IGetUserStatsResponse {

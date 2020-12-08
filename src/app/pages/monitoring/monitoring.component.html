@@ -159,11 +159,22 @@
     </app-chart-power> -->
 </div>
 <br />
-<nz-table class="workers-table" nzBordered [nzTemplateMode]="true" [nzLoading]="isLiveLoading">
+<nz-table class="workers-table" nzBordered [nzTemplateMode]="true" [nzLoading]="isLiveLoading"
+#rowSelectionTable
+
+[nzPageSize]="30"
+[nzPageIndex]="1"
+nzPaginationPosition='both'
+      nzShowPagination
+      [nzData]="liveStatsWorkers"
+      (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+
+>
     <thead>
         <tr>
-            <th nzWidth="1px">N</th>
-            <th>
+            <th nzWidth="1px"></th>
+            <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">{{ column.title }}</th>
+<!--            <th>
                 {{ "common.dictionary.worker" | translate }}
             </th>
             <th>
@@ -175,13 +186,11 @@
             <th>
                 {{ "common.dictionary.lastSeen" | translate }}
             </th>
+        -->
         </tr>
     </thead>
     <tbody *ngIf="liveStatsWorkers">
-        <tr *ngFor="let item of liveStatsWorkers; index as i" className="_clickable" (click)="onWorkerRowClick(item.name)">
-            <td>
-                {{ plus(i) }}
-            </td>
+        <tr *ngFor="let item of rowSelectionTable.data" className="_clickable" (click)="onWorkerRowClick(item.name)">
             <td>
                 <ng-container [ngSwitch]="getWorkerState(item.lastShareTime)">
                     <i *ngSwitchCase="EWorkerState.Normal" class="worker-state _normal" nz-icon nzType="check-circle"
@@ -191,6 +200,8 @@
                     <i *ngSwitchCase="EWorkerState.Error" class="worker-state _error" nz-icon nzType="minus-circle"
                         nzTheme="outline"></i>
                 </ng-container>
+            </td>
+            <td>
                 {{ item.name }}
             </td>
             <td>
@@ -214,11 +225,23 @@
 
 
 
-<nz-table class="workers-mobile" nzBordered [nzTemplateMode]="true" [nzLoading]="isLiveLoading">
+<nz-table class="workers-mobile" nzBordered [nzTemplateMode]="true" [nzLoading]="isLiveLoading"
+#mrowSelectionTable
+
+  [nzPageSize]="10"
+  [nzPageIndex]="1"
+  nzPaginationPosition='both'
+
+      nzShowPagination
+      nzShowSizeChanger
+      [nzData]="liveStatsWorkers"
+      (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+      >
     <thead>
         <tr>
-            <th nzWidth="1px">N</th>
-            <th>
+            <th nzWidth="1px"></th>
+            <th *ngFor="let mcolumn of listOfMColumn" [nzSortFn]="mcolumn.compare" [nzSortPriority]="mcolumn.priority">{{ mcolumn.title }}</th>
+<!--            <th></th>
                 {{ "common.dictionary.worker" | translate }}
             </th>
             <th>
@@ -227,13 +250,11 @@
             <th>
                 {{ "common.dictionary.lastSeen" | translate }}
             </th>
+            -->
         </tr>
     </thead>
     <tbody *ngIf="liveStatsWorkers">
-        <tr *ngFor="let item of liveStatsWorkers; index as i" className="_clickable" (click)="onWorkerRowClick(item.name)">
-            <td>
-                {{ plus(i) }}
-            </td>
+        <tr *ngFor="let item of mrowSelectionTable.data" className="_clickable" (click)="onWorkerRowClick(item.name)">
             <td>
                 <ng-container [ngSwitch]="getWorkerState(item.lastShareTime)">
                     <i *ngSwitchCase="EWorkerState.Normal" class="worker-state _normal" nz-icon nzType="check-circle"
@@ -243,6 +264,9 @@
                     <i *ngSwitchCase="EWorkerState.Error" class="worker-state _error" nz-icon nzType="minus-circle"
                         nzTheme="outline"></i>
                 </ng-container>
+            </td>
+
+            <td>
                 {{ item.name }}</td>
             <td>
                 {{

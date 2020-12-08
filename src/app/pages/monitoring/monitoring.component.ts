@@ -8,18 +8,32 @@ import { TranslateService } from '@ngx-translate/core';
 import { TargetLoginBadgeComponent } from 'components/target-login-badge/target-login-badge.component';
 import { DefaultParams } from 'components/defaults.component';
 import { ILiveStatCommon, ICoinParams, ILiveStatWorker } from 'interfaces/common';
-
+import { AppService } from 'services/app.service';
 import { EAppRoutes } from 'enums/routing';
 import { BackendManualApiService } from 'api/backend-manual.api';
 import { TCoinName } from 'interfaces/coin';
 import { IUserBalanceItem, IWorkerStatsItem } from 'interfaces/backend-query';
 import { ESuffix } from 'pipes/suffixify.pipe';
 import { FetchPoolDataService } from 'services/fetchdata.service';
+import {
+    NzTableFilterFn,
+    NzTableFilterList,
+    NzTableSortFn,
+    NzTableSortOrder,
+} from 'ng-zorro-antd/table';
 
 enum EWorkerState {
     Normal = 'normal',
     Warning = 'warning',
     Error = 'error,',
+}
+interface Data {
+    name: string;
+    shareRate: number;
+    shareWork: number;
+    power: number;
+    lastShareTime: number;
+    disabled: boolean;
 }
 
 @Component({
@@ -31,6 +45,9 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     readonly EAppRoutes = EAppRoutes;
     readonly EWorkerState = EWorkerState;
     readonly ESuffix = ESuffix;
+
+    listOfColumn = [];
+    listOfMColumn = [];
 
     mainChartCoin: string = '';
     currentBalance: IUserBalanceItem;
@@ -110,6 +127,9 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     private changeMainChartCoinTimeoutId: number;
     private subscrip: any;
 
+    listOfData: Data[] = [];
+    listOfCurrentPageData: Data[] = [];
+
     constructor(
         private backendManualApiService: BackendManualApiService,
         private zoomSwitchService: ZoomSwitchService,
@@ -118,9 +138,51 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         private userApiService: UserApiService,
         private nzModalService: NzModalService,
         private translateService: TranslateService,
-        private targetLoginBadgeComponent: TargetLoginBadgeComponent,
+        private appService: AppService, //private targetLoginBadgeComponent: TargetLoginBadgeComponent,
     ) {
         super();
+        this.listOfColumn = [
+            {
+                title: this.translateService.instant('common.dictionary.worker'),
+                compare: (a: ILiveStatWorker, b: ILiveStatWorker) => a.name.localeCompare(b.name),
+                priority: 4,
+            },
+            {
+                title: this.translateService.instant('common.dictionary.shareRate'),
+                compare: (a: ILiveStatWorker, b: ILiveStatWorker) => a.shareRate - b.shareRate,
+                priority: 3,
+            },
+            {
+                title: this.translateService.instant('common.dictionary.power'),
+                compare: (a: ILiveStatWorker, b: ILiveStatWorker) => a.power - b.power,
+                priority: 2,
+            },
+            {
+                title: this.translateService.instant('common.dictionary.lastSeen'),
+                compare: (a: ILiveStatWorker, b: ILiveStatWorker) =>
+                    parseInt(a.lastShareTime as any) - parseInt(b.lastShareTime as any),
+                priority: 1,
+            },
+        ];
+
+        this.listOfMColumn = [
+            {
+                title: this.translateService.instant('common.dictionary.worker'),
+                compare: (a: ILiveStatWorker, b: ILiveStatWorker) => a.name.localeCompare(b.name),
+                priority: 3,
+            },
+            {
+                title: this.translateService.instant('common.dictionary.power'),
+                compare: (a: ILiveStatWorker, b: ILiveStatWorker) => a.power - b.power,
+                priority: 2,
+            },
+            {
+                title: this.translateService.instant('common.dictionary.lastSeen'),
+                compare: (a: ILiveStatWorker, b: ILiveStatWorker) =>
+                    parseInt(a.lastShareTime as any) - parseInt(b.lastShareTime as any),
+                priority: 1,
+            },
+        ];
     }
 
     ngOnInit(): void {
@@ -332,6 +394,16 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         this.historyFetcher();
     }*/
 
+    onCurrentPageDataChange(listOfCurrentPageData: Data[]): void {
+        this.listOfCurrentPageData = listOfCurrentPageData;
+        //        this.refreshCheckedStatus();
+    }
+    //    refreshCheckedStatus(): void {
+    //const listOfEnabledData = this.listOfCurrentPageData.filter(({ disabled }) => !disabled);
+    //this.checked = listOfEnabledData.every(({ id }) => this.setOfCheckedId.has(id));
+    //this.indeterminate =
+    //  listOfEnabledData.some(({ id }) => this.setOfCheckedId.has(id)) && !this.checked;
+    //}
     private processCoins() {
         const coinI =
             this.storageService.coinsList.length > 2 ? this.storageService.coinsList.length - 1 : 0;
@@ -494,6 +566,9 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     }
     private subs(): void {
         this.subscrip = [
+            this.appService.user.subscribe(user => {
+                // debugger;
+            }),
             this.zoomSwitchService.zoomSwitch.subscribe(zoom => {
                 if (zoom !== '') this.processZoomChange(zoom);
             }),
