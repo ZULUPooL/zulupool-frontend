@@ -11,7 +11,11 @@ import {
 } from 'interfaces/common';
 
 export class DefaultParams {
-    static readonly GUIVERSION: string = 'v1.20b';
+    static readonly GUIVERSION = 'v1.24b';
+    static readonly GUISOURCE = 'https://github.com/';
+
+    static readonly COREVERSION = 'v3.1b';
+    static readonly CORESOURCE = 'https://github.com/';
 
     static readonly SUPPORTMAIL = '';
     static readonly DISCORDSERVER = '';

@@ -10,6 +10,7 @@ import { StorageService } from 'services/storage.service';
 import { DefaultParams } from 'components/defaults.component';
 import { FetchPoolDataService } from 'services/fetchdata.service';
 import { ETime } from 'enums/time';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-history',
@@ -25,13 +26,66 @@ export class HistoryComponent implements OnInit {
 
     statsHistory: IWorkerStatsHistoryItem[];
     powerMultLog10: number;
+    listOfData: IWorkerStatsHistoryItem[] = [];
+    listOfCurrentPageData: IWorkerStatsHistoryItem[] = [];
+    listOfColumn = [];
+    listOfMColumn = [];
 
     constructor(
         private backendQueryApiService: BackendQueryApiService,
         private appService: AppService,
         private storageService: StorageService,
         private fetchPoolDataService: FetchPoolDataService,
-    ) {}
+        private translateService: TranslateService,
+    ) {
+        this.listOfColumn = [
+            {
+                title: this.translateService.instant('common.dictionary.date'),
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
+                    a.time - b.time,
+                priority: 4,
+            },
+            {
+                title: this.translateService.instant('common.dictionary.shareRate'),
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
+                    a.shareRate - b.shareRate,
+                priority: 3,
+            },
+            {
+                title: this.translateService.instant('common.dictionary.power'),
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
+                    a.power - b.power,
+                priority: 2,
+            },
+            {
+                title: this.translateService.instant('common.dictionary.acceptedDifficulty'),
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
+                    a.shareWork - b.shareWork,
+                priority: 1,
+            },
+        ];
+
+        this.listOfMColumn = [
+            {
+                title: this.translateService.instant('common.dictionary.date'),
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
+                    a.time - b.time,
+                priority: 4,
+            },
+            {
+                title: this.translateService.instant('common.dictionary.power'),
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
+                    a.power - b.power,
+                priority: 2,
+            },
+            {
+                title: this.translateService.instant('common.dictionary.acceptedDifficulty'),
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
+                    a.shareWork - b.shareWork,
+                priority: 1,
+            },
+        ];
+    }
 
     ngOnInit(): void {
         this.storageService.currType = 'history';
@@ -40,7 +94,10 @@ export class HistoryComponent implements OnInit {
     changeTarget(target: string) {
         this.onCurrentCoinChange(this.currentCoin);
     }
-
+    onCurrentPageDataChange(listOfCurrentPageData: IWorkerStatsHistoryItem[]): void {
+        this.listOfCurrentPageData = listOfCurrentPageData;
+        //        this.refreshCheckedStatus();
+    }
     onCurrentCoinChange(coin: TCoinName): void {
         this.currentCoin = coin;
         if (this.storageService.coinsObj[coin].is.nameSplitted)

@@ -150,43 +150,26 @@
         </nz-table>
     -->
     </div>
-
-    
     <app-chart class="coin-chart"  [mainCoinForChart]="mainChartCoin" ></app-chart>
-
-<!--
-    <app-chart-power  class="chart" [stats]="userStatsHistory.stats" [powerMultLog10]="userStatsHistory.powerMultLog10" [chartName]="userStatsHistory.coin">
-    </app-chart-power> -->
 </div>
 <br />
-<nz-table class="workers-table" nzBordered [nzTemplateMode]="true" [nzLoading]="isLiveLoading"
-#rowSelectionTable
-
-[nzPageSize]="30"
-[nzPageIndex]="1"
-nzPaginationPosition='both'
-      nzShowPagination
-      [nzData]="liveStatsWorkers"
-      (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
-
+<nz-table 
+    #rowSelectionTable
+    class="workers-table" 
+    nzBordered 
+    [nzTemplateMode]="true" 
+    [nzLoading]="isLiveLoading"
+    [nzPageSize]="30"
+    [nzPageIndex]="1"
+    nzPaginationPosition='both'
+    nzShowPagination
+    [nzData]="liveStatsWorkers"
+    (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
 >
     <thead>
         <tr>
             <th nzWidth="1px"></th>
             <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">{{ column.title }}</th>
-<!--            <th>
-                {{ "common.dictionary.worker" | translate }}
-            </th>
-            <th>
-                {{ "common.dictionary.shareRate" | translate }}
-            </th>
-            <th>
-                {{ "common.dictionary.power" | translate }}
-            </th>
-            <th>
-                {{ "common.dictionary.lastSeen" | translate }}
-            </th>
-        -->
         </tr>
     </thead>
     <tbody *ngIf="liveStatsWorkers">
@@ -221,36 +204,24 @@ nzPaginationPosition='both'
 </nz-table>
 
 
-
-
-
-
-<nz-table class="workers-mobile" nzBordered [nzTemplateMode]="true" [nzLoading]="isLiveLoading"
-#mrowSelectionTable
-
-  [nzPageSize]="10"
-  [nzPageIndex]="1"
-  nzPaginationPosition='both'
-
-      nzShowPagination
-      nzShowSizeChanger
-      [nzData]="liveStatsWorkers"
-      (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+<nz-table 
+    #mrowSelectionTable
+    class="workers-mobile" 
+    nzBordered 
+    [nzTemplateMode]="true" 
+    [nzLoading]="isLiveLoading"
+    [nzPageSize]="10"
+    [nzPageIndex]="1"
+    nzPaginationPosition='both'
+    nzShowPagination
+    nzShowSizeChanger
+    [nzData]="liveStatsWorkers"
+    (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
       >
     <thead>
         <tr>
             <th nzWidth="1px"></th>
             <th *ngFor="let mcolumn of listOfMColumn" [nzSortFn]="mcolumn.compare" [nzSortPriority]="mcolumn.priority">{{ mcolumn.title }}</th>
-<!--            <th></th>
-                {{ "common.dictionary.worker" | translate }}
-            </th>
-            <th>
-                {{ "common.dictionary.power" | translate }}
-            </th>
-            <th>
-                {{ "common.dictionary.lastSeen" | translate }}
-            </th>
-            -->
         </tr>
     </thead>
     <tbody *ngIf="liveStatsWorkers">

@@ -1,27 +1,70 @@
 <app-target-login-badge style="padding-bottom: 5px;" (onTargetChange)=changeTarget($event)></app-target-login-badge>
-<div class="header-block">
-    <div class="coin-select-block">
-        <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
+<div class="main">
+    <div class="info">
+        <div class="coin-select-block">
+            <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
+        </div>
+        <div class="payouts-table">
+            <nz-table 
+                nzBordered 
+                nzTemplateMode 
+                [nzLoading]="isPayoutsLoading"
+            
+                #rowSelectionTable
+                nzBordered 
+                [nzTemplateMode]="true" 
+                [nzPageSize]="30"
+                [nzPageIndex]="1"
+                nzPaginationPosition='both'
+                nzShowPagination
+                [nzData]="payouts"
+                (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+            >
+                <thead>
+                    <tr>
+                        <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority" style="padding: 3px 4px 0px; text-align: center;">{{ column.title }}</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="payouts">
+                    <tr *ngFor="let payout of rowSelectionTable.data">
+                        <td style="text-align: center;">{{ payout.time * 1000 | date: "dd MMM HH:mm" | async }}</td>
+                        <td style="text-align: center;" className="_clickable" (click)="onTxClick(payout)">{{ payout.txid }}</td>
+                        <td style="text-align: center;">{{ payout.value }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+        <div class="payouts-table-mobile">
+            <nz-table 
+            nzBordered 
+            nzTemplateMode 
+            [nzLoading]="isPayoutsLoading"
+            
+            #mrowSelectionTable
+            class="payouts-mobile _table-mobile" 
+            nzBordered 
+            [nzTemplateMode]="true" 
+            [nzPageSize]="10"
+            [nzPageIndex]="1"
+            nzPaginationPosition='both'
+            nzShowPagination
+            [nzData]="payouts"
+            (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+            >
+            <thead>
+                <tr>
+                    <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">{{ column.title }}</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="payouts">
+                <tr *ngFor="let payout of mrowSelectionTable.data">
+                    <td style="text-align: center;">{{ payout.time * 1000 | date: "dd MMM HH:mm" | async }}</td>
+                    <td style="text-align: center;" className="_clickable" (click)="onTxClick(payout)" >{{ truncate(payout.txid) }}</td>
+                    <td style="text-align: center;">{{ payout.value | toFixed }}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+        
+        </div>
     </div>
 </div>
-
-<nz-table nzBordered nzTemplateMode [nzLoading]="isPayoutsLoading">
-    <thead>
-        <tr>
-            <th>
-                {{ "common.dictionary.date" | translate }}
-            </th>
-            <th>txid</th>
-            <th>
-                {{ "common.dictionary.amount" | translate }}
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let payout of payouts" (click)="onTxClick(payout)">
-            <td>{{ payout.time * 1000 | date: "dd MMM HH:mm" | async }}</td>
-            <td>{{ truncate(payout.txid) }}</td>
-            <td>{{ payout.value }}</td>
-        </tr>
-    </tbody>
-</nz-table>

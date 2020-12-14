@@ -121,6 +121,10 @@
 </ng-template>
 <ng-template #foundBlockDataTemplateMobile let-key="key" let-value="value">
     <ng-container [ngSwitch]="key">
+        <ng-container *ngSwitchCase="'time'">
+            {{ value * 1000 | date: "dd MMM HH:mm" | async }}
+        </ng-container>
+
         <ng-container *ngSwitchCase="'hash'">
             <span class="found-blocks-hash">
                 {{ truncate(value) }}

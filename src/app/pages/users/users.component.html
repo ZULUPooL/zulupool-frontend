@@ -1,91 +1,92 @@
-
-<nz-table class="users-table" *ngIf="isReady" nzBordered  [nzTemplateMode]="true">
-<thead>
-    <tr>
-        <th *ngFor="let title of usersKeys" >
-            {{ "users.usersTable.title." + title | translate }}
-        </th>
-    </tr>
-</thead>
-<tbody>
-    <tr *ngFor="let item of users" (click)="onUserClick(item)" [class._selected]="item.name === targetLogin"  style="word-break: break-all;">
-        <td *ngFor="let key of usersKeys">
-            <ng-container *ngTemplateOutlet="
-            usersDataTemplate;
-                    context: {
-                        key: key,
-                        value: item                        
-                    }
-                "></ng-container>
-        </td>
-    </tr>
-</tbody>
-</nz-table>
-
-<nz-table class="users-table-mobile _table-mobile" *ngIf="isReady" nzBordered  [nzTemplateMode]="true">
-<thead>
-    <tr>
-        <th *ngFor="let title of usersMKeys" >
-            {{ "users.usersTable.title." + title | translate }}
-        </th>
-    </tr>
-</thead>
-<tbody>
-    <tr *ngFor="let item of users" (click)="onUserClick(item)" [class._selected]="item.name === targetLogin"  style="word-break: break-all;">
-        <td *ngFor="let key of usersMKeys">
-            <ng-container *ngTemplateOutlet="
-            usersDataTemplate;
-                    context: {
-                        key: key,
-                        value: item                        
-                    }
-                "></ng-container>
-        </td>
-    </tr>
-</tbody>
-</nz-table>
-
-
-<ng-template #usersDataTemplate let-key="key" let-value="value">
-    <ng-container [ngSwitch]="key">
-        <ng-container *ngSwitchCase="'loginM'">
-            {{ value.login }}
-    </ng-container>
-    <ng-container *ngSwitchCase="'login'">
-            {{ value.login }} / {{ value.name }}
-    </ng-container>
-    <ng-container *ngSwitchCase="'registrationDate'">
-        {{
-            value[key] * 1000
-                | date: "dd.MM.yy HH:mm"
-                | async
-        }}
-    </ng-container>
-    <ng-container *ngSwitchCase="'shareRate'">
-        {{ value[key] | suffixify: ESuffix.ShareRate }}
-    </ng-container>
-    <ng-container *ngSwitchCase="'power'">
-        {{ value[key] 
-                | metricPrefixify: powerMultLog10
-                | toFixed
-                | suffixify: ESuffix.Power
-        }}
-    </ng-container>
-    <ng-container *ngSwitchCase="'lastShareTime'">
-        <div *ngIf="value.longAgo">
-            {{ "users.longAgo" | translate }}
+<div class="main">
+    <div class="info">
+        <div class="users-table">
+            <nz-table 
+            nzBordered 
+            nzTemplateMode 
+            #rowSelectionTable
+            nzBordered 
+            [nzTemplateMode]="true" 
+            [nzPageSize]="30"
+            [nzPageIndex]="1"
+            nzPaginationPosition='both'
+            nzShowPagination
+            [nzData]="users"
+            (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+        >
+            <thead>
+                <tr>
+                    <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority" style="padding: 3px 4px 0px; text-align: center;">{{ column.title }}</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="users">
+                <tr *ngFor="let user of rowSelectionTable.data">
+                    <td style="text-align: center;"> {{ user.login }} / {{ user.name }}</td>
+                    <td style="text-align: center;"> {{ user.email }}</td>
+                    <td style="text-align: center;"> {{
+                        user.registrationDate * 1000
+                            | date: "dd.MM.yy HH:mm"
+                            | async
+                    }}</td>
+                    <td style="text-align: center;"> {{ user.workers }} </td>
+                    <td style="text-align: center;"> {{ user.ShareRate | suffixify: ESuffix.ShareRate }}</td>
+                    <td style="text-align: center;"> {{ user.power 
+                        | metricPrefixify: powerMultLog10
+                        | toFixed
+                        | suffixify: ESuffix.Power
+                        }}</td>
+                    <td style="text-align: center;">    
+                        <div *ngIf="user.longAgo">
+                            {{ "users.longAgo" | translate }}
+                        </div>
+                        <div *ngIf="!user.longAgo">
+                            {{ user.lastShareTime | ago | async }}
+                        </div> 
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
         </div>
-        <div *ngIf="!value.longAgo">
-            {{ value[key] | ago | async }}
+        <div class="users-table-mobile">
+            <nz-table 
+            nzBordered 
+            nzTemplateMode 
+            #mrowSelectionTable
+            nzBordered 
+            [nzTemplateMode]="true" 
+            [nzPageSize]="30"
+            [nzPageIndex]="1"
+            nzPaginationPosition='both'
+            nzShowPagination
+            [nzData]="users"
+            (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+        >
+            <thead>
+                <tr>
+                    <th *ngFor="let column of listOfMColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority" style="padding: 3px 4px 0px; text-align: center;">{{ column.title }}</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="users">
+                <tr *ngFor="let user of mrowSelectionTable.data">
+                    <td style="text-align: center;"> {{ user.login }}</td>
+                    <td style="text-align: center;"> {{ user.workers }} </td>
+                    <td style="text-align: center;"> {{ user.power 
+                        | metricPrefixify: powerMultLog10
+                        | toFixed
+                        | suffixify: ESuffix.Power
+                        }}</td>
+                    <td style="text-align: center;">    
+                        <div *ngIf="user.longAgo">
+                            {{ "users.longAgo" | translate }}
+                        </div>
+                        <div *ngIf="!user.longAgo">
+                            {{ user.lastShareTime | ago | async }}
+                        </div> 
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+
         </div>
-    </ng-container>
-    <ng-container *ngSwitchDefault>
-            <span>
-                {{ value[key] }}
-            </span>
-        </ng-container>
-    </ng-container>
-</ng-template>
-
-
-
+    </div>
+</div>

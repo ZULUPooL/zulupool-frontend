@@ -9,6 +9,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
 import { DefaultParams } from 'components/defaults.component';
 import { Validators } from '@angular/forms';
+import { FetchPoolDataService } from 'services/fetchdata.service';
 
 @Component({
     selector: 'app-settings',
@@ -58,10 +59,13 @@ export class SettingsComponent implements OnInit {
         private nzModalService: NzModalService,
         private translateService: TranslateService,
         private formService: FormService,
+        private fetchPoolDataService: FetchPoolDataService,
     ) {}
 
     ngOnInit(): void {
         this.isStarting = true;
+        this.storageService.currType = 'settings';
+        this.fetchPoolDataService.coins({ coin: '', type: 'settings', forceUpdate: true });
     }
     onCurrentCoinChange(coin: TCoinName): void {
         if (coin === 'HTR') this.isNeedHTRWarning = true;

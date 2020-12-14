@@ -35,7 +35,9 @@ export class CoinSwitcherComponent implements OnInit {
     ngOnInit(): void {
         this.coinsListLoading = false;
         this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
-            if (data.status && data.type === this.storageService.currType) this.processCoins(data);
+            if (data.status && data.type === this.storageService.currType) {
+                this.processCoins(data);
+            }
         });
     }
 
@@ -46,15 +48,24 @@ export class CoinSwitcherComponent implements OnInit {
 
     private processCoins(data) {
         const url = this.router.routerState.snapshot.url.slice(1);
-        let maxL = 1;
-        if (url === 'payouts' || url === 'settings') maxL = 2;
-
-        const coinI =
-            this.storageService.coinsList.length > 2
-                ? this.storageService.coinsList.length - maxL
-                : 0;
-        this.coin = this.storageService.coinsList[coinI];
+        //let maxL = 1;
+        //if (url === 'payouts' || url === 'settings') maxL = 2;
         this.coins = this.storageService.coinsList;
+
+        if (this.storageService.coinsList.length > 2) {
+            if (url === 'payouts' || url === 'settings') {
+                this.coins = [];
+                this.storageService.coinsList.forEach(el => {
+                    if (el !== 'sha256') this.coins.push(el);
+                });
+            }
+        }
+
+        this.coin = this.coins[this.coins.length - 1];
+        //const coinI =
+        //this.storageService.coinsList.length > 2
+        //? this.storageService.coinsList.length - maxL
+        //: 0;
         const coinObjIs = this.storageService.coinsObj[this.coin].is;
 
         coinObjIs.chartMain = true;

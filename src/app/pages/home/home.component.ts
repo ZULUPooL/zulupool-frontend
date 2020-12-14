@@ -55,7 +55,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         'foundBy',
         'time',
     ];
-    foundBlockKeysMobile: (keyof IBlockItem)[] = ['height', 'hash', 'confirmations', 'foundBy'];
+    foundBlockKeysMobile: (keyof IBlockItem)[] = ['height', 'hash', 'confirmations', 'time'];
     /*
     signUpLink = {
         href: `/${EAppRoutes.Auth}`,
@@ -137,7 +137,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     }
 
     truncate(fullStr) {
-        let s = { sep: '....', front: 3, back: 7 };
+        let s = { sep: '..', front: 0, back: 4 };
         return fullStr.substr(0, s.front) + s.sep + fullStr.substr(fullStr.length - s.back);
     }
 

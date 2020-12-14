@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 //import { UserApiService } from 'api/user.api';
 import { BackendQueryApiService } from 'api/backend-query.api';
@@ -19,11 +20,15 @@ export class PayoutsComponent implements OnInit {
     settings: IUserSettings[];
     selectedIndex: number;
 
+    listOfColumn = [];
+
     payouts: IUserPayouts[];
     isPayoutsLoading = false;
 
     isManualPayoutSending = false;
     currentCoin: TCoinName;
+    listOfData: IUserPayouts[] = [];
+    listOfCurrentPageData: IUserPayouts[] = [];
 
     private explorersLinks = DefaultParams.TXLINKS;
 
@@ -33,7 +38,27 @@ export class PayoutsComponent implements OnInit {
         //private backendManualApiService: BackendManualApiService,
         private storageService: StorageService,
         private fetchPoolDataService: FetchPoolDataService,
-    ) {}
+        private translateService: TranslateService,
+    ) {
+        this.listOfColumn = [
+            {
+                title: this.translateService.instant('common.dictionary.date'),
+                compare: (a: IUserPayouts, b: IUserPayouts) => a.time - b.time,
+                priority: 3,
+            },
+            {
+                title: 'TXid',
+                compare: (a: IUserPayouts, b: IUserPayouts) => a.txid.localeCompare(b.txid),
+                priority: 2,
+            },
+            {
+                title: this.translateService.instant('common.dictionary.amount'),
+                compare: (a: IUserPayouts, b: IUserPayouts) =>
+                    parseFloat(a.value) - parseFloat(b.value),
+                priority: 1,
+            },
+        ];
+    }
 
     ngOnInit(): void {
         this.storageService.currType = 'payouts';
@@ -49,6 +74,10 @@ export class PayoutsComponent implements OnInit {
         this.getUserStat(coin);
     }
 
+    onCurrentPageDataChange(listOfCurrentPageData: IUserPayouts[]): void {
+        this.listOfCurrentPageData = listOfCurrentPageData;
+        //        this.refreshCheckedStatus();
+    }
     getUserStat(coin: TCoinName): void {
         this.isPayoutsLoading = true;
 
@@ -57,6 +86,9 @@ export class PayoutsComponent implements OnInit {
 
         this.backendQueryApiService.getUserPayouts({ coin }).subscribe(
             ({ payouts }) => {
+                //if (coin !== 'HTR') {
+                //payouts.forEach(el => (el.value = parseFloat(el.value).toFixed(4)));
+                //}
                 this.payouts = payouts;
                 this.isPayoutsLoading = false;
             },
@@ -68,7 +100,7 @@ export class PayoutsComponent implements OnInit {
     }
 
     truncate(fullStr) {
-        let s = { sep: '....', front: 5, back: 10 };
+        let s = { sep: '..', front: 4, back: 6 };
         return fullStr.substr(0, s.front) + s.sep + fullStr.substr(fullStr.length - s.back);
     }
 

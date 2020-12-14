@@ -1,24 +1,31 @@
 <div style="font-size: 12px; ">
-            <thead style="text-align: center;">
-                <span style="padding: 2px; text-align: center; font-size: 20px; font-weight: bold;">
-                    ZuluPool
-                    <span style="padding: 2px; text-align: center; font-size: 12px; font-weight:lighter">
-                        GUI {{guiVersion}}
-                    </span>
-                </span>
-            </thead>
-        <tbody>
-        </tbody>
+    <thead style="text-align: center;">
+        <span style="padding: 2px; text-align: center; font-size: 20px; font-weight: bold;">
+            ZULUPooL
+            <span style="padding: 2px; text-align: center; font-size: 15px; font-weight:lighter">
+                <a nzType="link" [href]="discord">Discord</a>
+            </span>
+        </span>
+    </thead>
+    <tbody>
+    </tbody>
+    <div style="padding: 2px; font-size: 9px">
+        Your access and use of the Services constitutes your agreement to be bound by these
+        <a class="help-link" [routerLink]="EAppRoutes.Terms">
+            Terms
+        </a>
+    </div>
+    <div style="padding: 2px; font-size: 7px; font-weight:lighter">
+        GUI 
+        <a class="help-link" [href]="guiSource" >
+            {{guiVersion}}
+        </a>
+        PoolCore 
+        <a class="help-link" [href]="coreSource">
+            {{coreVersion}}
+        </a>
+
+    </div>
+    
 </div>
 
-<div style="font-size: 9px; padding: 0Px,0px,0px; ">
-    Your access and use of the Services constitutes your agreement to be bound by these
-    <a class="help-link" [routerLink]="EAppRoutes.Terms">
-    Trems
-</a>
-
-<!--    and
-    <a nzType="link" href="policy">Policy</a>
--->
-
-</div>

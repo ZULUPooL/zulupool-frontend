@@ -13,15 +13,6 @@ import * as IApi from 'interfaces/userapi-query';
 export class UserApiService {
     constructor(private restService: RestService) {}
 
-    /*userChangePassword(data: IUserChangePasswordParams): Observable<any> {
-        return this.restService.post("/userChangePassword", data);
-    }
-    userChangePasswordInitiate(data: IUserChangePasswordInitiateParams): Observable<any> {
-        return this.restService.post("/userChangePasswordInitiate", data);
-    } 
-    createUser(user: IUserCreateParams): Observable<any> {
-        return this.restService.post("/userCreate", user);
-    }*/
     createUser(
         params: IApi.IUserCreateParams = {} as IApi.IUserCreateParams,
     ): Observable<IApi.IUserCreateResponse | null> {
@@ -37,38 +28,27 @@ export class UserApiService {
     userChangePassword(
         params: IApi.IUserChangePassword,
     ): Observable<IApi.IUserActionResponse | null> {
-        //if (not(params.id)) return of(null);
         return this.restService.post('/userChangePassword', params);
     }
 
     userAction(
         params: IApi.IUserActionParams = {} as IApi.IUserActionParams,
     ): Observable<IApi.IUserActionResponse | null> {
-        //if (not(params.id)) return of(null);
         return this.restService.post('/userAction', params);
     }
     userGetCredentials(
         params: IApi.IUserGetCredentialsParms = {} as IApi.IUserGetCredentialsParms,
     ): Observable<IApi.IUserGetCredentialsResponse | null> {
-        //        if (not(params.id)) return of(null);
         return this.restService.post(`/userGetCredentials`, params);
     }
     userGetSettings(
         params: IApi.IUserGetSettingsParams = {} as IApi.IUserGetSettingsParams,
     ): Observable<IApi.IUserGetSettingsResponse | null> {
-        //        if (not(params.id)) return of(null);
         return this.restService.post('/userGetSettings', params);
     }
     userUpdateSettings(
         params: IApi.IUserUpdateSettingsParams = {} as IApi.IUserUpdateSettingsParams,
     ): Observable<IApi.IUserUpdateSettingsResponse | null> {
-        if (
-            not(params.coin) ||
-            not(params.address) ||
-            not(params.payoutThreshold) ||
-            not(params.autoPayoutEnabled)
-        )
-            return of(null);
         return this.restService.post('/userUpdateSettings', params);
     }
 

@@ -377,6 +377,7 @@ export class FetchPoolDataService {
                     }
                     historyResponce.stats[lastItem].power = lastPowerData;
                 }
+
                 historyResponce.stats.forEach(el => {
                     el.power = el.power / Math.pow(10, 15 - historyResponce.powerMultLog10);
                 });
