@@ -20,15 +20,7 @@ import { IGetFoundBlocksParams, IGetUserBalanceParams } from 'api/backend-query.
 import { TCoinName } from 'interfaces/coin';
 import { Injectable } from '@angular/core';
 
-import {
-    ICoinParams,
-    ICoinItem,
-    ISendLiveStat,
-    IFetchResponce,
-    IHistoryResp,
-    IFetchParams,
-    ILiveStatCommon,
-} from 'interfaces/common';
+import { ICoinParams, ICoinItem, ISendLiveStat, IFetchResponce, IHistoryResp, IFetchParams, ILiveStatCommon } from 'interfaces/common';
 
 import { StorageService } from 'services/storage.service';
 import { BackendQueryApiService } from 'api/backend-query.api';
@@ -91,11 +83,7 @@ export class FetchPoolDataService {
                     storage.coinsList = [];
                     sort(coins);
                     storage.coinsListTs = getTs();
-                    if (
-                        storage.coinsList.length === 1 &&
-                        storage.coinsObj[storage.coinsList[0]].is.algo
-                    )
-                        storage.isPPDA = true;
+                    if (storage.coinsList.length === 1 && storage.coinsObj[storage.coinsList[0]].is.algo) storage.isPPDA = true;
                     this.apiGetListOfCoins.next({ status: true, coin: '', type: params.type });
                 },
                 () => {
@@ -371,13 +359,24 @@ export class FetchPoolDataService {
                     historyResponce.stats[lastItem].time = time;
                     let lastPowerData = coinObj.live.data.power;
                     if (workerId !== '') {
-                        lastPowerData = coinObj.live.data.miners.filter(
-                            miner => miner.name === workerId,
-                        )[0].power;
+                        lastPowerData = coinObj.live.data.miners.filter(miner => miner.name === workerId)[0].power;
                     }
                     historyResponce.stats[lastItem].power = lastPowerData;
                 }
-
+                for (let i = 1; i < historyResponce.stats.length - 1; i++) {
+                    const el = historyResponce.stats[i].power;
+                    const el_m = historyResponce.stats[i - 1].power;
+                    const el_p = historyResponce.stats[i + 1].power;
+                    const av = (el_m + el_p) / 2;
+                    if (el_m > 0 && el_p > 0) {
+                        if (params.type === 'worker' || params.type === 'user') {
+                            if (el === 0) historyResponce.stats[i].power = av;
+                        }
+                        if (params.type === 'pool' && el !== 0 && el < av * 0.8) {
+                            historyResponce.stats[i].power = av;
+                        }
+                    }
+                }
                 historyResponce.stats.forEach(el => {
                     el.power = el.power / Math.pow(10, 15 - historyResponce.powerMultLog10);
                 });
@@ -499,10 +498,7 @@ export class FetchPoolDataService {
             },
         );
     }
-    constructor(
-        private storageService: StorageService,
-        private backendQueryApiService: BackendQueryApiService,
-    ) {}
+    constructor(private storageService: StorageService, private backendQueryApiService: BackendQueryApiService) {}
 
     private tNow(): number {
         return ((new Date().valueOf() / 1000) as any).toFixed(0);

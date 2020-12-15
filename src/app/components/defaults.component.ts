@@ -1,20 +1,10 @@
-import {
-    IZoomList,
-    IZoom,
-    IExplorerLink,
-    IHistoryItem2,
-    IZoomSettings,
-    ILiveStatWorker,
-    IFetchResponce,
-    ILocalTimeDelta,
-    ILiveStatCommon,
-} from 'interfaces/common';
+import { IZoomList, IZoom, IExplorerLink, IHistoryItem2, IZoomSettings, ILiveStatWorker, IFetchResponce, ILocalTimeDelta, ILiveStatCommon } from 'interfaces/common';
 
 export class DefaultParams {
-    static readonly GUIVERSION = 'v1.24b';
+    static readonly GUIVERSION = 'v1.25b';
     static readonly GUISOURCE = 'https://github.com/';
 
-    static readonly COREVERSION = 'v3.1b';
+    static readonly COREVERSION = 'v3.11b';
     static readonly CORESOURCE = 'https://github.com/';
 
     static readonly SUPPORTMAIL = '';
@@ -32,8 +22,7 @@ export class DefaultParams {
     static readonly FETCHRESPONCE: IFetchResponce = { status: false, coin: '', type: '' };
     static readonly DEFAULTTYPE = 'pool';
     static readonly DNSNAME = 'zulupool.com';
-    static readonly BTCWIKI =
-        'https://en.bitcoin.it/wiki/Difficulty#What_is_the_minimum_difficulty.3F';
+    static readonly BTCWIKI = 'https://en.bitcoin.it/wiki/Difficulty#What_is_the_minimum_difficulty.3F';
     static readonly PPDA = 'https://ppda.';
     static readonly PPDALN = 'https://beta.';
     static readonly PPDAALGO = 'sha256d';
@@ -43,19 +32,11 @@ export class DefaultParams {
     static readonly PPDALNREWARD = '91.12%';
     static readonly RECOMMENDEDHTR = '1600';
     static readonly ADDREXAMPLES = {
-        BTC: [
-            ' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f',
-            ' PS2H:3H28N5WuREZ93CNmhWcRcrnykWrMqkhFyWN',
-            ' Bech32:bc1uf5tdn87k2uz7r2kl5zrfww362ch3746lq5vse7',
-        ],
+        BTC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' PS2H:3H28N5WuREZ93CNmhWcRcrnykWrMqkhFyWN', ' Bech32:bc1uf5tdn87k2uz7r2kl5zrfww362ch3746lq5vse7'],
         BCHN: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
         BCHABC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
         BSV: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
-        DGB: [
-            ' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc',
-            ' PS2H:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc',
-            ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9',
-        ],
+        DGB: [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' PS2H:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9'],
         FCH: [' P2PKH:FV4WF4rRUvqD3ekQudccGGCFHqTTHnpMhu'],
         HTR: [' P2PKH:HTjxTEAUSwZf34nK4YuicfDPocT7JsQwJi'],
     };
