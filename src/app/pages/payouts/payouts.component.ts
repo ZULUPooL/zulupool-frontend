@@ -53,8 +53,7 @@ export class PayoutsComponent implements OnInit {
             },
             {
                 title: this.translateService.instant('common.dictionary.amount'),
-                compare: (a: IUserPayouts, b: IUserPayouts) =>
-                    parseFloat(a.value) - parseFloat(b.value),
+                compare: (a: IUserPayouts, b: IUserPayouts) => parseFloat(a.value) - parseFloat(b.value),
                 priority: 1,
             },
         ];
@@ -81,10 +80,9 @@ export class PayoutsComponent implements OnInit {
     getUserStat(coin: TCoinName): void {
         this.isPayoutsLoading = true;
 
-        if (this.storageService.coinsObj[coin].is.nameSplitted)
-            coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
+        if (this.storageService.coinsObj[coin].is.nameSplitted) coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
 
-        this.backendQueryApiService.getUserPayouts({ coin }).subscribe(
+        this.backendQueryApiService.getUserPayouts({ coin, timeFrom: 0 }).subscribe(
             ({ payouts }) => {
                 //if (coin !== 'HTR') {
                 //payouts.forEach(el => (el.value = parseFloat(el.value).toFixed(4)));

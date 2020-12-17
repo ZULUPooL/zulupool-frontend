@@ -1,10 +1,10 @@
 import { IZoomList, IZoom, IExplorerLink, IHistoryItem2, IZoomSettings, ILiveStatWorker, IFetchResponce, ILocalTimeDelta, ILiveStatCommon } from 'interfaces/common';
 
 export class DefaultParams {
-    static readonly GUIVERSION = 'v1.25b';
+    static readonly GUIVERSION = 'v1.26b';
     static readonly GUISOURCE = 'https://github.com/';
 
-    static readonly COREVERSION = 'v3.11b';
+    static readonly COREVERSION = 'v3.12b';
     static readonly CORESOURCE = 'https://github.com/';
 
     static readonly SUPPORTMAIL = '';
@@ -100,30 +100,33 @@ export class DefaultParams {
         workers: 0,
     };
     static readonly BLOCKSLINKS: IExplorerLink = {
-        BTC: 'https://btc.com/',
+        //        BTC: 'https://btc.com/',
+        BTC: 'https://chainz.cryptoid.info/btc/block.dws?',
         BCH: 'https://bch.btc.com/',
         BCHN: 'https://bch.btc.com/',
-        BCHA: 'https://bch.btc.com/',
+        BCHA: 'https://explorer.bitcoinabc.org/block/',
         BSV: 'https://whatsonchain.com/block/',
         DGB: 'https://chainz.cryptoid.info/dgb/block.dws?',
         FCH: 'http://fch.world/block/',
         HTR: 'https://explorer.hathor.network/transaction/',
     };
     static readonly TXLINKS: IExplorerLink = {
-        BTC: 'https://btc.com/',
+        //BTC: 'https://btc.com/',
+        BTC: 'https://chainz.cryptoid.info/btc/tx.dws?',
         BCH: 'https://bch.btc.com/',
         BCHN: 'https://bch.btc.com/',
-        BCHA: 'https://bch.btc.com/',
+        BCHABC: 'https://explorer.bitcoinabc.org/tx/',
         BSV: 'https://whatsonchain.com/tx/',
         DGB: 'https://chainz.cryptoid.info/dgb/tx.dws?',
         FCH: 'http://fch.world/tx/',
         HTR: 'https://explorer.hathor.network/transaction/',
     };
     static readonly ADDRLINKS: IExplorerLink = {
-        BTC: 'https://btc.com/',
+        //BTC: 'https://btc.com/',
+        BTC: 'https://chainz.cryptoid.info/btc/address.dws?',
         BCH: 'https://bch.btc.com/',
         BCHN: 'https://bch.btc.com/',
-        BCHA: 'https://bch.btc.com/',
+        BCHABC: 'https://explorer.bitcoinabc.org/address/',
         BSV: 'https://whatsonchain.com/address/',
         DGB: 'https://chainz.cryptoid.info/dgb/address.dws?',
         FCH: 'http://fch.world/address/',
@@ -133,15 +136,15 @@ export class DefaultParams {
     //static readonly zoom: string = "15M";
     //static readonly zoomList: string[] = ["1M","5M","30M","H1","H4","D","W",];
     static readonly ZOOM: IZoom = {
-        pool: '3M',
-        user: '5M',
-        worker: '5M',
+        pool: 'H1',
+        user: 'H1',
+        worker: 'H1',
         history: 'D',
     };
     static readonly ZOOMSLIST: IZoomList = {
         pool: ['3M', '15M', '30M', 'H1', 'H4', 'D'],
         user: ['5M', '15M', 'H1', 'H4', 'D'],
-        worker: ['5M', '30M', 'H1', 'H4', 'D'],
+        worker: ['5M', '15M', 'H1', 'H4', 'D'],
         history: ['D', 'W', 'M'],
     };
     static readonly ZOOMPARAMS: IZoomSettings = {
@@ -187,48 +190,48 @@ export class DefaultParams {
         },
         '15M': {
             groupByInterval: 15 * 60,
-            statsWindow: 80,
-            maxStatsWindow: 90,
+            statsWindow: 50,
+            maxStatsWindow: 60,
             refreshTimer: 60,
             labelText: 'HH:mm',
             lastLabelText: 'HH:mm:ss',
         },
         '30M': {
             groupByInterval: 30 * 60,
-            statsWindow: 80,
-            maxStatsWindow: 90,
+            statsWindow: 50,
+            maxStatsWindow: 60,
             refreshTimer: 60,
             labelText: 'HH:mm',
             lastLabelText: 'HH:mm:ss',
         },
         H1: {
             groupByInterval: 60 * 60,
-            statsWindow: 80,
-            maxStatsWindow: 90,
+            statsWindow: 50,
+            maxStatsWindow: 60,
             refreshTimer: 60,
             labelText: 'dd HH:mm',
             lastLabelText: 'HH:mm:ss',
         },
         H4: {
             groupByInterval: 4 * 60 * 60,
-            statsWindow: 80,
-            maxStatsWindow: 90,
+            statsWindow: 50,
+            maxStatsWindow: 60,
             refreshTimer: 60,
             labelText: 'dd HH:mm',
             lastLabelText: 'HH:mm:ss',
         },
         D: {
             groupByInterval: 24 * 60 * 60,
-            statsWindow: 80,
-            maxStatsWindow: 90,
+            statsWindow: 50,
+            maxStatsWindow: 60,
             refreshTimer: 60,
             labelText: 'dd HH:mm',
             lastLabelText: 'HH:mm:ss',
         },
         W: {
             groupByInterval: 7 * 24 * 60 * 60,
-            statsWindow: 80,
-            maxStatsWindow: 90,
+            statsWindow: 50,
+            maxStatsWindow: 60,
             refreshTimer: 60,
             labelText: 'dd HH:mm',
             lastLabelText: 'HH:mm:ss',
