@@ -82,7 +82,7 @@ export class PayoutsComponent implements OnInit {
 
         if (this.storageService.coinsObj[coin].is.nameSplitted) coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
 
-        this.backendQueryApiService.getUserPayouts({ coin, timeFrom: 0 }).subscribe(
+        this.backendQueryApiService.getUserPayouts({ coin, timeFrom: 0, count: 1000 }).subscribe(
             ({ payouts }) => {
                 //if (coin !== 'HTR') {
                 //payouts.forEach(el => (el.value = parseFloat(el.value).toFixed(4)));
