@@ -31,6 +31,13 @@ export class UserLayoutComponent extends SubscribableComponent implements OnInit
 
     readonly navigationItems: INavigationItem[] = patchTrackIds([
         {
+            route: EAppRoutes.HistoryPool,
+            title: 'components.userLayout.nav.historyPool',
+            icon: 'dashboard',
+            access: EUserRoles.User,
+            ROaccess: true,
+        },
+        {
             route: EAppRoutes.Math,
             title: 'components.userLayout.nav.math',
             icon: 'info-circle',
@@ -134,11 +141,9 @@ export class UserLayoutComponent extends SubscribableComponent implements OnInit
 
     ngOnInit(): void {
         this.subscriptions = [
-            this.router.events
-                .pipe(filter(event => event instanceof NavigationEnd))
-                .subscribe(() => {
-                    this.onUrlChange();
-                }),
+            this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+                this.onUrlChange();
+            }),
             this.activatedRoute.url.subscribe(() => {
                 this.onUrlChange();
             }),

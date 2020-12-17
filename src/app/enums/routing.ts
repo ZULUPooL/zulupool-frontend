@@ -6,6 +6,7 @@ export enum EAppRoutes {
     Actions = 'actions',
     Monitoring = 'monitoring',
     History = 'history',
+    HistoryPool = 'history-pool',
     Users = 'users',
     Help = 'help',
     Payouts = 'payouts',

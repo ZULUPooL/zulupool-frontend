@@ -1,7 +1,7 @@
 import { IZoomList, IZoom, IExplorerLink, IHistoryItem2, IZoomSettings, ILiveStatWorker, IFetchResponce, ILocalTimeDelta, ILiveStatCommon } from 'interfaces/common';
 
 export class DefaultParams {
-    static readonly GUIVERSION = 'v1.26b';
+    static readonly GUIVERSION = 'v1.27b';
     static readonly GUISOURCE = 'https://github.com/';
 
     static readonly COREVERSION = 'v3.12b';

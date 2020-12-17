@@ -58,6 +58,7 @@ import {
     LogoutOutline,
     CloudUploadOutline,
     ToolOutline,
+    DashboardOutline,
 } from '@ant-design/icons-angular/icons';
 
 import { ChartsModule } from 'ng2-charts';
@@ -67,6 +68,7 @@ import { HomeComponent } from 'pages/home/home.component';
 import { LandingComponent } from 'pages/landing/landing.component';
 import { MonitoringComponent } from 'pages/monitoring/monitoring.component';
 import { HistoryComponent } from 'pages/history/history.component';
+import { HistoryPoolComponent } from 'pages/history-pool/history-pool.component';
 import { AuthComponent } from 'pages/auth/auth.component';
 import { UserActivateComponent } from 'pages/actions/user-activate/user-activate.component';
 import { NewPassowrdComponent } from 'pages/actions/new-password/new-password.component';
@@ -176,6 +178,7 @@ export function HttpLoaderFactory(http: HttpClient) {
             LogoutOutline,
             CloudUploadOutline,
             ToolOutline,
+            DashboardOutline,
         ]),
 
         ChartsModule,
@@ -203,6 +206,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         LandingComponent,
         MonitoringComponent,
         HistoryComponent,
+        HistoryPoolComponent,
         AuthComponent,
         UserActivateComponent,
         NewPassowrdComponent,

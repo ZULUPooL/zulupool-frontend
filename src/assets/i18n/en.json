@@ -54,6 +54,7 @@
     "components.mainLayout.enterButton": "Enter",
     "components.userLayout.nav.monitoring": "Monitoring",
     "components.userLayout.nav.history": "History",
+    "components.userLayout.nav.historyPool": "Pool History",
     "components.userLayout.nav.users": "Users",
     "components.userLayout.nav.createuser": "Add user",
     "components.userLayout.nav.profitswitch": "Profit SW",

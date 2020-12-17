@@ -14,6 +14,7 @@ import { HomeComponent } from 'pages/home/home.component';
 import { AuthComponent } from 'pages/auth/auth.component';
 import { MonitoringComponent } from 'pages/monitoring/monitoring.component';
 import { HistoryComponent } from 'pages/history/history.component';
+import { HistoryPoolComponent } from 'pages/history-pool/history-pool.component';
 import { PageNotFoundComponent } from 'pages/404/page-not-found.component';
 import { UserActivateComponent } from 'pages/actions/user-activate/user-activate.component';
 import { UserResendEmailComponent } from 'pages/user-resend-email/user-resend-email.component';
@@ -116,6 +117,14 @@ const routes: Routes = [
             {
                 path: EAppRoutes.History,
                 component: HistoryComponent,
+                data: {
+                    accessFor: EUserRoles.User,
+                    disabledFor: 'none',
+                },
+            },
+            {
+                path: EAppRoutes.HistoryPool,
+                component: HistoryPoolComponent,
                 data: {
                     accessFor: EUserRoles.User,
                     disabledFor: 'none',

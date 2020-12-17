@@ -58,6 +58,7 @@
     "components.mainLayout.enterButton": "Вход",
     "components.userLayout.nav.monitoring": "Мониторинг",
     "components.userLayout.nav.history": "История",
+    "components.userLayout.nav.historyPool": "История пула",
     "components.userLayout.nav.users": "Пользователи",
     "components.userLayout.nav.createuser": "Создать пользователя",
     "components.userLayout.nav.profitswitch": "Настройка профита",
