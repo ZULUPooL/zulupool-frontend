@@ -1,7 +1,7 @@
 import { IZoomList, IZoom, IExplorerLink, IHistoryItem2, IZoomSettings, ILiveStatWorker, IFetchResponce, ILocalTimeDelta, ILiveStatCommon } from 'interfaces/common';
 
 export class DefaultParams {
-    static readonly GUIVERSION = 'v1.28b';
+    static readonly GUIVERSION = 'v1.30b';
     static readonly GUISOURCE = 'https://github.com/';
 
     static readonly COREVERSION = 'v3.12b';
@@ -104,7 +104,7 @@ export class DefaultParams {
         BTC: 'https://chainz.cryptoid.info/btc/block.dws?',
         BCH: 'https://bch.btc.com/',
         BCHN: 'https://bch.btc.com/',
-        BCHA: 'https://explorer.bitcoinabc.org/block/',
+        BCHABC: 'https://explorer.bitcoinabc.org/block/',
         BSV: 'https://whatsonchain.com/block/',
         DGB: 'https://chainz.cryptoid.info/dgb/block.dws?',
         FCH: 'http://fch.world/block/',
@@ -136,9 +136,9 @@ export class DefaultParams {
     //static readonly zoom: string = "15M";
     //static readonly zoomList: string[] = ["1M","5M","30M","H1","H4","D","W",];
     static readonly ZOOM: IZoom = {
-        pool: 'H1',
-        user: 'H1',
-        worker: 'H1',
+        pool: '3M',
+        user: '5M',
+        worker: '5M',
         history: 'D',
     };
     static readonly ZOOMSLIST: IZoomList = {

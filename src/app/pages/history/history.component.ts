@@ -41,26 +41,22 @@ export class HistoryComponent implements OnInit {
         this.listOfColumn = [
             {
                 title: this.translateService.instant('common.dictionary.date'),
-                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
-                    a.time - b.time,
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) => a.time - b.time,
                 priority: 4,
             },
             {
                 title: this.translateService.instant('common.dictionary.shareRate'),
-                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
-                    a.shareRate - b.shareRate,
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) => a.shareRate - b.shareRate,
                 priority: 3,
             },
             {
                 title: this.translateService.instant('common.dictionary.power'),
-                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
-                    a.power - b.power,
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) => a.power - b.power,
                 priority: 2,
             },
             {
                 title: this.translateService.instant('common.dictionary.acceptedDifficulty'),
-                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
-                    a.shareWork - b.shareWork,
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) => a.shareWork - b.shareWork,
                 priority: 1,
             },
         ];
@@ -68,20 +64,17 @@ export class HistoryComponent implements OnInit {
         this.listOfMColumn = [
             {
                 title: this.translateService.instant('common.dictionary.date'),
-                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
-                    a.time - b.time,
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) => a.time - b.time,
                 priority: 4,
             },
             {
                 title: this.translateService.instant('common.dictionary.power'),
-                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
-                    a.power - b.power,
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) => a.power - b.power,
                 priority: 2,
             },
             {
                 title: this.translateService.instant('common.dictionary.acceptedDifficulty'),
-                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) =>
-                    a.shareWork - b.shareWork,
+                compare: (a: IWorkerStatsHistoryItem, b: IWorkerStatsHistoryItem) => a.shareWork - b.shareWork,
                 priority: 1,
             },
         ];

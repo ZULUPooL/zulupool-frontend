@@ -165,6 +165,8 @@
     "settings.addressesFormats": "Пример поддерживаемых форматов адресов для {{coin}}:",
     "settings.htrWarning":"Внимание! Наш механизм выплат HTR всё ещё далёк от совершенства.",
     "settings.htrAmount":"Для уменьшения нагрузки на модуль выплат HTR, не рекомендуется устанавливать порог для выплат более {{amount}} HTR.",
+    "settings.tab.payment": "Настройки платежей",
+    "settings.tab.account": "Настройки аккаунта",
     "settings.form.address": "Адрес",
     "settings.form.payoutThreshold": "Минимальный платёж",
     "settings.form.autoPayoutEnabled": "Авто-выплаты",

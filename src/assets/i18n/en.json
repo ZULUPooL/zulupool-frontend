@@ -154,6 +154,8 @@
     "settings.addressesFormats": "An example of supported address formats for {{coin}}:",
     "settings.htrWarning":"Warning! Our HTR payout engine is still far from perfect.",
     "settings.htrAmount":"To reduce the HTR payout module load, it is not recommended to set the payout threshold over {{amount}} HTR.",
+    "settings.tab.payment": "Payment settings",
+    "settings.tab.account": "Account settings",
     "settings.form.address": "Payment address",
     "settings.form.payoutThreshold": "Automatic payout threshold",
     "settings.form.autoPayoutEnabled": "Auto payout enabled",
