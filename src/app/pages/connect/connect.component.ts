@@ -90,15 +90,12 @@ export class ConnectComponent implements OnInit {
             this.modeString = this.translateService.instant('connect.toStart.smartMode', { coins });
         }
         this.port = item.port;
-        this.urlTarget = DefaultParams.STRATUM + DefaultParams.DNSNAME + ':' + item.port;
+        this.urlTarget = DefaultParams.STRATUMS[item.type] + DefaultParams.DNSNAME + ':' + item.port;
+        this.algoIsAsicBoost = item.type === 'HTR' || item.type === 'BTC';
         this.fastJobWarning = false;
         this.fastCoinName = '';
         item.backends.forEach(coin => {
-            if (
-                !this.fastJobWarning &&
-                DefaultParams.FASTJOBCOINS.includes(coin) &&
-                item.backends.length < 4
-            ) {
+            if (!this.fastJobWarning && DefaultParams.FASTJOBCOINS.includes(coin) && item.backends.length < 3) {
                 this.fastJobWarning = true;
                 this.fastCoinName = coin;
             }

@@ -70,7 +70,7 @@ export interface IUserEnumerateAllParams {
     coin?: TCoinName;
     offset?: number; //(default=0) - first row offset
     size?: number; //(default=100) - rows count in result
-    sortBy?: EApi.userEnumerateAllResp; // (default="averagePower") - column for sorting
+    sortBy?: string; // (default="averagePower") - column for sorting
     sortDescending?: boolean; //(default=true) - enable descending sort
 }
 export interface IUserEnumerateAllResponse {

@@ -190,11 +190,11 @@
     "math.modes.PPDALN.the.following.fees.for":"for all backends.",
 
     "math.modes.PPDALN.reward1":"Using ",
-    "math.modes.PPDALN.reward2":"mode, you receives up to",
-    "math.modes.PPDALN.reward3":"of the reward, except for the special conditions.",
+    "math.modes.PPDALN.reward2":"mode, for sha256 you receives up to",
+    "math.modes.PPDALN.reward3":"of the reward, except for the special conditions. For scrypt up to 96.4% of the reward.",
 
 
-    "math.modes.PPDA":"PPDA (Pay Per Difficulty Accepted).",
+    "math.modes.PPDA":"PPDA (Pay Per Difficulty Accepted). For sha256 only.",
     "math.modes.PPDA.at.the.moment1":"At the moment, for this mode, we are debugging our mathematical basis.",
     "math.modes.PPDA.at.the.moment2":"For now, this is not a public mode of operation, however, if you are interested in participating and earning light higher than the average profitability of the",
     "math.modes.PPDA.at.the.moment.contact.us": "network, feel free to contact us.",

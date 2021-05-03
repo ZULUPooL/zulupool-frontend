@@ -46,7 +46,7 @@ export class ProfitSettingsComponent implements OnInit {
 
     save(item: IProfitSett) {
         if (item.name === '' || item.name === null || item.name === undefined) return;
-        if (item.name === 'HTR' || item.name === 'sha256') {
+        if (item.name === 'HTR' || item.name === 'sha256' || item.name === 'DOGE' || item.name === 'scrypt') {
             this.nzModalService.error({
                 nzContent: this.translateService.instant('profit.form.cannot', {
                     coin: item.name,
@@ -56,8 +56,7 @@ export class ProfitSettingsComponent implements OnInit {
         } else {
             const coinObj = this.storageService.coinsObj[item.name];
             const value: string = this.form[item.name].value.profitSwitchCoeff;
-            if (coinObj.is.nameSplitted)
-                item.name = coinObj.info.name + '.' + coinObj.info.algorithm;
+            if (coinObj.is.nameSplitted) item.name = coinObj.info.name + '.' + coinObj.info.algorithm;
             const data = {
                 profitSwitchCoeff: parseFloat(value.replace(',', '.')),
                 coin: item.name,
@@ -106,10 +105,20 @@ export class ProfitSettingsComponent implements OnInit {
                         this.disabledCoin = algoCoin;
                     }
                 }
+                let newCoins = [];
+                for (let i = 0; i < data.coins.length; i++) {
+                    const c = data.coins[i];
+                    if (c.name != 'sha256' && c.name != 'scrypt' && c.name != 'HTR' && c.name != 'DOGE') newCoins.push(c);
+                }
+                data.coins = newCoins;
                 data.coins.forEach(coin => {
-                    if (coin.name.split('.').length > 1) {
-                        coin.name = coin.name.split('.')[0];
-                    }
+                    //if (coin.name === 'scrypt') data.co;
+                    //coin.name = coin.name.split('.')[0];
+                    //}
+
+                    //if (coin.name.split('.').length > 1) {
+                    //coin.name = coin.name.split('.')[0];
+                    //}
                     this.form[coin.name] = this.formBuilder.group({
                         profitSwitchCoeff: [coin.profitSwitchCoeff.toString()],
                     });

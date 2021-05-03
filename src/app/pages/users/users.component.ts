@@ -117,7 +117,7 @@ export class UsersComponent implements OnInit {
 
     ngOnInit(): void {
         this.isReady = false;
-        this.userApiService.userEnumerateAll().subscribe(({ users }) => {
+        this.userApiService.userEnumerateAll({ id: this.storageService.sessionId, sortBy:'averagePower',size: 5000 }).subscribe(({ users }) => {
             this.longAgo = false;
             /*users = users.filter(function (item) {
                 return (

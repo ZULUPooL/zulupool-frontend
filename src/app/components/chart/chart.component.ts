@@ -33,6 +33,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     chart: IChartSettings;
     private mainCoin: string = '';
     private currWorker: string = '';
+    private currAlgo: string = '';
     private usedColors: IColorsList[];
     private unusedColors: IColorsList[];
     private isStarting: boolean = true;
@@ -83,8 +84,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
                 //                this.changeColors();
             }),
             this.fetchPoolDataService.apiGetHistory.subscribe(result => {
-                if (result.status && result.type === this.storageService.currType)
-                    this.processHistory(result.coin);
+                if (result.status && result.type === this.storageService.currType) this.processHistory(result.coin);
             }),
             //this.zoomSwitchService.zoomSwitch.subscribe(zoom => {
             //if (zoom !== '' && this.storageService.coinsList.length !== 0)
@@ -94,13 +94,9 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     }
     private processHistory(coin: string) {
         this.zoom = this.storageService.currentWorker === '';
-        if (
-            this.isStarting ||
-            this.chart.labels.length === 0 ||
-            this.mainCoin === coin ||
-            this.currWorker !== this.storageService.currentWorker
-        ) {
+        if (this.isStarting || this.chart.labels.length === 0 || this.mainCoin === coin || this.currWorker !== this.storageService.currentWorker || this.currAlgo !== this.storageService.currAlgo) {
             this.currWorker = this.storageService.currentWorker;
+            this.currAlgo = this.storageService.currAlgo;
             this.createNewChart(coin);
             return;
         }
@@ -153,8 +149,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             }
         }
 
-        this.storageService.coinsObj[coin].history.timeFrom =
-            mainCoinObj.history.chart.label[0] - 2 * mainCoinObj.history.grByInterval;
+        this.storageService.coinsObj[coin].history.timeFrom = mainCoinObj.history.chart.label[0] - 2 * mainCoinObj.history.grByInterval;
         const coins = this.storageService.coinsList.filter(item => item !== coin);
         coins.forEach(item => {
             const coinObj = this.storageService.coinsObj[item];
@@ -257,13 +252,8 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
                 data: currHistoryData.data[chartDataI],
             };
             newData = { time: newHistoryData[0].time, data: newHistoryData[0].power };
-            if (newData.time > chartData.time && chartDataI < currHistoryData.label.length - 1)
-                chartDataI++;
-            else if (
-                newData.time <= chartData.time ||
-                chartDataI >= currHistoryData.label.length - 1
-            )
-                break;
+            if (newData.time > chartData.time && chartDataI < currHistoryData.label.length - 1) chartDataI++;
+            else if (newData.time <= chartData.time || chartDataI >= currHistoryData.label.length - 1) break;
             tmp++;
             if (tmp > 3000) throw new Error('Something is wrong');
         }
@@ -294,8 +284,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             }
             chartDataI++, newDataI++;
             // если после увеличения счётчиков выходим за границы массивов - выходим
-            goNext =
-                chartDataI < currHistoryData.label.length && newDataI < newHistoryData.length - 1;
+            goNext = chartDataI < currHistoryData.label.length && newDataI < newHistoryData.length - 1;
             // если выходим - вернуть счётчики назад - они ещё пригодятся
             //if (!goNext) chartDataI--, newDataI--;
             tmp++;
@@ -315,20 +304,13 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
                 coinObj.history.chart.data[chartDataI] = newData.data;
                 coinObj.history.chart.label[chartDataI] = newData.time;
                 //если основная монета - нужно перерисовать временные метки
-                if (isCoinMain)
-                    this.chart.labels[chartDataI] = getStr(
-                        newData.time,
-                        newDataI === newHistoryData.length - 1,
-                    );
+                if (isCoinMain) this.chart.labels[chartDataI] = getStr(newData.time, newDataI === newHistoryData.length - 1);
             } else {
                 this.chart.datasets[dsI].data.push(newData.data);
                 coinObj.history.chart.data.push(newData.data);
                 coinObj.history.chart.label.push(newData.time);
                 //если основная монета - нужно перерисовать временные метки
-                if (isCoinMain)
-                    this.chart.labels.push(
-                        getStr(newData.time, newDataI === newHistoryData.length - 1),
-                    );
+                if (isCoinMain) this.chart.labels.push(getStr(newData.time, newDataI === newHistoryData.length - 1));
             }
 
             chartDataI++;
@@ -338,9 +320,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             tmp++;
             if (tmp > 3000) throw new Error('Something is wrong');
         }
-        goNext =
-            this.chart.labels.length >
-            DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
+        goNext = this.chart.labels.length > DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
 
         //отрезаем, начало, если слишком длинный график
         while (goNext) {
@@ -349,16 +329,11 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
                 el.data.shift();
             });
             this.storageService.coinsList.forEach(coin => {
-                if (this.storageService.coinsObj[coin].history.data.length > 0)
-                    this.storageService.coinsObj[coin].history.data.shift();
-                if (this.storageService.coinsObj[coin].history.chart.data.length > 0)
-                    this.storageService.coinsObj[coin].history.chart.data.shift();
-                if (this.storageService.coinsObj[coin].history.chart.label.length > 0)
-                    this.storageService.coinsObj[coin].history.chart.label.shift();
+                if (this.storageService.coinsObj[coin].history.data.length > 0) this.storageService.coinsObj[coin].history.data.shift();
+                if (this.storageService.coinsObj[coin].history.chart.data.length > 0) this.storageService.coinsObj[coin].history.chart.data.shift();
+                if (this.storageService.coinsObj[coin].history.chart.label.length > 0) this.storageService.coinsObj[coin].history.chart.label.shift();
             });
-            goNext =
-                this.chart.labels.length >
-                DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
+            goNext = this.chart.labels.length > DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
         }
         function getStr(time: number, lastItem: boolean): string {
             let str = lastItem ? lastLabelText : labelText;
@@ -384,11 +359,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             return color.r !== r && color.g !== g && color.b !== b;
         });
 
-        this.chart = createDefaultData(
-            coin,
-            this.themeService.gridLinesColorX,
-            this.themeService.gridLinesColorY,
-        );
+        this.chart = createDefaultData(coin, this.themeService.gridLinesColorX, this.themeService.gridLinesColorY);
 
         const l = stor.history.data.length;
         for (let i = 0; i < l; i++) {
@@ -399,17 +370,13 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
             stor.history.chart.data.push(el.power);
         }
 
-        let goNext =
-            this.chart.labels.length >
-            DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
+        let goNext = this.chart.labels.length > DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
         while (goNext) {
             this.chart.labels.shift();
             this.chart.datasets[0].data.shift();
             stor.history.chart.data.shift();
             stor.history.chart.label.shift();
-            goNext =
-                this.chart.labels.length >
-                DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
+            goNext = this.chart.labels.length > DefaultParams.ZOOMPARAMS[this.storageService.currZoom].maxStatsWindow;
         }
         this.isStarting = false;
 

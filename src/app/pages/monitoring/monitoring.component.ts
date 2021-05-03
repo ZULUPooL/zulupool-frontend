@@ -15,12 +15,7 @@ import { TCoinName } from 'interfaces/coin';
 import { IUserBalanceItem, IWorkerStatsItem } from 'interfaces/backend-query';
 import { ESuffix } from 'pipes/suffixify.pipe';
 import { FetchPoolDataService } from 'services/fetchdata.service';
-import {
-    NzTableFilterFn,
-    NzTableFilterList,
-    NzTableSortFn,
-    NzTableSortOrder,
-} from 'ng-zorro-antd/table';
+import { NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
 
 enum EWorkerState {
     Normal = 'normal',
@@ -61,17 +56,8 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
 
     get isPayBttnActive(): boolean {
         if (this.storageService.isReadOnly || this.isBalanceDataLoading) return false;
-        if (
-            Object.keys(this.settingsItems).length === 0 ||
-            this.settingsItems[this.storageService.currCoin].address === null
-        )
-            return false;
-        if (
-            this.currentBalance?.balance !== '0' &&
-            this.currentBalance?.balance !== '0.00' &&
-            (this.currentBalance?.requested === '0.00' || this.currentBalance?.requested === '0')
-        )
-            return true;
+        if (Object.keys(this.settingsItems).length === 0 || this.settingsItems[this.storageService.currCoin].address === null) return false;
+        if (this.currentBalance?.balance !== '0' && this.currentBalance?.balance !== '0.00' && (this.currentBalance?.requested === '0.00' || this.currentBalance?.requested === '0')) return true;
         return false;
     }
     get isNeedInfoActive(): boolean {
@@ -159,8 +145,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
             },
             {
                 title: this.translateService.instant('common.dictionary.lastSeen'),
-                compare: (a: ILiveStatWorker, b: ILiveStatWorker) =>
-                    parseInt(a.lastShareTime as any) - parseInt(b.lastShareTime as any),
+                compare: (a: ILiveStatWorker, b: ILiveStatWorker) => parseInt(a.lastShareTime as any) - parseInt(b.lastShareTime as any),
                 priority: 1,
             },
         ];
@@ -178,8 +163,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
             },
             {
                 title: this.translateService.instant('common.dictionary.lastSeen'),
-                compare: (a: ILiveStatWorker, b: ILiveStatWorker) =>
-                    parseInt(a.lastShareTime as any) - parseInt(b.lastShareTime as any),
+                compare: (a: ILiveStatWorker, b: ILiveStatWorker) => parseInt(a.lastShareTime as any) - parseInt(b.lastShareTime as any),
                 priority: 1,
             },
         ];
@@ -239,8 +223,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         this.storageService.coinsObj[this.activeCoinName].is.liveVisible = false;
         this.storageService.coinsObj[this.activeCoinName].is.balanseVisible = false;
         this.storageService.coinsObj[coin].is.liveVisible = true;
-        this.storageService.coinsObj[coin].is.blocksVisible = !this.storageService.coinsObj[coin].is
-            .algo;
+        this.storageService.coinsObj[coin].is.blocksVisible = !this.storageService.coinsObj[coin].is.algo;
         this.haveBalanceData = !this.storageService.coinsObj[coin].is.algo;
         this.activeCoinName = coin;
         this.getLiveInfo();
@@ -301,7 +284,9 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
 
     manualPayout(): void {
         this.isManualPayoutSending = true;
-        const coin = this.storageService.currCoin;
+        let coin = this.storageService.currCoin;
+        const coinObj = this.storageService.coinsObj[this.storageService.currCoin];
+        if (coinObj.is.nameSplitted) coin = coinObj.info.name + '.' + coinObj.info.algorithm;
         this.backendManualApiService.forcePayout({ coin }).subscribe(
             () => {
                 this.nzModalService.success({
@@ -333,11 +318,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         const coinsObj = this.storageService.coinsObj;
         const mainCoinObj = this.storageService.chartMainCoinObj,
             currTime = mainCoinObj.history.chart.label[mainCoinObj.history.chart.label.length - 1],
-            currTime2 = parseInt(
-                ((new Date(currTime * 1000).setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(
-                    0,
-                ),
-            );
+            currTime2 = parseInt(((new Date(currTime * 1000).setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(0));
 
         const grI = DefaultParams.ZOOMPARAMS[zoom].groupByInterval;
         const statWindow = DefaultParams.ZOOMPARAMS[zoom].statsWindow;
@@ -405,8 +386,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     //  listOfEnabledData.some(({ id }) => this.setOfCheckedId.has(id)) && !this.checked;
     //}
     private processCoins() {
-        const coinI =
-            this.storageService.coinsList.length > 2 ? this.storageService.coinsList.length - 1 : 0;
+        const coinI = this.storageService.coinsList.length > 2 ? this.storageService.coinsList.length - 1 : 0;
         this.mainChartCoin = this.storageService.coinsList[coinI];
         this.historyFetcher();
         this.getSettings();
@@ -451,9 +431,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         this.liveStats = coinObj.live.data;
         this.liveStatsWorkers = this.liveStats.miners;
         if (this.storageService.currType === 'worker') {
-            this.workerData = this.liveStatsWorkers.filter(
-                worker => worker.name === this.storageService.currentWorker,
-            )[0];
+            this.workerData = this.liveStatsWorkers.filter(worker => worker.name === this.storageService.currentWorker)[0];
             this.workerDataReady = true;
         }
     }
@@ -525,9 +503,9 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
                     }
                 }
                 coins.forEach(coin => {
-                    if (coin.name.split('.').length > 1) {
-                        coin.name = coin.name.split('.')[0];
-                    }
+                    //if (coin.name.split('.').length > 1) {
+                    //coin.name = coin.name.split('.')[0];
+                    //}
                     this.settingsItems[coin.name] = coin;
                 });
 
@@ -549,9 +527,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         this.fetchPoolDataService.history({ coin, type: this.storageService.currType, workerId });
     }
 
-    private historyFetcher(
-        timer: number = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].refreshTimer,
-    ) {
+    private historyFetcher(timer: number = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].refreshTimer) {
         clearTimeout(this.historyFetcherTimeoutId);
         this.historyFetcherTimeoutId = setTimeout(() => {
             this.getLiveInfo();
@@ -576,12 +552,10 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
                 if (data.status && data.type === this.storageService.currType) this.processCoins();
             }),
             this.fetchPoolDataService.apiGetLiveStat.subscribe(data => {
-                if (data.status && data.type === this.storageService.currType)
-                    this.processLive(data.coin);
+                if (data.status && data.type === this.storageService.currType) this.processLive(data.coin);
             }),
             this.fetchPoolDataService.apiGetUserBalance.subscribe(data => {
-                if (data.status && data.type === this.storageService.currType)
-                    this.processBalance(data.coin);
+                if (data.status && data.type === this.storageService.currType) this.processBalance(data.coin);
             }),
         ];
     }

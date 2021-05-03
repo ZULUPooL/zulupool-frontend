@@ -1,10 +1,10 @@
 import { IZoomList, IZoom, IExplorerLink, IHistoryItem2, IZoomSettings, ILiveStatWorker, IFetchResponce, ILocalTimeDelta, ILiveStatCommon } from 'interfaces/common';
 
 export class DefaultParams {
-    static readonly GUIVERSION = 'v1.30b';
+    static readonly GUIVERSION = 'v1.75b';
     static readonly GUISOURCE = 'https://github.com/';
 
-    static readonly COREVERSION = 'v3.12b';
+    static readonly COREVERSION = 'v3.75b';
     static readonly CORESOURCE = 'https://github.com/';
 
     static readonly SUPPORTMAIL = '';
@@ -14,7 +14,7 @@ export class DefaultParams {
     static readonly GAZERNAME: string = 'observer';
     static readonly BASECOINSWITCHTIMER: number = 300;
     static readonly BLOCKSFETCHTIMER: number = 120;
-    static readonly DATAUPDATETIMER: number = 29;
+    static readonly DATAUPDATETIMER: number = 120;
     static readonly LIVESTATCACHE: number = 15;
     static readonly HISTORYSTATCACHE: number = 50;
     static readonly MAXHISTORYITEMS: number = 500;
@@ -27,18 +27,21 @@ export class DefaultParams {
     static readonly PPDALN = 'https://beta.';
     static readonly PPDAALGO = 'sha256d';
     static readonly STRATUM = 'sha256.';
-    static readonly FASTJOBCOINS = ['DGB.sha256'];
-    static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'BSV', 'DGB', 'FCH', 'HTR'];
-    static readonly PPDALNREWARD = '91.12%';
+    static readonly STRATUMS = { HTR: 'sha256.', DOGE: 'scrypt.' };
+    static readonly FASTJOBCOINS = ['DGB.sha256', 'DGB.scrypt'];
+    static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'BSV', 'DGB', 'FCH', 'HTR', 'DGB.sha256', 'DGB.scrypt', 'LTC', 'DOGE'];
+    static readonly PPDALNREWARD = '92.12%';
     static readonly RECOMMENDEDHTR = '1600';
     static readonly ADDREXAMPLES = {
-        BTC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' PS2H:3H28N5WuREZ93CNmhWcRcrnykWrMqkhFyWN', ' Bech32:bc1uf5tdn87k2uz7r2kl5zrfww362ch3746lq5vse7'],
-        BCHN: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
-        BCHABC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
+        BTC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' P2SH:3H28N5WuREZ93CNmhWcRcrnykWrMqkhFyWN', ' Bech32:bc1uf5tdn87k2uz7r2kl5zrfww362ch3746lq5vse7'],
+        BCHN: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqssr5lavh'],
+        BCHABC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqssr5lavh'],
         BSV: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
-        DGB: [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' PS2H:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9'],
+        DGB: [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9'],
         FCH: [' P2PKH:FV4WF4rRUvqD3ekQudccGGCFHqTTHnpMhu'],
         HTR: [' P2PKH:HTjxTEAUSwZf34nK4YuicfDPocT7JsQwJi'],
+        LTC: [' P2PKH:LcgdQuT7TPbo5X2qSfTi4Kbvov3p1uzeAK', ' P2SH:MKYXKMckKUgYX1tTPuEjLtGQ6jiBXhpf39'],
+        DOGE: [' P2PKH:DMHMEs1KBhFPuVtwUTCGTtJQSuCmyETxVH'],
     };
 
     static readonly TARGETLOGINIGNORE = [
@@ -107,8 +110,12 @@ export class DefaultParams {
         BCHABC: 'https://explorer.bitcoinabc.org/block/',
         BSV: 'https://whatsonchain.com/block/',
         DGB: 'https://chainz.cryptoid.info/dgb/block.dws?',
+        'DGB.sha256': 'https://chainz.cryptoid.info/dgb/block.dws?',
+        'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/block.dws?',
         FCH: 'http://fch.world/block/',
         HTR: 'https://explorer.hathor.network/transaction/',
+        LTC: 'https://chainz.cryptoid.info/ltc/block.dws?',
+        DOGE: 'https://blockchair.com/dogecoin/block/',
     };
     static readonly TXLINKS: IExplorerLink = {
         //BTC: 'https://btc.com/',
@@ -118,8 +125,12 @@ export class DefaultParams {
         BCHABC: 'https://explorer.bitcoinabc.org/tx/',
         BSV: 'https://whatsonchain.com/tx/',
         DGB: 'https://chainz.cryptoid.info/dgb/tx.dws?',
+        'DGB.sha256': 'https://chainz.cryptoid.info/dgb/tx.dws?',
+        'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/tx.dws?',
         FCH: 'http://fch.world/tx/',
         HTR: 'https://explorer.hathor.network/transaction/',
+        LTC: 'https://chainz.cryptoid.info/ltc/tx.dws?',
+        DOGE: 'https://blockchair.com/dogecoin/transaction/',
     };
     static readonly ADDRLINKS: IExplorerLink = {
         //BTC: 'https://btc.com/',
@@ -129,20 +140,24 @@ export class DefaultParams {
         BCHABC: 'https://explorer.bitcoinabc.org/address/',
         BSV: 'https://whatsonchain.com/address/',
         DGB: 'https://chainz.cryptoid.info/dgb/address.dws?',
+        'DGB.sha256': 'https://chainz.cryptoid.info/dgb/address.dws?',
+        'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/address.dws?',
         FCH: 'http://fch.world/address/',
         HTR: 'https://explorer.hathor.network/address/',
+        LTC: 'https://chainz.cryptoid.info/ltc/address.dws?',
+        DOGE: 'https://blockchair.com/dogecoin/address/',
     };
 
     //static readonly zoom: string = "15M";
     //static readonly zoomList: string[] = ["1M","5M","30M","H1","H4","D","W",];
     static readonly ZOOM: IZoom = {
-        pool: '3M',
+        pool: '15M',
         user: '5M',
         worker: '5M',
         history: 'D',
     };
     static readonly ZOOMSLIST: IZoomList = {
-        pool: ['3M', '15M', '30M', 'H1', 'H4', 'D'],
+        pool: ['15M', '30M', 'H1', 'H4', 'D'],
         user: ['5M', '15M', 'H1', 'H4', 'D'],
         worker: ['5M', '15M', 'H1', 'H4', 'D'],
         history: ['D', 'W', 'M'],

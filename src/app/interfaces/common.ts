@@ -6,7 +6,9 @@ export interface ICoinItem {
     algorithm: string;
     powerMultLog10?: number;
 }
-
+export interface IAlgoCoinData {
+    [algo: string]: ICoinItem[];
+}
 export interface IZoom {
     [type: string]: string;
 }

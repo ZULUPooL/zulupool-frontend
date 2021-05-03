@@ -206,12 +206,12 @@
     "math.modes.PPDALN.the.following.fees.for":"для всех бэкендов (монет).",
 
     "math.modes.PPDALN.reward1":"Используя ",
-    "math.modes.PPDALN.reward2":"режим, вы получаете до",
-    "math.modes.PPDALN.reward3":"от вознаграждения, за исключением персональных условий.",
+    "math.modes.PPDALN.reward2":"режим, для sh256 вы получаете до",
+    "math.modes.PPDALN.reward3":"от вознаграждения, за исключением персональных условий. Для scrypt - 96.4% от вознаграждения.",
 
 
 
-    "math.modes.PPDA":"PPDA (Pay Per Difficulty Accepted) (Оплата за выполненную работу).",
+    "math.modes.PPDA":"PPDA (Pay Per Difficulty Accepted) (Оплата за выполненную работу.). Только для sha256.",
     "math.modes.PPDA.at.the.moment1":"На данный момент, для этого режима мы отлаживаем нашу математическую основу.",
     "math.modes.PPDA.at.the.moment2":"Пока это не публичный режим работы, однако, если вы заинтересованы в участии на данном этапе и вам интересно зарабатывать несколько выше, чем средняя прибыльность сети",
     "math.modes.PPDA.at.the.moment.contact.us": "не стесняйтесь с нами связаться.",

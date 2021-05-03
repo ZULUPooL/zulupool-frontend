@@ -160,11 +160,11 @@ export class SettingsComponent implements OnInit {
                         this.disabledCoin = algoCoin;
                     }
                 }
-                coins.forEach(coin => {
-                    if (coin.name.split('.').length > 1) {
-                        coin.name = coin.name.split('.')[0];
-                    }
-                });
+                /*coins.forEach(coin => {
+                   //if (coin.name.split('.').length > 1) {
+                        //coin.name = coin.name.split('.')[0];
+                    //}
+                }); */
 
                 this.settingsItems = coins;
                 if (coin === '') this.currentCoin = coins[coins.length - 1].name;

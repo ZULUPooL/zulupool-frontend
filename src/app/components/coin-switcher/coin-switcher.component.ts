@@ -23,14 +23,11 @@ export class CoinSwitcherComponent implements OnInit {
 
     coin: string;
     coins: string[];
+    selectedAlgo: number;
+    algos: string[];
     coinsListLoading: boolean;
 
-    constructor(
-        private coinSwitchService: CoinSwitchService,
-        private storageService: StorageService,
-        private fetchPoolDataService: FetchPoolDataService,
-        private router: Router,
-    ) {}
+    constructor(private coinSwitchService: CoinSwitchService, private storageService: StorageService, private fetchPoolDataService: FetchPoolDataService, private router: Router) {}
 
     ngOnInit(): void {
         this.coinsListLoading = false;
@@ -45,20 +42,37 @@ export class CoinSwitcherComponent implements OnInit {
         this.coinSwitchService.setCoin(newCoin);
         this.onChange.emit(newCoin);
     }
+    onAlgoChange(): void {
+        this.storageService.coinsList = [];
+        this.storageService.algoCoinsData[this.algos[this.selectedAlgo]].forEach(coin => this.storageService.coinsList.push(coin.name));
+        this.coins = this.storageService.coinsList;
+        this.storageService.currAlgo = this.algos[this.selectedAlgo];
+        this.coin = this.coins[this.coins.length - 1];
+        this.cangeCoin(this.coin);
+        //
+        //this.storageService.targetUser = this.usersItems[this.selectedIndex].login;
+        //this.onTargetChange.emit(this.storageService.targetUser);
+    }
 
     private processCoins(data) {
         const url = this.router.routerState.snapshot.url.slice(1);
         //let maxL = 1;
         //if (url === 'payouts' || url === 'settings') maxL = 2;
+        this.algos = this.storageService.algosList;
+        //this.selectedAlgo = this.algos.length - 1;
+        this.selectedAlgo = 0;
+        this.storageService.coinsList = [];
+        this.storageService.algoCoinsData[this.algos[this.selectedAlgo]].forEach(coin => this.storageService.coinsList.push(coin.name));
         this.coins = this.storageService.coinsList;
+        this.storageService.currAlgo = this.algos[this.selectedAlgo];
 
         if (this.storageService.coinsList.length > 2) {
-            if (url === 'payouts' || url === 'settings') {
-                this.coins = [];
-                this.storageService.coinsList.forEach(el => {
-                    if (el !== 'sha256') this.coins.push(el);
-                });
-            }
+        if (url === 'payouts' || url === 'settings') {
+        this.coins = [];
+        this.storageService.coinsList.forEach(el => {
+        if (el !== 'sha256' && el !== 'scrypt') this.coins.push(el);
+        });
+        }
         }
 
         this.coin = this.coins[this.coins.length - 1];

@@ -41,7 +41,7 @@ export class AppService {
                 //this.storageService.isReadOnly = isReadOnly;
                 this.storageService.activeUserData = user;
                 //const state = isReadOnly ? EUsersState.ReadOnly : EUsersState.Regular;
-                return this.userApiService.userEnumerateAll({ id: sessionId }).pipe(
+                return this.userApiService.userEnumerateAll({ id: sessionId, sortBy:'averagePower',size: 5000 }).pipe(
                     map(({ users }) => {
                         const superUser =
                             users

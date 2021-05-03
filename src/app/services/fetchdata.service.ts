@@ -99,6 +99,36 @@ export class FetchPoolDataService {
         }
 
         function sort(coins: IPoolCoinsItem[]): void {
+            let shaCoins = [],
+                scryptCoins = [];
+            coins.forEach(coin => {
+                if (coin.algorithm === 'sha256') {
+                    if (coin.name === 'BTC') shaCoins.unshift(coin);
+                    else shaCoins.push(coin);
+                } else if (coin.algorithm === 'scrypt') {
+                    if (coin.name === 'LTC') scryptCoins.unshift(coin);
+                    else scryptCoins.push(coin);
+                }
+            });
+            storage.algosList = [];
+            if (shaCoins.length > 1) {
+                shaCoins.push({ name: shaCoins[0].algorithm, fullName: shaCoins[0].algorithm, algorithm: shaCoins[0].algorithm });
+                storage.algoCoinsData[shaCoins[0].algorithm] = shaCoins;
+                storage.algosList.push(shaCoins[0].algorithm);
+                shaCoins.forEach(coin => {
+                    addCoinToList(coin, false);
+                });
+            }
+            if (scryptCoins.length > 1) {
+                scryptCoins.push({ name: scryptCoins[0].algorithm, fullName: scryptCoins[0].algorithm, algorithm: scryptCoins[0].algorithm });
+                storage.algoCoinsData[scryptCoins[0].algorithm] = scryptCoins;
+                storage.algosList.push(scryptCoins[0].algorithm);
+                scryptCoins.forEach(coin => {
+                    addCoinToList(coin, false);
+                });
+            }
+            storage.currAlgo = storage.algosList[storage.algosList.length - 1];
+            /*
             let algo = true;
             //const ts = getTs();
             coins.forEach(coin => {
@@ -108,17 +138,18 @@ export class FetchPoolDataService {
             if (algo && coins.length !== 1) {
                 const a = coins[0].algorithm;
                 addCoinToList({ name: a, fullName: a, algorithm: a }, false);
-            }
+            } */
 
             function addCoinToList(coin: ICoinItem, isBtc: boolean = false): void {
                 const isAlgo = coin.name === coin.algorithm;
                 let isSpliName = false;
-                if (coin.name.split('.').length > 1) {
-                    coin.name = coin.name.split('.')[0];
-                    isSpliName = true;
-                }
-                if (!isBtc) storage.coinsList.push(coin.name);
-                else storage.coinsList.unshift(coin.name);
+                //if (coin.name.split('.').length > 1) {
+                //coin.name = coin.name.split('.')[0];
+                //isSpliName = true;
+                //}
+                //if (!isBtc) storage.coinsList.push(coin.name);
+                //else storage.coinsList.unshift(coin.name);
+                //if (isAlgo) storage.algosList.push(coin.algorithm);
                 const state = { isLoading: false, cacheTs: 0 };
                 const blocksState = { data: [], ...state };
                 const liveState = { data: {} as any, ...state };
