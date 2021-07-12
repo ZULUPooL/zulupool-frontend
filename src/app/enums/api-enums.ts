@@ -26,6 +26,8 @@ export enum userCreateResp {
     duplicateLogin = 'duplicate_login',
     smtpServerError = 'smtp_client_create_error',
     emailSendError = 'email_send_error',
+    parentNotAllowed = 'parent_select_not_allowed',
+    noParentExist = 'parent_not_exists',
 }
 export enum userResendEmailResp {
     invalidPassword = 'invalid_password',

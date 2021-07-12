@@ -1,10 +1,12 @@
 import { IZoomList, IZoom, IExplorerLink, IHistoryItem2, IZoomSettings, ILiveStatWorker, IFetchResponce, ILocalTimeDelta, ILiveStatCommon } from 'interfaces/common';
 
 export class DefaultParams {
-    static readonly GUIVERSION = 'v1.75b';
+    static readonly DNSNAME = 'zulupool.com';
+
+    static readonly GUIVERSION = 'v2.01b';
     static readonly GUISOURCE = 'https://github.com/';
 
-    static readonly COREVERSION = 'v3.75b';
+    static readonly COREVERSION = 'v0.99b';
     static readonly CORESOURCE = 'https://github.com/';
 
     static readonly SUPPORTMAIL = '';
@@ -12,6 +14,7 @@ export class DefaultParams {
 
     static readonly ADMINNAME: string = 'admin';
     static readonly GAZERNAME: string = 'observer';
+    
     static readonly BASECOINSWITCHTIMER: number = 300;
     static readonly BLOCKSFETCHTIMER: number = 120;
     static readonly DATAUPDATETIMER: number = 120;
@@ -21,7 +24,8 @@ export class DefaultParams {
     static readonly MULTIPLYHISTORYDATAFORCHART: number = 3;
     static readonly FETCHRESPONCE: IFetchResponce = { status: false, coin: '', type: '' };
     static readonly DEFAULTTYPE = 'pool';
-    static readonly DNSNAME = 'zulupool.com';
+
+    
     static readonly BTCWIKI = 'https://en.bitcoin.it/wiki/Difficulty#What_is_the_minimum_difficulty.3F';
     static readonly PPDA = 'https://ppda.';
     static readonly PPDALN = 'https://beta.';
@@ -30,18 +34,19 @@ export class DefaultParams {
     static readonly STRATUMS = { HTR: 'sha256.', DOGE: 'scrypt.' };
     static readonly FASTJOBCOINS = ['DGB.sha256', 'DGB.scrypt'];
     static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'BSV', 'DGB', 'FCH', 'HTR', 'DGB.sha256', 'DGB.scrypt', 'LTC', 'DOGE'];
-    static readonly PPDALNREWARD = '92.12%';
+    static readonly PPDALNREWARD = '94.12%';
     static readonly RECOMMENDEDHTR = '1600';
     static readonly ADDREXAMPLES = {
-        BTC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' P2SH:3H28N5WuREZ93CNmhWcRcrnykWrMqkhFyWN', ' Bech32:bc1uf5tdn87k2uz7r2kl5zrfww362ch3746lq5vse7'],
-        BCHN: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqssr5lavh'],
-        BCHABC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqssr5lavh'],
-        BSV: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
-        DGB: [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9'],
-        FCH: [' P2PKH:FV4WF4rRUvqD3ekQudccGGCFHqTTHnpMhu'],
-        HTR: [' P2PKH:HTjxTEAUSwZf34nK4YuicfDPocT7JsQwJi'],
-        LTC: [' P2PKH:LcgdQuT7TPbo5X2qSfTi4Kbvov3p1uzeAK', ' P2SH:MKYXKMckKUgYX1tTPuEjLtGQ6jiBXhpf39'],
-        DOGE: [' P2PKH:DMHMEs1KBhFPuVtwUTCGTtJQSuCmyETxVH'],
+        BTC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' P2SH:3H28N5WuREZ93CNmhWcRcrnykWrMqkhFyWN', ' Bech32:bc1uf5tdn87k2uz7r2kl5zrfww362ch3746lq5vse7', ' MinPay:0.001 BTC'],
+        BCHN: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqssr5lavh', ' MinPay:0.005 BCH(node)'],
+        BCHABC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqssr5lavh', ' MinPay:0.005 BCHABC'],
+        BSV: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' MinPay:0.005 BSV'],
+        'DGB.sha256': [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9', ' MinPay:10.0 DGB'],
+        'DGB.scrypt': [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9', ' MinPay:10.0 DGB'],
+        FCH: [' P2PKH:FV4WF4rRUvqD3ekQudccGGCFHqTTHnpMhu', ' MinPay:1 FCH'],
+        HTR: [' P2PKH:HTjxTEAUSwZf34nK4YuicfDPocT7JsQwJi', ' MinPay:1 HTR'],
+        LTC: [' P2PKH:LcgdQuT7TPbo5X2qSfTi4Kbvov3p1uzeAK', ' P2SH:MKYXKMckKUgYX1tTPuEjLtGQ6jiBXhpf39', ' MinPay:0.01 LTC'],
+        DOGE: [' P2PKH:DMHMEs1KBhFPuVtwUTCGTtJQSuCmyETxVH', ' MinPay:5.0 DOGE'],
     };
 
     static readonly TARGETLOGINIGNORE = [

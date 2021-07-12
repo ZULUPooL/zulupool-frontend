@@ -28,7 +28,7 @@ export class StorageService {
     private coinsData: ICoinsData = {};
     private currentZoom = DefaultParams.ZOOM[this.type];
     private currentZoomList = DefaultParams.ZOOMSLIST[this.type];
-    private userData: ICredentials;
+    userData: ICredentials;
     private trgUserData: IUser[];
 
     private zoomParams = DefaultParams.ZOOMPARAMS;
@@ -181,7 +181,7 @@ export class StorageService {
     }
 
     get targetUserRegDate(): number | null {
-        if (this.targetLogin === null) return this.userData.registrationDate;
+        if (this.targetLogin === null || this.targetLogin === '') return this.userData.registrationDate;
         if (this.targetLogin === EUserRoles.Admin || this.targetLogin === EUserRoles.Observer) {
             const groupByInterval = ETime.Day;
             const currTime = parseInt(((new Date().setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(0));
@@ -217,6 +217,16 @@ export class StorageService {
     set sessionId(sessionId: string | null) {
         if (sessionId) window.localStorage.setItem('sessionId', sessionId);
         else window.localStorage.removeItem('sessionId');
+    }
+
+    get usersList(): IUser[] | null {
+        let res = JSON.parse(window.localStorage.getItem('userlist')) || null;
+        return res;
+    }
+
+    set usersList(users: IUser[] | null) {
+        if (users) window.localStorage.setItem('userlist', JSON.stringify(users));
+        else window.localStorage.removeItem('userlist');
     }
 
     get targetUser(): string | null {

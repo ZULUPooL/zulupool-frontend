@@ -6,6 +6,7 @@ export interface IUserBalanceItem {
     balance: string;
     requested: string;
     paid: string;
+    queued: string;
 }
 
 export interface IFoundBlock {

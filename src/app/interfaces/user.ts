@@ -12,6 +12,31 @@ export interface IUser {
     lastShareTime?: number;
     role: EUserRoles;
     users?: IUser[];
+    feePlanId?: string;
+    //parentUser?: string;
+    //defaultFee?: number;
+    //specificFee?: IFeeInfo[];
+    isReadOnly?: boolean;
+    isActive?: boolean;
+}
+
+export interface IFeePalnData {
+    feePlanId: string;
+    default: IDefaultFeeData[];
+    coinSpecificFee: ICoinSpecificFeeData[];
+    totalDefault?: number;
+}
+
+export interface ICoinSpecificFeeData {
+    coin: string;
+    config: IDefaultFeeData[];
+    total?: number;
+}
+
+export interface IDefaultFeeData {
+    userId: string,
+    percentage: number
+    i?: number
 }
 
 export interface IUserInfo {

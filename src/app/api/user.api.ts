@@ -11,45 +11,42 @@ import * as IApi from 'interfaces/userapi-query';
     providedIn: 'root',
 })
 export class UserApiService {
-    constructor(private restService: RestService) {}
+    constructor(private restService: RestService) { }
 
-    createUser(
-        params: IApi.IUserCreateParams = {} as IApi.IUserCreateParams,
-    ): Observable<IApi.IUserCreateResponse | null> {
+    createUser(params: IApi.IUserCreateParams = {} as IApi.IUserCreateParams): Observable<IApi.IUserCreateResponse | null> {
         return this.restService.post('/userCreate', params);
     }
-    userResendEmail(
-        params: IApi.IUserResendEmailParams = {} as IApi.IUserResendEmailParams,
-    ): Observable<IApi.IUserResendEmailResponse | null> {
+    userResendEmail(params: IApi.IUserResendEmailParams = {} as IApi.IUserResendEmailParams): Observable<IApi.IUserResendEmailResponse | null> {
         if (not(params.login) || not(params.password) || not(params.email)) return of(null);
         return this.restService.post('/userResendEmail', params);
     }
 
-    userChangePassword(
-        params: IApi.IUserChangePassword,
-    ): Observable<IApi.IUserActionResponse | null> {
+    userChangePassword(params: IApi.IUserChangePassword): Observable<IApi.IUserActionResponse | null> {
         return this.restService.post('/userChangePassword', params);
     }
 
-    userAction(
-        params: IApi.IUserActionParams = {} as IApi.IUserActionParams,
-    ): Observable<IApi.IUserActionResponse | null> {
+    userAction(params: IApi.IUserActionParams = {} as IApi.IUserActionParams): Observable<IApi.IUserActionResponse | null> {
         return this.restService.post('/userAction', params);
     }
-    userGetCredentials(
-        params: IApi.IUserGetCredentialsParms = {} as IApi.IUserGetCredentialsParms,
-    ): Observable<IApi.IUserGetCredentialsResponse | null> {
+    userGetCredentials(params: IApi.IUserGetCredentialsParms = {} as IApi.IUserGetCredentialsParms): Observable<IApi.IUserGetCredentialsResponse | null> {
         return this.restService.post(`/userGetCredentials`, params);
     }
-    userGetSettings(
-        params: IApi.IUserGetSettingsParams = {} as IApi.IUserGetSettingsParams,
-    ): Observable<IApi.IUserGetSettingsResponse | null> {
+    userGetSettings(params: IApi.IUserGetSettingsParams = {} as IApi.IUserGetSettingsParams): Observable<IApi.IUserGetSettingsResponse | null> {
         return this.restService.post('/userGetSettings', params);
     }
-    userUpdateSettings(
-        params: IApi.IUserUpdateSettingsParams = {} as IApi.IUserUpdateSettingsParams,
-    ): Observable<IApi.IUserUpdateSettingsResponse | null> {
+    userUpdateSettings(params: IApi.IUserUpdateSettingsParams = {} as IApi.IUserUpdateSettingsParams): Observable<IApi.IUserUpdateSettingsResponse | null> {
         return this.restService.post('/userUpdateSettings', params);
+    }
+    userUpdateCredentials(params: {}): Observable<IApi.IUserUpdateCredentialsResponse | null> {
+        return this.restService.post('/userUpdateCredentials', params);
+    }
+
+    userChangePasswordForce(params: {}): any {
+        return this.restService.post('/userChangePasswordForce', params);
+    }
+
+    userUpdatePersonalFee(params: {}): any {
+        return this.restService.post('/userUpdatePersonalFee', params);
     }
 
     queryProfitSwitchCoeff(params = {}): any {
@@ -64,10 +61,21 @@ export class UserApiService {
         return this.restService.post('/userChangePassword', params);
     }
 
-    userEnumerateAll(
-        params: IApi.IUserEnumerateAllParams = {} as IApi.IUserEnumerateAllParams,
-    ): Observable<IApi.IUserEnumerateAllResponse | null> {
+    userEnumerateAll(params: IApi.IUserEnumerateAllParams = {} as IApi.IUserEnumerateAllParams): Observable<IApi.IUserEnumerateAllResponse | null> {
         return this.restService.post('/userEnumerateAll', params);
+    }
+
+    userEnumerateFeePlan(params: {}): any {
+        return this.restService.post('/userEnumerateFeePlan', params);
+    }
+    userGetFeePlan(params: {}): any {
+        return this.restService.post('/userGetFeePlan', params);
+    }
+    userUpdateFeePlan(params: {}): any {
+        return this.restService.post('/userUpdateFeePlan', params);
+    }
+    userChangeFeePlan(params: {}): any {
+        return this.restService.post('/userChangeFeePlan', params);
     }
 }
 
@@ -79,11 +87,15 @@ export interface IAdminUserCreateParams {
     isActive?: boolean;
     isReadOnly?: boolean;
     id?: string;
+    parentUser?: string;
+    defaultFee?: number;
 }
 export interface IUserCreateParams {
     login: string;
     password: string;
     email: string;
+    parentUser?: string;
+    defaultFee?: number;
     // name: string;
 }
 

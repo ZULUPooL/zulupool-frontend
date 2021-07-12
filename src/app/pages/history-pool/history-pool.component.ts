@@ -95,7 +95,7 @@ export class HistoryPoolComponent implements OnInit {
         this.currentCoin = coin;
         if (this.storageService.coinsObj[coin].is.nameSplitted) coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
         const groupByInterval = ETime.Day;
-        const timeFrom = (new Date().setHours(0, 0, 0, 0).valueOf() / 1000 - 30 * 86400) as any;
+        const timeFrom = (new Date().setHours(0, 0, 0, 0).valueOf() / 1000 - 150 * 86400) as any;
         this.appService.user.subscribe(user => {
             this.backendQueryApiService
                 .getPoolStatsHistory({

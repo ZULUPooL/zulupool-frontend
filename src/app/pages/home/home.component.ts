@@ -45,16 +45,9 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     mainChartCoin: string = '';
     haveBlocksData: boolean = false;
     isBlocksLoading: boolean;
-    blocks: IBlocks[];
+    blocks: IBlockItem[];
 
-    foundBlockKeys: (keyof IBlockItem)[] = [
-        'height',
-        'hash',
-        'confirmations',
-        'generatedCoins',
-        'foundBy',
-        'time',
-    ];
+    foundBlockKeys: (keyof IBlockItem)[] = ['height', 'hash', 'confirmations', 'generatedCoins', 'foundBy', 'time'];
     foundBlockKeysMobile: (keyof IBlockItem)[] = ['height', 'hash', 'confirmations', 'time'];
     /*
     signUpLink = {
@@ -70,11 +63,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     private blocksFetcherTimeoutId: number;
     private changeMainChartCoinTimeoutId: number;
     private isStarting: boolean;
-    constructor(
-        private zoomSwitchService: ZoomSwitchService,
-        private fetchPoolDataService: FetchPoolDataService,
-        private storageService: StorageService,
-    ) {
+    constructor(private zoomSwitchService: ZoomSwitchService, private fetchPoolDataService: FetchPoolDataService, private storageService: StorageService) {
         super();
     }
 
@@ -87,12 +76,10 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
                 if (data.status && data.type === this.storageService.currType) this.processCoins();
             }),
             this.fetchPoolDataService.apiGetLiveStat.subscribe(data => {
-                if (data.status && data.type === this.storageService.currType)
-                    this.processLive(data.coin);
+                if (data.status && data.type === this.storageService.currType) this.processLive(data.coin);
             }),
             this.fetchPoolDataService.apiGetBlocks.subscribe(data => {
-                if (data.status && data.type === this.storageService.currType)
-                    this.processBlocks(data.coin);
+                if (data.status && data.type === this.storageService.currType) this.processBlocks(data.coin);
             }),
         ];
     }
@@ -128,8 +115,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         this.storageService.coinsObj[this.activeCoinName].is.liveVisible = false;
         this.storageService.coinsObj[this.activeCoinName].is.blocksVisible = false;
         this.storageService.coinsObj[coin].is.liveVisible = true;
-        this.storageService.coinsObj[coin].is.blocksVisible = !this.storageService.coinsObj[coin].is
-            .algo;
+        this.storageService.coinsObj[coin].is.blocksVisible = !this.storageService.coinsObj[coin].is.algo;
         this.haveBlocksData = !this.storageService.coinsObj[coin].is.algo;
         this.activeCoinName = coin;
         this.getLiveInfo();
@@ -149,11 +135,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         const coinsObj = this.storageService.coinsObj;
         const mainCoinObj = this.storageService.chartMainCoinObj,
             currTime = mainCoinObj.history.chart.label[mainCoinObj.history.chart.label.length - 1],
-            currTime2 = parseInt(
-                ((new Date(currTime * 1000).setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(
-                    0,
-                ),
-            );
+            currTime2 = parseInt(((new Date(currTime * 1000).setMinutes(0, 0, 0).valueOf() / 1000) as any).toFixed(0));
 
         const grI = DefaultParams.ZOOMPARAMS[zoom].groupByInterval;
         const statWindow = DefaultParams.ZOOMPARAMS[zoom].statsWindow;
@@ -191,8 +173,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     }
 
     private processCoins() {
-        const coinI =
-            this.storageService.coinsList.length > 2 ? this.storageService.coinsList.length - 1 : 0;
+        const coinI = this.storageService.coinsList.length > 2 ? this.storageService.coinsList.length - 1 : 0;
         this.mainChartCoin = this.storageService.coinsList[coinI];
         //this.getLiveInfo();
         this.historyFetcher();
@@ -210,7 +191,12 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         this.isBlocksLoading = false;
         const coinObj = this.storageService.coinsObj[coin];
         if (!coinObj.is.blocksVisible) return;
-        this.blocks = coinObj.blocks.data as any;
+        this.blocks = coinObj.blocks.data;
+        this.blocks.forEach(blk => {
+            if (blk.confirmations === -1) blk.confirmations = 'ORPHAN';
+            if (blk.confirmations === -2) blk.confirmations = 'node_err';
+            if (blk.confirmations === 0) blk.confirmations = 'NEW';
+        });
     }
 
     //
@@ -262,11 +248,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     private getBloksInfo() {
         const coinObj = this.storageService.coinsObj;
         const list = this.storageService.coinsList.filter(coin => {
-            return (
-                !coinObj[coin].is.algo &&
-                !coinObj[coin].blocks.isLoading &&
-                coinObj[coin].is.blocksVisible
-            );
+            return !coinObj[coin].is.algo && !coinObj[coin].blocks.isLoading && coinObj[coin].is.blocksVisible;
         });
         list.forEach(coin => {
             this.blocks = [];
@@ -284,9 +266,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         }, timer * 1000);
     }
 
-    private historyFetcher(
-        timer: number = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].refreshTimer,
-    ) {
+    private historyFetcher(timer: number = DefaultParams.ZOOMPARAMS[this.storageService.currZoom].refreshTimer) {
         clearTimeout(this.historyFetcherTimeoutId);
         this.historyFetcherTimeoutId = setTimeout(() => {
             this.getLiveInfo();

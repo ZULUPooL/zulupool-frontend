@@ -84,6 +84,9 @@ export class HistoryComponent implements OnInit {
         this.storageService.currType = 'history';
         this.fetchPoolDataService.coins({ coin: '', type: 'history', forceUpdate: true });
     }
+    nZoomChange(): void {
+        return;
+    }
     changeTarget(target: string) {
         this.onCurrentCoinChange(this.currentCoin);
     }
@@ -93,8 +96,7 @@ export class HistoryComponent implements OnInit {
     }
     onCurrentCoinChange(coin: TCoinName): void {
         this.currentCoin = coin;
-        if (this.storageService.coinsObj[coin].is.nameSplitted)
-            coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
+        if (this.storageService.coinsObj[coin].is.nameSplitted) coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
         const groupByInterval = ETime.Day;
         this.appService.user.subscribe(user => {
             this.backendQueryApiService

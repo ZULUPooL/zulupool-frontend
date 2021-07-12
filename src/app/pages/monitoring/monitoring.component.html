@@ -94,13 +94,16 @@
 
                 <tr>
                     <th style="padding: 3px 4px 0px; text-align: center;">
-                        {{ "monitoring.balance" | translate }}
+                        {{ "monitoring.paid" | translate }}
                     </th>
                     <th style="padding: 3px 4px 0px; text-align: center;">
                         {{ "monitoring.requested" | translate }}
                     </th>
                     <th style="padding: 3px 4px 0px; text-align: center;">
-                        {{ "monitoring.paid" | translate }}
+                        {{ "monitoring.balance" | translate }}
+                    </th>
+                    <th style="padding: 3px 4px 0px; text-align: center;">
+                        {{ "monitoring.queued" | translate }}
                     </th>
                 </tr>
 
@@ -108,13 +111,16 @@
             <tbody>
                 <tr>
                     <td style="padding: 3px 4px 0px; text-align: center;">
-                        {{ currentBalance?.balance }}
+                        {{ currentBalance?.paid }}
                     </td>
                     <td style="padding: 3px 4px 0px; text-align: center;">
                         {{ currentBalance?.requested }}
                     </td>
                     <td style="padding: 3px 4px 0px; text-align: center;">
-                        {{ currentBalance?.paid }}
+                        {{ currentBalance?.balance }}
+                    </td>
+                    <td style="padding: 3px 4px 0px; text-align: center;">
+                        {{ currentBalance?.queued }}
                     </td>
                 </tr>
                 <tr style="padding: 3px 4px 0px; text-align: center;">

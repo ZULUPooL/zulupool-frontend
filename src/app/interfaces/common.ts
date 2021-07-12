@@ -38,7 +38,7 @@ export interface IBlockItem {
     height: number;
     hash: string;
     time: number;
-    confirmations: number;
+    confirmations: number | string;
     generatedCoins: string;
     foundBy: string;
 }
@@ -52,6 +52,7 @@ export interface IUserBalanceItem {
     balance: string;
     requested: string;
     paid: string;
+    queued: string;
 }
 export interface IUserSettingsItem {
     name: string;

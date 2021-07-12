@@ -1,19 +1,14 @@
 <app-target-login-badge style="padding-bottom: 5px;" (onTargetChange)=changeTarget($event)></app-target-login-badge>
 
 
-<nz-tabset>
-    <nz-tab [nzTitle]="'settings.tab.payment' | translate">
+<nz-tabset #tabGroup>
+    <nz-tab [nzTitle]="'settings.tab.payment' | translate" >
         <ng-template nz-tab>
             <div class="coin-select-block">
                 <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
             </div>
-                        
-            <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="form" (submit)="save()">
+        <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="form" (submit)="save()">
                 <nz-form-item>
-                    <nz-alert *ngIf="isNeedAddressInfoWarning" style="padding-bottom: 3px; max-width: 100%;" nzType="warning" 
-                        [nzMessage]="'settings.addressesFormats'| translate: {coin: currentCoin}"
-                        [nzDescription]="addrFormats"
-                    ></nz-alert>
                     <nz-form-label nzFor="address">
                         {{ "settings.form.address" | translate }}
                     </nz-form-label>
@@ -23,10 +18,6 @@
                 </nz-form-item>
             
                 <nz-form-item>
-                    <nz-alert *ngIf="isNeedHTRWarning" style="padding-bottom: 3px; max-width: 100%;" nzType="warning" 
-                        [nzMessage]="'settings.htrWarning'| translate"
-                        [nzDescription]="'settings.htrAmount'| translate: {amount:htrAmount}"
-                    ></nz-alert>
             
                     <nz-form-label nzFor="payoutThreshold">
                         {{ "settings.form.payoutThreshold" | translate }}
@@ -49,52 +40,62 @@
                     {{ "common.save" | translate }}
                 </button>
             </form>
-            
-
-
         </ng-template>
     </nz-tab>
-    <nz-tab [nzTitle]="'settings.tab.account' | translate">
+    <nz-tab [nzTitle]="'settings.tab.account' | translate" >
         <ng-template nz-tab>
+
+            <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="formMail.formData" (submit)="saveUserMail()">
+                <nz-form-item>
+                    <nz-form-label nzFor="email">{{ "common.email" | translate }} </nz-form-label>
+                    <nz-form-control>
+                        <!-- <input formControlName="email" nz-input id="email"/>--> {{ email }}
+                        <button disabled nz-button nzType="primary" >{{ "common.save" | translate }}</button>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+            <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="form2FA.formData" (submit)="saveUser2FA()">
+                <nz-form-item>
+                    <nz-form-label nzFor="faKey">{{ "2FA key"}} 
+                        <span style="font-weight: bold;"> &nbsp; {{ 'generate' }}</span>
+                        <span style="font-weight: bold;"> &nbsp; {{ 'Show QR' }}</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                        <!--<input formControlName="faKey" nz-input id="faKey"/>--> {{ ' key2fa ' }}
+                        <button  disabled nz-button nzType="primary" >{{ "common.save" | translate }}</button>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+
+
             <form class="settings-form"
             nz-form
             nzLayout="vertical"
             [formGroup]="formUser.formData"
-            (submit)="saveUser()"
+            (submit)="saveUserData()"
             >
+            <nz-form-item>
+                <span style="font-weight: bold;">
+                    {{ "settings.form.registrationDate" | translate }}
+                </span>
+                {{
+                            regDate * 1000
+                                | date: "dd.MM.yy HH:mm"
+                                | async
+                        }}
+            </nz-form-item>
                 <nz-form-item>
-                    <nz-form-label nzFor="name">
+                    <nz-form-label nzFor="name" (click)="genName()">
                         <span style="font-weight: bold;">
-                            {{ "settings.form.publicName" | translate }}
+                            {{ "settings.form.publicName" | translate }} &nbsp; {{ 'generate' }}
                         </span>
                     </nz-form-label>
-                    <nz-form-control nzDisabled="true">
-                        <!--<input nz-input formControlName="name" id="name" />-->
-                        <input disabled formControlName="name" id="name" />
+                    <nz-form-control >
+                        <input nz-input formControlName="name" id="name" />
                     </nz-form-control>
-                </nz-form-item>
-            
-                <nz-form-item>
-                        <span style="font-weight: bold;">
-                            {{ "settings.form.email" | translate }}
-                        </span>
-                        {{ email }}
-                    </nz-form-item>
-            
-                <nz-form-item>
-                    <span style="font-weight: bold;">
-                        {{ "settings.form.registrationDate" | translate }}
-                    </span>
-                    {{
-                                regDate * 1000
-                                    | date: "dd.MM.yy HH:mm"
-                                    | async
-                            }}
+                    <button nz-button nzType="primary" >{{ "common.save" | translate }}</button>
                 </nz-form-item>
                         
-                <button disabled="true" nz-button nzType="primary" >
-                    {{ "common.save" | translate }}
-                </button>
             </form>
             
         </ng-template>
@@ -102,6 +103,12 @@
 
 </nz-tabset>
 
+<div style="display: inline-table;" >
+<nz-alert *ngIf="tabGroup.selectedIndex==0 && isNeedAddressInfoWarning" nzType="warning" 
+[nzMessage]="'settings.addressesFormats'| translate: {coin: currentCoin}"
+[nzDescription]="addrFormats"
+></nz-alert>
+</div>
 
 
 

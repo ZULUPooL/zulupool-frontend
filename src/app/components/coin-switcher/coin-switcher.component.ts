@@ -43,8 +43,23 @@ export class CoinSwitcherComponent implements OnInit {
         this.onChange.emit(newCoin);
     }
     onAlgoChange(): void {
+        const prevCoins = this.coins;
+        const prevAlgo = this.storageService.currAlgo;
+        let needAlgo = false;
+        prevCoins.forEach(coin => {
+            needAlgo = coin === prevAlgo;
+        });
+
         this.storageService.coinsList = [];
-        this.storageService.algoCoinsData[this.algos[this.selectedAlgo]].forEach(coin => this.storageService.coinsList.push(coin.name));
+        if (needAlgo) {
+            this.storageService.algoCoinsData[this.algos[this.selectedAlgo]].forEach(coin => this.storageService.coinsList.push(coin.name));
+        } else {
+            this.storageService.algoCoinsData[this.algos[this.selectedAlgo]].forEach(coin => {
+                if (coin.name !== this.algos[this.selectedAlgo]) this.storageService.coinsList.push(coin.name);
+            });
+        }
+
+        //this.storageService.algoCoinsData[this.algos[this.selectedAlgo]].forEach(coin => this.storageService.coinsList.push(coin.name));
         this.coins = this.storageService.coinsList;
         this.storageService.currAlgo = this.algos[this.selectedAlgo];
         this.coin = this.coins[this.coins.length - 1];
@@ -67,12 +82,12 @@ export class CoinSwitcherComponent implements OnInit {
         this.storageService.currAlgo = this.algos[this.selectedAlgo];
 
         if (this.storageService.coinsList.length > 2) {
-        if (url === 'payouts' || url === 'settings') {
-        this.coins = [];
-        this.storageService.coinsList.forEach(el => {
-        if (el !== 'sha256' && el !== 'scrypt') this.coins.push(el);
-        });
-        }
+            if (url === 'payouts' || url === 'settings') {
+                this.coins = [];
+                this.storageService.coinsList.forEach(el => {
+                    if (el !== 'sha256' && el !== 'scrypt') this.coins.push(el);
+                });
+            }
         }
 
         this.coin = this.coins[this.coins.length - 1];

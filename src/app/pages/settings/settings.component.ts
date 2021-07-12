@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { FormService } from 'services/form.service';
 import { UserApiService } from 'api/user.api';
 import { IUserSettings } from 'interfaces/user';
@@ -8,7 +8,7 @@ import { StorageService } from 'services/storage.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
 import { DefaultParams } from 'components/defaults.component';
-import { Validators } from '@angular/forms';
+
 import { FetchPoolDataService } from 'services/fetchdata.service';
 
 @Component({
@@ -17,6 +17,8 @@ import { FetchPoolDataService } from 'services/fetchdata.service';
     styleUrls: ['./settings.component.less'],
 })
 export class SettingsComponent implements OnInit {
+    @ViewChild('tabGroup') tabGroup;
+
     readonly formUser = this.formService.createFormManager(
         {
             name: {
@@ -24,7 +26,23 @@ export class SettingsComponent implements OnInit {
             },
         },
         {
-            onSubmit: () => this.saveUser(),
+            onSubmit: () => this.saveUserData(),
+        },
+    );
+    readonly formMail = this.formService.createFormManager(
+        {
+            email: {},
+        },
+        {
+            onSubmit: () => this.saveUserMail(),
+        },
+    );
+    readonly form2FA = this.formService.createFormManager(
+        {
+            email: {},
+        },
+        {
+            onSubmit: () => this.saveUser2FA(),
         },
     );
     regDate: number;
@@ -126,8 +144,57 @@ export class SettingsComponent implements OnInit {
         );
     }
 
-    saveUser() {
+    saveUserMail() {
         return;
+    }
+
+    saveUser2FA() {
+        return;
+    }
+
+    saveUserData() {
+        if (this.formUser.formData.value.name === null || this.formUser.formData.value.name === '') {
+            this.nzModalService.error({
+                nzContent: 'Public name is empty',
+                nzOkText: 'Got it!',
+            });
+            return;
+        }
+        this.isSubmitting = true;
+
+        this.userApiService.userUpdateCredentials({ name: this.formUser.formData.value.name }).subscribe(
+            () => {
+                this.nzModalService.success({
+                    nzContent: this.translateService.instant('settings.form.success', {
+                        coinName: 'public name',
+                    }),
+                    nzOkText: this.translateService.instant('common.ok'),
+                });
+                this.isSubmitting = false;
+                this.isStarting = true;
+                this.getCredentials();
+            },
+            () => {
+                this.isSubmitting = false;
+            },
+        );
+    }
+    tabChanged(event: any) {
+        debugger;
+        return;
+    }
+
+    private generateName() {
+        let randI = Math.floor(Math.random() * DefaultParams.STATES.length);
+        const state = DefaultParams.STATES[randI];
+        randI = Math.floor(Math.random() * DefaultParams.ANIMALS.length);
+        const animal = DefaultParams.ANIMALS[randI];
+        return state + ' ' + animal;
+    }
+
+    genName() {
+        this.formUser.formData.controls['name'].setValue(this.generateName());
+        //this.selectedIndex = 11;
     }
 
     private getCredentials(): void {
