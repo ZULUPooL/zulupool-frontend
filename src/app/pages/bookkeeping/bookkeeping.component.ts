@@ -13,15 +13,15 @@ import { IFoundBlock } from 'interfaces/backend-query';
 import { not } from 'logical-not';
 
 @Component({
-    selector: 'app-users-page',
-    templateUrl: './users.component.html',
-    styleUrls: ['./users.component.less'],
+    selector: 'app-bookkeeping',
+    templateUrl: './bookkeeping.component.html',
+    styleUrls: ['./bookkeeping.component.less'],
 })
 
 
 
 
-export class UsersComponent implements OnInit {
+export class BookkeepingComponent implements OnInit {
     readonly ESuffix = ESuffix;
 
     isReady: boolean;
@@ -33,6 +33,7 @@ export class UsersComponent implements OnInit {
     listOfColumn = [];
     listOfMColumn = [];
 
+    listOfUsersBalances: IUser[]=[];
     listOfUsers: IUser[];
     listOfTagUsers: string[] = [];
 

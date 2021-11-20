@@ -1,12 +1,13 @@
 import { IZoomList, IZoom, IExplorerLink, IHistoryItem2, IZoomSettings, ILiveStatWorker, IFetchResponce, ILocalTimeDelta, ILiveStatCommon } from 'interfaces/common';
+import { ETime } from 'enums/time';
 
 export class DefaultParams {
     static readonly DNSNAME = 'zulupool.com';
 
-    static readonly GUIVERSION = 'v2.01b';
+    static readonly GUIVERSION = 'v2.06b';
     static readonly GUISOURCE = 'https://github.com/';
 
-    static readonly COREVERSION = 'v0.99b';
+    static readonly COREVERSION = 'v0.999b';
     static readonly CORESOURCE = 'https://github.com/';
 
     static readonly SUPPORTMAIL = '';
@@ -31,22 +32,50 @@ export class DefaultParams {
     static readonly PPDALN = 'https://beta.';
     static readonly PPDAALGO = 'sha256d';
     static readonly STRATUM = 'sha256.';
-    static readonly STRATUMS = { HTR: 'sha256.', DOGE: 'scrypt.' };
+    static readonly STRATUMS = { HTR: 'sha256.', DOGE: 'scrypt.', ZEC: 'equihash.' };
     static readonly FASTJOBCOINS = ['DGB.sha256', 'DGB.scrypt'];
-    static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'BSV', 'DGB', 'FCH', 'HTR', 'DGB.sha256', 'DGB.scrypt', 'LTC', 'DOGE'];
+    static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'XEC', 'BSV', 'DGB', 'XPM', 'FCH', 'HTR', 'DGB.sha256', 'DGB.scrypt', 'LTC', 'DOGE', 'XPM', 'ZEC', 'ZEN', 'ARRR', 'KMD', 'ETC', 'ETH' ];
     static readonly PPDALNREWARD = '94.12%';
     static readonly RECOMMENDEDHTR = '1600';
     static readonly ADDREXAMPLES = {
-        BTC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' P2SH:3H28N5WuREZ93CNmhWcRcrnykWrMqkhFyWN', ' Bech32:bc1uf5tdn87k2uz7r2kl5zrfww362ch3746lq5vse7', ' MinPay:0.001 BTC'],
-        BCHN: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqssr5lavh', ' MinPay:0.005 BCH(node)'],
-        BCHABC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqssr5lavh', ' MinPay:0.005 BCHABC'],
-        BSV: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' MinPay:0.005 BSV'],
-        'DGB.sha256': [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9', ' MinPay:10.0 DGB'],
-        'DGB.scrypt': [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9', ' MinPay:10.0 DGB'],
-        FCH: [' P2PKH:FV4WF4rRUvqD3ekQudccGGCFHqTTHnpMhu', ' MinPay:1 FCH'],
-        HTR: [' P2PKH:HTjxTEAUSwZf34nK4YuicfDPocT7JsQwJi', ' MinPay:1 HTR'],
-        LTC: [' P2PKH:LcgdQuT7TPbo5X2qSfTi4Kbvov3p1uzeAK', ' P2SH:MKYXKMckKUgYX1tTPuEjLtGQ6jiBXhpf39', ' MinPay:0.01 LTC'],
-        DOGE: [' P2PKH:DMHMEs1KBhFPuVtwUTCGTtJQSuCmyETxVH', ' MinPay:5.0 DOGE'],
+        BTC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' P2SH:3H28N5WuREZ93CNmhWcRcrnykWrMqkhFyWN', ' Bech32:bc1uf5tdn87k2uz7r2kl5zrfww362ch3746lq5vse7'],
+        BCHN: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqssr5lavh'],
+        BCHABC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqssr5lavh'],
+        XEC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqfahly82q'],
+        BSV: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f'],
+        XPM: [' P2PKH:AZ6QziuQaHDZkwWr125jSJcs23s7PjgzRb'],
+        'DGB.sha256': [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9'],
+        'DGB.scrypt': [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9'],
+        FCH: [' P2PKH:FV4WF4rRUvqD3ekQudccGGCFHqTTHnpMhu'],
+        HTR: [' P2PKH:HTjxTEAUSwZf34nK4YuicfDPocT7JsQwJi'],
+        LTC: [' P2PKH:LcgdQuT7TPbo5X2qSfTi4Kbvov3p1uzeAK', ' P2SH:MKYXKMckKUgYX1tTPuEjLtGQ6jiBXhpf39'],
+        DOGE: [' P2PKH:DMHMEs1KBhFPuVtwUTCGTtJQSuCmyETxVH'],
+        ZEC: [' P2PKH:t1U3gkQ3EJxnsXkSWX8bQgFFySX93AoseNQ'],
+        ZEN: [' P2PKH:zneqvx2qmLzdL1JiEismPh3pvN1fUy8DXL9'],
+        KMD: [' P2PKH:RUQARw7ng8ya9PjM84NK9jvUpZYqSZ1S6M'],
+        ARRR: [' P2PKH:RUQARw7ng8ya9PjM84NK9jvUpZYqSZ1S6M'],
+        ETC: [' 0x51022AD3CB0758b78229a8852A009abc4583e264'],
+        ETH: [' 0x9Eb6D37F824c52c4b0244F5f6D9d9Be20476959E'],
+    };
+    static readonly MINIMALPAYMENTS = {
+        BTC: 0.001,
+        BCHN: 0.005,
+        BCHABC: 0.01,
+        XEC: 10000,
+        BSV: 0.005,
+        XPM: 10,
+        'DGB.sha256': 10,
+        'DGB.scrypt': 10,
+        FCH: 1,
+        HTR: 5,
+        LTC: 0.01,
+        DOGE: 100,
+        ZEC: 0.01,
+        ZEN: 0.1,
+        KMD: 0.1,
+        ARRR: 0.1,
+        ETC: 0.1,
+        ETH: 0.01,
     };
 
     static readonly TARGETLOGINIGNORE = [
@@ -65,6 +94,7 @@ export class DefaultParams {
         '/backendQueryProfitSwitchCoeff',
         '/backendUpdateProfitSwitchCoeff',
         '/instanceEnumerateAll',
+        '/backendPoolLuck'
     ];
     static readonly SESSIONIDIGNORE = [
         '/userChangePasswordInitiate',
@@ -75,6 +105,7 @@ export class DefaultParams {
         '/backendQueryPoolStats',
         '/backendQueryPoolStatsHistory',
         '/instanceEnumerateAll',
+        '/backendPoolLuck'
     ];
     static readonly REQTYPE = {
         POOL: 'pool',
@@ -108,49 +139,73 @@ export class DefaultParams {
         workers: 0,
     };
     static readonly BLOCKSLINKS: IExplorerLink = {
-        //        BTC: 'https://btc.com/',
-        BTC: 'https://chainz.cryptoid.info/btc/block.dws?',
-        BCH: 'https://bch.btc.com/',
-        BCHN: 'https://bch.btc.com/',
         BCHABC: 'https://explorer.bitcoinabc.org/block/',
+        XEC: 'https://explorer.bitcoinabc.org/block/',
         BSV: 'https://whatsonchain.com/block/',
-        DGB: 'https://chainz.cryptoid.info/dgb/block.dws?',
-        'DGB.sha256': 'https://chainz.cryptoid.info/dgb/block.dws?',
-        'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/block.dws?',
-        FCH: 'http://fch.world/block/',
+        XPM: 'https://chainz.cryptoid.info/xpm/block.dws?',
+        FCH: 'https://ifblock.io/fch/block/',
         HTR: 'https://explorer.hathor.network/transaction/',
-        LTC: 'https://chainz.cryptoid.info/ltc/block.dws?',
-        DOGE: 'https://blockchair.com/dogecoin/block/',
+        ARRR: 'https://explorer.pirate.black/block/',
+        DGB: 'https://dgb.tokenview.com/en/block/',
+        'DGB.sha256': 'https://dgb.tokenview.com/en/block/',
+        'DGB.scrypt': 'https://dgb.tokenview.com/en/block/',
+        BTC: 'https://btc.tokenview.com/en/block/',
+        BCH: 'https://bch.tokenview.com/en/block/',
+        BCHN: 'https://bch.tokenview.com/en/block/',
+        LTC: 'https://ltc.tokenview.com/en/block/',
+        KMD: 'https://kmd.tokenview.com/en/block/',
+        ETH: 'https://eth.tokenview.com/en/block/',
+        ETC: 'https://etc.tokenview.com/en/block/',
+        ZEC: 'https://zec.tokenview.com/en/block/',
+        ZEN: 'https://zen.tokenview.com/en/block/',
+        DOGE: 'https://doge.tokenview.com/en/block/',
+
+
     };
     static readonly TXLINKS: IExplorerLink = {
-        //BTC: 'https://btc.com/',
-        BTC: 'https://chainz.cryptoid.info/btc/tx.dws?',
-        BCH: 'https://bch.btc.com/',
-        BCHN: 'https://bch.btc.com/',
         BCHABC: 'https://explorer.bitcoinabc.org/tx/',
+        XEC: 'https://explorer.bitcoinabc.org/tx/',
         BSV: 'https://whatsonchain.com/tx/',
-        DGB: 'https://chainz.cryptoid.info/dgb/tx.dws?',
-        'DGB.sha256': 'https://chainz.cryptoid.info/dgb/tx.dws?',
-        'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/tx.dws?',
-        FCH: 'http://fch.world/tx/',
+        XPM: 'https://chainz.cryptoid.info/xpm/tx.dws?',
+        FCH: 'https://ifblock.io/fch/tx/',
         HTR: 'https://explorer.hathor.network/transaction/',
-        LTC: 'https://chainz.cryptoid.info/ltc/tx.dws?',
-        DOGE: 'https://blockchair.com/dogecoin/transaction/',
+        ARRR: 'https://explorer.pirate.black/tx/',
+        DGB: 'https://dgb.tokenview.com/en/tx/',
+        'DGB.sha256': 'https://dgb.tokenview.com/en/tx/',
+        'DGB.scrypt': 'https://dgb.tokenview.com/en/tx/',
+        BTC: 'https://btc.tokenview.com/en/tx/',
+        BCH: 'https://bch.tokenview.com/en/tx/',
+        BCHN: 'https://bch.tokenview.com/en/tx/',
+        LTC: 'https://ltc.tokenview.com/en/tx/',
+        KMD: 'https://kmd.tokenview.com/en/tx/',
+        ETH: 'https://eth.tokenview.com/en/tx/',
+        ETC: 'https://etc.tokenview.com/en/tx/',
+        ZEC: 'https://zec.tokenview.com/en/tx/',
+        ZEN: 'https://zen.tokenview.com/en/tx/',
+        DOGE: 'https://doge.tokenview.com/en/tx/',
+
     };
     static readonly ADDRLINKS: IExplorerLink = {
-        //BTC: 'https://btc.com/',
-        BTC: 'https://chainz.cryptoid.info/btc/address.dws?',
-        BCH: 'https://bch.btc.com/',
-        BCHN: 'https://bch.btc.com/',
         BCHABC: 'https://explorer.bitcoinabc.org/address/',
-        BSV: 'https://whatsonchain.com/address/',
-        DGB: 'https://chainz.cryptoid.info/dgb/address.dws?',
-        'DGB.sha256': 'https://chainz.cryptoid.info/dgb/address.dws?',
-        'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/address.dws?',
-        FCH: 'http://fch.world/address/',
+        XEC: 'https://explorer.bitcoinabc.org/address/',
+        XPM: 'https://chainz.cryptoid.info/xpm/address.dws?',
+        FCH: 'https://ifblock.io/fch/address/',
         HTR: 'https://explorer.hathor.network/address/',
-        LTC: 'https://chainz.cryptoid.info/ltc/address.dws?',
-        DOGE: 'https://blockchair.com/dogecoin/address/',
+        ARRR: 'https://explorer.pirate.black/address/',
+        DGB: 'https://dgb.tokenview.com/en/address/',
+        'DGB.sha256': 'https://dgb.tokenview.com/en/address/',
+        'DGB.scrypt': 'https://dgb.tokenview.com/en/address/',
+        BTC: 'https://btc.tokenview.com/en/address/',
+        BCH: 'https://bch.tokenview.com/en/address/',
+        BCHN: 'https://bch.tokenview.com/en/address/',
+        BSV: 'https://bsv.tokenview.com/en/address/',
+        LTC: 'https://ltc.tokenview.com/en/address/',
+        KMD: 'https://kmd.tokenview.com/en/address/',
+        ETH: 'https://eth.tokenview.com/en/address/',
+        ETC: 'https://etc.tokenview.com/en/address/',
+        ZEC: 'https://zec.tokenview.com/en/address/',
+        ZEN: 'https://zen.tokenview.com/en/address/',
+        DOGE: 'https://doge.tokenview.com/en/address/',
     };
 
     //static readonly zoom: string = "15M";
@@ -161,6 +216,10 @@ export class DefaultParams {
         worker: '5M',
         history: 'D',
     };
+
+    static readonly LUCKPERIODS: string[] = ['Day', 'Three Days', 'Week', 'Decade', 'Month', 'Quarter'];
+    static readonly LUCKINTERVALS: number[] = [ETime.Day, ETime.ThreeDays, ETime.Week, ETime.Decade, ETime.Month, ETime.Quarter];
+    
     static readonly ZOOMSLIST: IZoomList = {
         pool: ['15M', '30M', 'H1', 'H4', 'D'],
         user: ['5M', '15M', 'H1', 'H4', 'D'],

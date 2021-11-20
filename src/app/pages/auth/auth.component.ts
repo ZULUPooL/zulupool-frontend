@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators, NgControl } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
@@ -29,6 +29,10 @@ export class AuthComponent implements OnInit {
         {
             login: {
                 validators: [Validators.required, Validators.maxLength(64)],
+            },
+            totp: {
+                validators: [Validators.maxLength(6)],
+                errors: ['2fa_invalid', 'unknown'],
             },
             password: {
                 validators: [
@@ -69,7 +73,7 @@ export class AuthComponent implements OnInit {
                 errors: ['login_format_invalid', 'duplicate_login'],
             },
             publicname: {
-                validators: [Validators.required, Validators.maxLength(256)],
+                validators: [Validators.required, Validators.maxLength(64)],
             },
             password: {
                 validators: [
@@ -130,7 +134,7 @@ export class AuthComponent implements OnInit {
         this.submitting = true;
 
         const params = this.signInForm.formData.value as IAuthSignInParams;
-
+        if (params.totp !=="")params.totp=params.totp.toString();
         this.authApiService.sigIn(params).subscribe(
             ({ sessionid, isReadOnly }) => {
                 this.storageService.sessionId = sessionid;

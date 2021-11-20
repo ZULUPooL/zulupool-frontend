@@ -48,6 +48,9 @@ export class BackendQueryApiService {
         return this.restService.post('/backendQueryPoolStatsHistory', params);
     }
 
+    getPoolLuck(params: IGetPoolLuckParams): Observable<IGetPoolLuckResponse> {
+        return this.restService.post('/backendPoolLuck', params);
+    }
     getUserStats(params: IGetUserStatsParams): Observable<IGetUserStatsResponse> {
         return this.restService.post('/backendQueryUserStats', params);
     }
@@ -128,6 +131,16 @@ export interface IGetPoolStatsHistoryResponse {
     powerUnit: string;
     powerMultLog10: number;
     stats: IPoolStatsHistoryItem[];
+}
+
+
+export interface IGetPoolLuckParams {
+    coin: string;
+    intervals: number[];
+}
+
+export interface IGetPoolLuckResponse {
+    luck: number[];
 }
 
 export interface IGetUserStatsParams {

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component } from '@angular/core';
+//import { TranslateService } from '@ngx-translate/core';
 import { DefaultParams } from 'components/defaults.component';
 
 @Component({

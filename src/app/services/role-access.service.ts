@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { EUserRoles, EUsersState } from 'enums/role';
+import { EUserRoles } from 'enums/role';
 import { AppService } from 'services/app.service';
 
 @Injectable({

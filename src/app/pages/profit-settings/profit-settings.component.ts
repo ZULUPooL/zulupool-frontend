@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { UserApiService } from 'api/user.api';
-import { IUserSettings } from 'interfaces/user';
+//import { IUserSettings } from 'interfaces/user';
 import { TCoinName } from 'interfaces/coin';
 import { StorageService } from 'services/storage.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -46,7 +46,7 @@ export class ProfitSettingsComponent implements OnInit {
 
     save(item: IProfitSett) {
         if (item.name === '' || item.name === null || item.name === undefined) return;
-        if (item.name === 'HTR' || item.name === 'sha256' || item.name === 'DOGE' || item.name === 'scrypt') {
+        if (item.name === 'HTR' || item.name === 'sha256' || item.name === 'DOGE' || item.name === 'scrypt'  || item.name === 'equihash.200.9') {
             this.nzModalService.error({
                 nzContent: this.translateService.instant('profit.form.cannot', {
                     coin: item.name,
@@ -108,7 +108,7 @@ export class ProfitSettingsComponent implements OnInit {
                 let newCoins = [];
                 for (let i = 0; i < data.coins.length; i++) {
                     const c = data.coins[i];
-                    if (c.name != 'sha256' && c.name != 'scrypt' && c.name != 'HTR' && c.name != 'DOGE') newCoins.push(c);
+                    if (c.name != 'sha256' && c.name != 'scrypt' && c.name != 'HTR' && c.name != 'DOGE'&& c.name != 'equihash.200.9') newCoins.push(c);
                 }
                 data.coins = newCoins;
                 data.coins.forEach(coin => {

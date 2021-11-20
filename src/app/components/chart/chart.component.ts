@@ -4,7 +4,7 @@ import { SubscribableComponent } from 'ngx-subscribable';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, BaseChartDirective } from 'ng2-charts';
 import { formatDate } from '@angular/common';
-import { ZoomSwitchService } from 'services/zoomswitch.service';
+//import { ZoomSwitchService } from 'services/zoomswitch.service';
 
 //import { TranslateService } from "@ngx-translate/core";
 import { FetchPoolDataService } from 'services/fetchdata.service';

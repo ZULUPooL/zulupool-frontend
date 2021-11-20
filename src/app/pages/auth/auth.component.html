@@ -38,6 +38,23 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
+            <nz-form-label nzFor="totp">
+                {{ "common.authenticator" | translate }}
+            </nz-form-label>
+            <nz-form-control
+                [nzValidateStatus]="signInForm.errors.totp.status | async"
+                [nzErrorTip]="signInForm.errors.totp.error | async"
+            >
+                <input
+                    type="number"
+                    formControlName="totp"
+                    nz-input
+                    id="totp"
+                    [placeholder]="'signInForm.totpPlaceholder' | translate"
+                />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
             <nz-form-control>
                 <button
                     type="submit"
@@ -73,9 +90,11 @@
             </nz-form-item>
 
             <nz-form-item>
-                <nz-form-label nzFor="publicname" (click)="genName()">
-                    {{ "common.name" | translate }}
-                    <span style="font-weight: bold;"> &nbsp; {{ "common.click" | translate }}</span>
+                <nz-form-label nzFor="publicname" >
+                    {{ "common.name" | translate }}  
+                    <span style="font-weight: bold;">
+                         &nbsp; <i nz-icon [nzType]="'redo'"  [nzTheme]="'outline'" (click)="genName()"></i>
+                    </span>
                 </nz-form-label>
                 <nz-form-control
                     [nzValidateStatus]="signUpForm.errors.publicname.status | async"
@@ -157,14 +176,13 @@
             <nz-form-item>
                 <nz-form-control>
                     <button
-                    disabled="true"
                         type="submit"
                         nz-button
                         nzType="primary"
                         [nzLoading]="submitting"
                     >
-                    Still beta. Manual passwordchange. Link to Discord at the homepage.
-                    <!---{{ "auth.signIn.form.changePasswordInitiateButton" | translate }}--->
+                    <!---Still beta. Manual passwordchange. Link to Discord at the homepage.--->
+                    {{ "auth.signIn.form.changePasswordInitiateButton" | translate }}
                     </button>
                 </nz-form-control>
             </nz-form-item>

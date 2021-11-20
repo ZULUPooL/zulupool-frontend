@@ -82,10 +82,15 @@ export class CoinSwitcherComponent implements OnInit {
         this.storageService.currAlgo = this.algos[this.selectedAlgo];
 
         if (this.storageService.coinsList.length > 2) {
-            if (url === 'payouts' || url === 'settings') {
+            if (url === 'payouts' || url === 'settings' || url === 'bookkeeping') {
                 this.coins = [];
                 this.storageService.coinsList.forEach(el => {
-                    if (el !== 'sha256' && el !== 'scrypt') this.coins.push(el);
+                    //const xxx =this.storageService.algosList.filter(s => s.indexOf(el)===0);
+                    if (this.storageService.algosList.filter(s => s.indexOf(el)===0).length === 0) {
+                        this.coins.push(el);
+                    }
+
+                    //if (el !== 'sha256' && el !== 'scrypt' && el !== 'ethhash' && el !== 'equihash.200.9') this.coins.push(el);
                 });
             }
         }

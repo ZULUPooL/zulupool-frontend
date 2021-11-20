@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 
 import { RoleAccessService } from 'services/role-access.service';
 import { EUserRoles } from 'enums/role';
-import { EAppRoutes, userRootRoute } from 'enums/routing';
+import { userRootRoute } from 'enums/routing';
 
 @Injectable({
     providedIn: 'root',
@@ -26,8 +26,8 @@ export class RoleAccessGuard implements CanActivate {
         const route = state.url.slice(1, state.url.length);
         //if (route === EAppRoutes.Terms) return true as any;
         const rConf = data.routeConfig.children;
-        const accessFor = rConf.find(item => item?.path === route).data.accessFor || 'user';
-        const disabledFor = rConf.find(item => item?.path === route).data.disabledFor || 'none';
+        const accessFor = rConf.find(item => item?.path === route)?.data.accessFor || 'user';
+        const disabledFor = rConf.find(item => item?.path === route)?.data.disabledFor || 'none';
         return this.roleAccessService.hasAccess(accessFor as EUserRoles).pipe(
             map(hasAccess => {
                 if (hasAccess && disabledFor === 'none') return hasAccess;

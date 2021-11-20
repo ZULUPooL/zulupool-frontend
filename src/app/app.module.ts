@@ -32,6 +32,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import {
+    PercentageOutline,
     FundProjectionScreenOutline,
     LeftCircleOutline,
     RightCircleOutline,
@@ -49,8 +50,10 @@ import {
     PlusSquareOutline,
     PlusCircleOutline,
     UserAddOutline,
+    DatabaseOutline,
     PullRequestOutline,
     RestOutline,
+    RedoOutline,
     ApiOutline,
     InfoCircleOutline,
     LinkOutline,
@@ -68,9 +71,12 @@ import { HomeComponent } from 'pages/home/home.component';
 import { LandingComponent } from 'pages/landing/landing.component';
 import { MonitoringComponent } from 'pages/monitoring/monitoring.component';
 import { HistoryComponent } from 'pages/history/history.component';
+import { FeeplanComponent } from 'pages/feeplan/feeplan.component';
 import { HistoryPoolComponent } from 'pages/history-pool/history-pool.component';
 import { AuthComponent } from 'pages/auth/auth.component';
 import { UserActivateComponent } from 'pages/actions/user-activate/user-activate.component';
+import { OtpActivateComponent } from 'pages/actions/otp-activate/otp-activate.component';
+import { OtpDeactivateComponent } from 'pages/actions/otp-deactivate/otp-deactivate.component';
 import { NewPassowrdComponent } from 'pages/actions/new-password/new-password.component';
 import { UserResendEmailComponent } from 'pages/user-resend-email/user-resend-email.component';
 import { HelpComponent } from 'pages/help/help.component';
@@ -84,6 +90,7 @@ import { TermsComponent } from 'pages/terms/terms.component';
 import { PolicyComponent } from 'pages/policy/policy.component';
 
 //import { DefaultParams } from "components/defaults.component";
+import { BookkeepingComponent } from 'pages/bookkeeping/bookkeeping.component';
 import { CreateUserComponent } from 'pages/createuser/createuser.component';
 import { CoinSwitcherComponent } from 'components/coin-switcher/coin-switcher.component';
 import { ZoomSwitcherComponent } from 'components/zoom-switcher/zoom-switcher.component';
@@ -109,6 +116,7 @@ import { DatePipe } from 'pipes/date.pipe';
 
 import { AppRoutingModule } from 'app.routing';
 import { AppComponent } from 'app.component';
+import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, '/assets/i18n/', `.json?v=${Date.now()}`);
@@ -116,6 +124,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 @NgModule({
     imports: [
+        NgxQRCodeModule,
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
@@ -152,6 +161,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         NzSwitchModule,
         NzTypographyModule,
         NzIconModule.forRoot([
+            PercentageOutline,
             FundProjectionScreenOutline,
             LeftCircleOutline,
             RightCircleOutline,
@@ -169,6 +179,8 @@ export function HttpLoaderFactory(http: HttpClient) {
             PlusSquareOutline,
             PlusCircleOutline,
             UserAddOutline,
+            RedoOutline,
+            DatabaseOutline,
             PullRequestOutline,
             RestOutline,
             ApiOutline,
@@ -209,12 +221,16 @@ export function HttpLoaderFactory(http: HttpClient) {
         HistoryPoolComponent,
         AuthComponent,
         UserActivateComponent,
+        OtpActivateComponent,
+        OtpDeactivateComponent,
         NewPassowrdComponent,
         UserResendEmailComponent,
         HelpComponent,
+        FeeplanComponent,
         UsersComponent,
         PayoutsComponent,
         SettingsComponent,
+        BookkeepingComponent,
         CreateUserComponent,
         ProfitSettingsComponent,
         MathComponent,

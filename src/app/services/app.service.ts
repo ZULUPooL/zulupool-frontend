@@ -10,7 +10,7 @@ import { IUser } from 'interfaces/user';
 //import { TCoinName } from 'interfaces/coin';
 import { StorageService } from 'services/storage.service';
 import { IPoolCoinsItem } from 'interfaces/backend-query';
-import { EUserRoles, EUsersState } from 'enums/role';
+import { EUserRoles } from 'enums/role';
 import * as IApi from 'interfaces/userapi-query';
 
 const undefined = void 0;

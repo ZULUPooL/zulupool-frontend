@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "build": "ng build --prod --build-optimizer --configuration=production,themes",
+        "prod": "ng build --prod --build-optimizer --configuration=production,themes --base-href http://www.pool.com",
         "start": "ng serve --port=4201 --configuration=production,themes",
         "test": "ng test"
     },
@@ -16,8 +17,10 @@
         "@angular/platform-browser": "~10.1.4",
         "@angular/platform-browser-dynamic": "~10.1.4",
         "@angular/router": "~10.1.4",
+        "@ant-design/icons": "^4.6.3",
         "@ngx-translate/core": "^13.0.0",
         "@ngx-translate/http-loader": "^6.0.0",
+        "@techiediaries/ngx-qrcode": "^9.1.0",
         "chart.js": "^2.9.3",
         "logical-not": "^1.0.7",
         "ng-zorro-antd": "^10.0.0",

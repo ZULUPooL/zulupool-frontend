@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { SubscribableComponent } from 'ngx-subscribable';
 import { StorageService } from 'services/storage.service';
-
+import { BackendQueryApiService } from 'api/backend-query.api'
 import { DefaultParams } from 'components/defaults.component';
-import { EAppRoutes, userRootRoute } from 'enums/routing';
+import { EAppRoutes } from 'enums/routing';
 import { ESuffix } from 'pipes/suffixify.pipe';
 import { ZoomSwitchService } from 'services/zoomswitch.service';
 import { FetchPoolDataService } from 'services/fetchdata.service';
 
-import { ILiveStatCommon, IBlockItem, IBlocks, ICoinParams } from 'interfaces/common';
+import { ILiveStatCommon, IBlockItem, ILuckItem, ICoinParams } from 'interfaces/common';
 
 @Component({
     selector: 'app-home',
@@ -45,7 +45,9 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     mainChartCoin: string = '';
     haveBlocksData: boolean = false;
     isBlocksLoading: boolean;
+    showLuck: boolean = false;;
     blocks: IBlockItem[];
+    poolLuck: ILuckItem[];
 
     foundBlockKeys: (keyof IBlockItem)[] = ['height', 'hash', 'confirmations', 'generatedCoins', 'foundBy', 'time'];
     foundBlockKeysMobile: (keyof IBlockItem)[] = ['height', 'hash', 'confirmations', 'time'];
@@ -63,7 +65,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     private blocksFetcherTimeoutId: number;
     private changeMainChartCoinTimeoutId: number;
     private isStarting: boolean;
-    constructor(private zoomSwitchService: ZoomSwitchService, private fetchPoolDataService: FetchPoolDataService, private storageService: StorageService) {
+    constructor(private zoomSwitchService: ZoomSwitchService, private fetchPoolDataService: FetchPoolDataService, private storageService: StorageService,  private backendQueryApiService: BackendQueryApiService,) {
         super();
     }
 
@@ -93,6 +95,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         this.fetchPoolDataService.coins({ coin: '', type: 'pool', forceUpdate: true });
         //this.historyFetcher();
         //this.blocksFetch();
+        this.poolLuck= [];
     }
     ngOnDestroy(): void {
         //this.storageService.resetChartsData = true;
@@ -120,12 +123,30 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         this.activeCoinName = coin;
         this.getLiveInfo();
         this.getBloksInfo();
+
     }
 
     truncate(fullStr) {
         let s = { sep: '..', front: 0, back: 4 };
         return fullStr.substr(0, s.front) + s.sep + fullStr.substr(fullStr.length - s.back);
     }
+
+    private getPoolLuck(coin:string): void {
+        const params={coin,intervals:DefaultParams.LUCKINTERVALS};
+        this.backendQueryApiService.getPoolLuck(params).subscribe(resp => {
+            this.poolLuck=[];
+            for (let index = 0; index < resp.luck.length; index++) {
+                this.poolLuck.push(
+                    {
+                        period: DefaultParams.LUCKPERIODS[index],
+                        interval: DefaultParams.LUCKINTERVALS[index],
+                        luck: resp.luck[index]
+                    }
+                )
+            }
+        });
+    }
+
 
     private processZoomChange(zoom: string) {
         if (zoom === null) debugger;
@@ -197,6 +218,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
             if (blk.confirmations === -2) blk.confirmations = 'node_err';
             if (blk.confirmations === 0) blk.confirmations = 'NEW';
         });
+        this.getPoolLuck(coin);
     }
 
     //

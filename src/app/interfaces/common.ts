@@ -42,6 +42,11 @@ export interface IBlockItem {
     generatedCoins: string;
     foundBy: string;
 }
+export interface ILuckItem {
+    period: string;
+    interval: number;
+    luck: number;
+}
 /*
 export interface ICharts {
     data?: IChartParams;

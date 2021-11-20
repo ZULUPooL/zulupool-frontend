@@ -44,6 +44,7 @@ export enum userActionResp {
 export enum userLoginResp {
     invalidPassword = 'invalid_password',
     userNotActive = 'user_not_active',
+    invalid2fa ='2fa_invalid',
 }
 export enum userEnumerateAllResp {
     unknownColumnName = 'unknown_column_name', // invalid sortBy value

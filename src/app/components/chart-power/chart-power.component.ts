@@ -1,9 +1,9 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, OnChanges } from '@angular/core';
 //import { formatDate } from "@angular/common";
 
 //import { Label } from "ng2-charts";
 
-import { IPoolStatsHistoryItem } from 'interfaces/backend-query';
+//import { IPoolStatsHistoryItem } from 'interfaces/backend-query';
 //import { LangService } from "services/lang.service";
 //import { StorageService } from "services/storage.service";
 

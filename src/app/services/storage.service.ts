@@ -29,7 +29,7 @@ export class StorageService {
     private currentZoom = DefaultParams.ZOOM[this.type];
     private currentZoomList = DefaultParams.ZOOMSLIST[this.type];
     userData: ICredentials;
-    private trgUserData: IUser[];
+    trgUserData: IUser[];
 
     private zoomParams = DefaultParams.ZOOMPARAMS;
 

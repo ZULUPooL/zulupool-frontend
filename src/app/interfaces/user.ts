@@ -52,9 +52,14 @@ export interface IUserInfo {
     type?: number;
 }
 
+export interface IAuthSettings {
+    auth2FAEnabled: boolean;
+}
+
 export interface IUserSettings {
     name: TCoinName;
     address: string;
     payoutThreshold: number;
     autoPayoutEnabled: boolean;
+    totp?: number;
 }

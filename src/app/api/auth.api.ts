@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { RestService } from 'services/rest.service';
-import { IUser } from 'interfaces/user';
+//import { IUser } from 'interfaces/user';
 
 @Injectable({
     providedIn: 'root',
@@ -31,6 +31,7 @@ export class AuthApiService {
 export interface IAuthSignInParams {
     login: string;
     password: string;
+    totp: string;
 }
 
 export interface IAuthSignInResponse {

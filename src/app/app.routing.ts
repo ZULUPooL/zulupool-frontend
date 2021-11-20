@@ -16,10 +16,11 @@ import { MonitoringComponent } from 'pages/monitoring/monitoring.component';
 import { HistoryComponent } from 'pages/history/history.component';
 import { HistoryPoolComponent } from 'pages/history-pool/history-pool.component';
 import { PageNotFoundComponent } from 'pages/404/page-not-found.component';
-import { UserActivateComponent } from 'pages/actions/user-activate/user-activate.component';
 import { UserResendEmailComponent } from 'pages/user-resend-email/user-resend-email.component';
 import { HelpComponent } from 'pages/help/help.component';
 import { UsersComponent } from 'pages/users/users.component';
+import { FeeplanComponent } from 'pages/feeplan/feeplan.component';
+import { BookkeepingComponent } from 'pages/bookkeeping/bookkeeping.component';
 import { PayoutsComponent } from 'pages/payouts/payouts.component';
 import { SettingsComponent } from 'pages/settings/settings.component';
 import { CreateUserComponent } from 'pages/createuser/createuser.component';
@@ -29,7 +30,10 @@ import { ConnectComponent } from 'pages/connect/connect.component';
 import { PolicyComponent } from 'pages/policy/policy.component';
 import { TermsComponent } from 'pages/terms/terms.component';
 import { MathComponent } from 'pages/math/math.component';
-import { NewPassowrdComponent } from 'pages/actions/new-password/new-password.component';
+import { NewPassowrdComponent }   from 'pages/actions/new-password/new-password.component';
+import { UserActivateComponent }  from 'pages/actions/user-activate/user-activate.component';
+import { OtpActivateComponent }   from 'pages/actions/otp-activate/otp-activate.component';
+import { OtpDeactivateComponent } from 'pages/actions/otp-deactivate/otp-deactivate.component';
 
 const routes: Routes = [
     {
@@ -75,10 +79,18 @@ const routes: Routes = [
     },
     {
         path: EAppRoutes.Actions,
-        children: [
+        children: [ 
             {
                 path: EActionsRoutes.UserActivate,
                 component: UserActivateComponent,
+            },
+            {
+                path: EActionsRoutes.OtpActivate,
+                component: OtpActivateComponent,
+            },
+            {
+                path: EActionsRoutes.OtpDeactivate,
+                component: OtpDeactivateComponent,
             },
             {
                 path: EActionsRoutes.NewPassword,
@@ -147,6 +159,14 @@ const routes: Routes = [
                 },
             },
             {
+                path: EAppRoutes.Bookkeeping,
+                component: BookkeepingComponent,
+                data: {
+                    accessFor: EUserRoles.Admin,
+                    disabledFor: EUsersState.ReadOnly,
+                },
+            },
+            {
                 path: EAppRoutes.Users,
                 component: UsersComponent,
                 data: {
@@ -157,6 +177,14 @@ const routes: Routes = [
             {
                 path: EAppRoutes.CreateUser,
                 component: CreateUserComponent,
+                data: {
+                    accessFor: EUserRoles.Admin,
+                    disabledFor: EUsersState.ReadOnly,
+                },
+            },
+            {
+                path: EAppRoutes.Feeplan,
+                component: FeeplanComponent,
                 data: {
                     accessFor: EUserRoles.Admin,
                     disabledFor: EUsersState.ReadOnly,

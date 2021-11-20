@@ -1,4 +1,6 @@
 export enum EAppRoutes {
+    Bookkeeping = 'bookkeeping',
+    Feeplan = 'feeplan',
     Landing = 'landing',
     Home = '',
     Auth = 'auth',
@@ -20,7 +22,9 @@ export enum EAppRoutes {
 }
 
 export enum EActionsRoutes {
-    UserActivate = 'user-acivate',
+    UserActivate = 'user-activate',
+    OtpActivate = 'otp-activate',
+    OtpDeactivate = 'otp-deactivate',
     NewPassword = 'new-password',
 }
 

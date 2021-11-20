@@ -7,7 +7,7 @@ import { IWorkerStatsHistoryItem } from 'interfaces/backend-query';
 import { AppService } from 'services/app.service';
 import { ESuffix } from 'pipes/suffixify.pipe';
 import { StorageService } from 'services/storage.service';
-import { DefaultParams } from 'components/defaults.component';
+//import { DefaultParams } from 'components/defaults.component';
 import { FetchPoolDataService } from 'services/fetchdata.service';
 import { ETime } from 'enums/time';
 import { TranslateService } from '@ngx-translate/core';

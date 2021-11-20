@@ -15,7 +15,7 @@ import { toValueArray } from 'tools/enum';
 import { hasValue } from 'tools/has-value';
 import { AppService } from 'services/app.service';
 import { routeToUrl } from 'tools/route-to-url';
-import { EUserRoles, EUsersState } from 'enums/role';
+import { EUserRoles} from 'enums/role';
 import { RoleAccessService } from 'services/role-access.service';
 import { FormService } from 'services/form.service';
 import { UserApiService, IUserChangePassword } from 'api/user.api';
@@ -78,7 +78,14 @@ export class UserLayoutComponent extends SubscribableComponent implements OnInit
             icon: 'setting',
             access: EUserRoles.User,
             ROaccess: false,
-        },
+        },/*
+        {
+            route: EAppRoutes.Bookkeeping,
+            title: 'components.userLayout.nav.bookkeeping',
+            icon: 'database',
+            access: EUserRoles.Admin,
+            ROaccess: true,
+        }, */
         {
             route: EAppRoutes.Users,
             title: 'components.userLayout.nav.users',
@@ -90,6 +97,13 @@ export class UserLayoutComponent extends SubscribableComponent implements OnInit
             route: EAppRoutes.CreateUser,
             title: 'components.userLayout.nav.createuser',
             icon: 'user-add',
+            access: EUserRoles.Admin,
+            ROaccess: false,
+        },
+        {
+            route: EAppRoutes.Feeplan,
+            title: 'components.userLayout.nav.feeplan',
+            icon: 'percentage',
             access: EUserRoles.Admin,
             ROaccess: false,
         },

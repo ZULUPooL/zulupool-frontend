@@ -6,32 +6,32 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { FormService } from 'services/form.service';
 
-import { EAppRoutes, authRoute, homeRoute } from 'enums/routing';
+import { EAppRoutes, homeRoute, userRootRoute } from 'enums/routing';
 //import { AppService } from 'services/app.service';
 import { UserApiService } from 'api/user.api';
 
 @Component({
-    selector: 'app-new-password',
-    templateUrl: './new-password.component.html',
-    styleUrls: ['./new-password.component.less'],
+    selector: 'app-otp-deactivate',
+    templateUrl: './otp-deactivate.component.html',
+    styleUrls: ['./otp-deactivate.component.less'],
 })
-export class NewPassowrdComponent {
+export class OtpDeactivateComponent {
     readonly EAppRoutes = EAppRoutes;
     //readonly routeToUrl = routeToUrl;
 
-    readonly newPasswordForm = this.formService.createFormManager<{ password: string }>(
+    readonly otpForm = this.formService.createFormManager<{ otp: number }>(
         {
-            password: {
+            otp: {
                 validators: [
                     Validators.required,
-                    Validators.minLength(8),
-                    Validators.maxLength(64),
+                    Validators.minLength(6),
+                    Validators.maxLength(6),
                 ],
                 errors: ['invalid_password', 'user_not_active', 'unknown'],
             },
         },
         {
-            onSubmit: () => this.onNewPassword(),
+            onSubmit: () => this.submitOtp(),
         },
     );
     submitting: boolean;
@@ -48,22 +48,22 @@ export class NewPassowrdComponent {
         private formService: FormService, //        private authApiService: AuthApiService, //private appService: AppService, //private storageService: StorageService,
     ) {}
 
-    onNewPassword(): void {
+    submitOtp(): void {
         this.submitting = true;
         const { id } = this.activatedRoute.snapshot.queryParams;
-        const { password } = this.newPasswordForm.formData.value;
-        this.userApiService.userAction({ actionId: id, newPassword:password }).subscribe(
+        const { totp } = this.otpForm.formData.value.toString();
+        this.userApiService.userAction({ actionId:id, totp }).subscribe(
             () => {
                 this.nzModalService.success({
-                    nzContent: this.translateService.instant('actions.newpassword.success'),
+                    nzContent: this.translateService.instant('actions.otpDeactivate.success'),
                     nzOkText: this.translateService.instant('common.ok'),
                 });
                 this.submitting = false;
-                this.router.navigate([authRoute]);
+                this.router.navigate([userRootRoute]);
             },
             () => {
                 this.nzMessageService.error(
-                    this.translateService.instant('actions.newpassword.error'),
+                    this.translateService.instant('actions.otpDeactivate.error'),
                 );
                 this.submitting = false;
                 this.router.navigate([homeRoute]);

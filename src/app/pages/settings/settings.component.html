@@ -1,19 +1,19 @@
 <app-target-login-badge style="padding-bottom: 5px;" (onTargetChange)=changeTarget($event)></app-target-login-badge>
 
 
-<nz-tabset #tabGroup>
+<nz-tabset #tabGroup >
     <nz-tab [nzTitle]="'settings.tab.payment' | translate" >
-        <ng-template nz-tab>
+        <ng-template nz-tab >
             <div class="coin-select-block">
                 <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
             </div>
-        <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="form" (submit)="save()">
+        <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="form" (submit)="savePaymentSettings()">
                 <nz-form-item>
                     <nz-form-label nzFor="address">
                         {{ "settings.form.address" | translate }}
                     </nz-form-label>
                     <nz-form-control>
-                        <input nz-input formControlName="address" id="address" />
+                        <input nz-input formControlName="address" id="address" [placeholder]="addressPlaceholder"/>
                     </nz-form-control>
                 </nz-form-item>
             
@@ -23,7 +23,7 @@
                         {{ "settings.form.payoutThreshold" | translate }}
                     </nz-form-label>
                     <nz-form-control>
-                        <input nz-input formControlName="payoutThreshold" id="payoutThreshold" />
+                        <input nz-input formControlName="payoutThreshold" id="payoutThreshold" [placeholder]="minPayPlaceholder" />
                     </nz-form-control>
                 </nz-form-item>
             
@@ -35,67 +35,87 @@
                         </span>
                     </nz-form-label>
                 </nz-form-item>
-                        
+                <div *ngIf="credentials?.has2fa">
+                    <nz-form-item>
+                        <nz-form-label nzFor="totp">
+                            {{ "common.authenticator" | translate }}
+                        </nz-form-label>
+                        <nz-form-control>
+                            <input
+                                type="number"
+                                formControlName="totp"
+                                nz-input
+                                id="totp"
+                                [placeholder]="'settings.totpPlaceholder' | translate"
+                            />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+        
+
                 <button [disabled]="isDisabled" nz-button nzType="primary" [nzLoading]="isSubmitting">
-                    {{ "common.save" | translate }}
+                    {{ "settings.form.save.paymentsSettings" | translate }}
                 </button>
+
+
+                <div style="display: inline-table;" >
+                    <nz-alert nzType="warning" 
+                    [nzMessage]="'settings.addressesFormats'| translate: {coin: currentCoin}"
+                    [nzDescription]="addrFormats"
+                    ></nz-alert>
+                </div>
             </form>
         </ng-template>
     </nz-tab>
     <nz-tab [nzTitle]="'settings.tab.account' | translate" >
         <ng-template nz-tab>
 
-            <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="formMail.formData" (submit)="saveUserMail()">
+            <form class="settings-form" nz-form nzLayout="vertical" >
                 <nz-form-item>
-                    <nz-form-label nzFor="email">{{ "common.email" | translate }} </nz-form-label>
-                    <nz-form-control>
-                        <!-- <input formControlName="email" nz-input id="email"/>--> {{ email }}
-                        <button disabled nz-button nzType="primary" >{{ "common.save" | translate }}</button>
-                    </nz-form-control>
+                    <span style="font-weight: bold;">
+                        <nz-form-label nzFor="email">{{ "common.email" | translate }} </nz-form-label>
+                    </span>
+                    <nz-form-control> {{ emailTip }} </nz-form-control>
                 </nz-form-item>
             </form>
-            <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="form2FA.formData" (submit)="saveUser2FA()">
+            <form class="settings-form" nz-form nzLayout="vertical" [formGroup]="auth" >
                 <nz-form-item>
-                    <nz-form-label nzFor="faKey">{{ "2FA key"}} 
-                        <span style="font-weight: bold;"> &nbsp; {{ 'generate' }}</span>
-                        <span style="font-weight: bold;"> &nbsp; {{ 'Show QR' }}</span>
-                    </nz-form-label>
-                    <nz-form-control>
-                        <!--<input formControlName="faKey" nz-input id="faKey"/>--> {{ ' key2fa ' }}
-                        <button  disabled nz-button nzType="primary" >{{ "common.save" | translate }}</button>
-                    </nz-form-control>
+                    <span style="font-weight: bold;">
+                        <nz-form-label nzFor="faKey">{{ "common.twoFA"  | translate }} </nz-form-label>
+                        <span style="padding-left: 15px;">
+                            <nz-switch [formControl]="auth.get('auth2FAEnabled')" (click)="clickSwitch2FA()" [nzLoading]="loading"></nz-switch>
+                        </span>
+                    </span>
                 </nz-form-item>
             </form>
 
 
             <form class="settings-form"
-            nz-form
-            nzLayout="vertical"
-            [formGroup]="formUser.formData"
-            (submit)="saveUserData()"
+                nz-form
+                nzLayout="vertical"
+                [formGroup]="formUser.formData"
+                (submit)="saveUserData()"
             >
             <nz-form-item>
                 <span style="font-weight: bold;">
                     {{ "settings.form.registrationDate" | translate }}
                 </span>
-                {{
-                            regDate * 1000
-                                | date: "dd.MM.yy HH:mm"
-                                | async
-                        }}
+                {{  regDate * 1000
+                    | date: "dd.MM.yy HH:mm"
+                    | async
+                }}
             </nz-form-item>
                 <nz-form-item>
-                    <nz-form-label nzFor="name" (click)="genName()">
+                    <nz-form-label nzFor="name" >
                         <span style="font-weight: bold;">
-                            {{ "settings.form.publicName" | translate }} &nbsp; {{ 'generate' }}
+                            {{ "settings.form.publicName" | translate }} <i nz-icon [nzType]="'redo'"  [nzTheme]="'outline'" (click)="genName()"></i> 
                         </span>
                     </nz-form-label>
                     <nz-form-control >
-                        <input nz-input formControlName="name" id="name" />
+                        <input nz-input formControlName="name" id="name"/>
                     </nz-form-control>
-                    <button nz-button nzType="primary" >{{ "common.save" | translate }}</button>
                 </nz-form-item>
-                        
+                <button nz-button nzType="primary" >{{ "settings.form.save.publicName" | translate }}</button>                        
             </form>
             
         </ng-template>
@@ -103,17 +123,25 @@
 
 </nz-tabset>
 
-<div style="display: inline-table;" >
-<nz-alert *ngIf="tabGroup.selectedIndex==0 && isNeedAddressInfoWarning" nzType="warning" 
-[nzMessage]="'settings.addressesFormats'| translate: {coin: currentCoin}"
-[nzDescription]="addrFormats"
-></nz-alert>
-</div>
 
 
 
 
+<nz-modal nzWrapClassName="vertical-center-modal" [nzVisible]="key2FAReady" [nzTitle]="'common.twoFA' | translate"
+    [nzFooter]="null" (nzOnCancel)="clear()">
+    {{ "actions.otpActivateReq.success" | translate }}
 
+    <ngx-qrcode 
+    [elementType]="'url'" 
+    [value]="totpUrl"
+    cssClass="aclass"
+    errorCorrectionLevel="M">
+</ngx-qrcode>
+<input
+nz-input
+[value]="totpUrl"
+/>
+</nz-modal>
 
 
 

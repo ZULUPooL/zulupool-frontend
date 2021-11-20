@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { OnInit, } from '@angular/core';
 //import { StorageService } from "services/storage.service";
 //import { CoinsFetchService } from "services/coinsfetch.service";
 //import { IPoolCoinsItem } from "interfaces/backend-query";

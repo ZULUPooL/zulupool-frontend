@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserApiService } from 'api/user.api';
 import { IUserCreateByAdminParams } from 'interfaces/userapi-query';
 import { FormService } from 'services/form.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
 import { DefaultParams } from 'components/defaults.component';
@@ -87,7 +87,7 @@ export class CreateUserComponent implements OnInit {
         this.addUserForm.formData.controls['password'].setValue(this.generatePassword());
         this.addUserForm.formData.controls['name'].setValue(this.generateName());
         this.addUserForm.formData.controls['isActive'].setValue(true);
-        this.addUserForm.formData.controls['isReadOnly'].setValue(true);
+        this.addUserForm.formData.controls['isReadOnly'].setValue(false);
         this.addUserForm.formData.controls['feePlanId'].setValue('default');
         //this.addUserForm.formData.controls['defaultFee'].setValue('');
     }

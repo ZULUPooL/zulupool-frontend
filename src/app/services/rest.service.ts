@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EAppRoutes, homeRoute } from 'enums/routing';
+import { EAppRoutes } from 'enums/routing';
 import { Router } from '@angular/router';
 import { DefaultParams } from 'components/defaults.component';
-import { AppService } from 'services/app.service';
+//import { AppService } from 'services/app.service';
 
 import { Observable } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { StorageService } from 'services/storage.service';
 import { not } from 'logical-not';
 
 export const OKStatus = 'ok';
+export const unknownId = 'unknown_id';
 
 export interface IResponse {
     status?: string;
@@ -34,16 +35,21 @@ export class RestService {
     constructor(
         private http: HttpClient,
         private storageService: StorageService,
-        private router: Router, 
+        private router: Router,
+        //private appService: AppService, 
     ) {}
 
     post<T>(url: string, params: any = {}): Observable<T> {
         const options = { headers: this.headers };
         const tmpUrl = url;
-        params = { id: this.storageService.sessionId, ...params };
-
+        params = { id: this.storageService.sessionId, sessionId: this.storageService.sessionId, ...params };
+//debugger;
         if (not(params.id) || DefaultParams.SESSIONIDIGNORE.includes(url)) {
             delete params.id;
+            //delete params.sessionId;
+        }
+        if (not(params.sessionId) || DefaultParams.SESSIONIDIGNORE.includes(url)) {
+            delete params.sessionId;
         }
 
         const { targetUser } = this.storageService;
@@ -61,7 +67,19 @@ export class RestService {
                 if (tmpUrl === '/backendQueryProfitSwitchCoeff' && Array.isArray(response)) {
                     response['coins'] = response;
                     response['status'] = 'ok';
-                } else if (status !== OKStatus) throw new InvalidDataError(status);
+                } else if (status === unknownId){
+                    this.storageService.sessionId = null;
+                    this.storageService.usersList = null;
+                    this.storageService.isReadOnly = null;
+                    this.storageService.targetUser = null;
+                    this.storageService.allUsersData = null;
+                    this.router.navigate([routeToUrl(EAppRoutes.Home)]);
+                    //this.router.navigate([homeRoute]);
+                } else if (status !== OKStatus){
+                    if (tmpUrl === '/userGetSettings' &&  status === 'json_format_error' ) {
+                        this.router.navigate([routeToUrl(EAppRoutes.Auth)]);
+                    } else throw new InvalidDataError(status);
+                }
             }),
             map(response => {
                 delete (response as IResponse).status;

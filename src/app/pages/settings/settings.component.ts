@@ -1,15 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators} from '@angular/forms';
 import { FormService } from 'services/form.service';
 import { UserApiService } from 'api/user.api';
-import { IUserSettings } from 'interfaces/user';
+import { IUserSettings, IAuthSettings } from 'interfaces/user';
 import { TCoinName } from 'interfaces/coin';
 import { StorageService } from 'services/storage.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { TranslateService } from '@ngx-translate/core';
 import { DefaultParams } from 'components/defaults.component';
+//import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
 
 import { FetchPoolDataService } from 'services/fetchdata.service';
+import { not } from 'logical-not';
+
 
 @Component({
     selector: 'app-settings',
@@ -33,36 +37,40 @@ export class SettingsComponent implements OnInit {
         {
             email: {},
         },
-        {
-            onSubmit: () => this.saveUserMail(),
-        },
     );
     readonly form2FA = this.formService.createFormManager(
         {
             email: {},
         },
-        {
-            onSubmit: () => this.saveUser2FA(),
-        },
     );
     regDate: number;
     settingsItems: IUserSettings[];
+    credentials: any;
     selectedIndex: number;
     currentCoin: TCoinName;
     isStarting: boolean;
-
-    isNeedAddressInfoWarning: boolean;
+    key2FAReady: boolean;
+    minPayPlaceholder: string;
+    addressPlaceholder: string;
     addrFormats: string;
-    isNeedHTRWarning: boolean;
-    readonly htrAmount = DefaultParams.RECOMMENDEDHTR;
-
+    //authCodeTip: string ='';
+    //totpPlaceholder: string ='';
+    authBttn: boolean;
+    totpUrl:string;
     form = this.formBuilder.group({
         address: [],
         payoutThreshold: [],
         autoPayoutEnabled: [],
+        totp:[],
     } as Record<keyof IUserSettings, any>);
 
+    auth = this.formBuilder.group({
+        auth2FAEnabled: [],
+    } as Record<keyof IAuthSettings, any>);
+
+    emailTip: string;
     email: string;
+    
     isSubmitting = false;
     private disabledCoin: string;
 
@@ -75,6 +83,7 @@ export class SettingsComponent implements OnInit {
         private userApiService: UserApiService,
         private storageService: StorageService,
         private nzModalService: NzModalService,
+        private nzMessageService: NzMessageService,
         private translateService: TranslateService,
         private formService: FormService,
         private fetchPoolDataService: FetchPoolDataService,
@@ -86,8 +95,6 @@ export class SettingsComponent implements OnInit {
         this.fetchPoolDataService.coins({ coin: '', type: 'settings', forceUpdate: true });
     }
     onCurrentCoinChange(coin: TCoinName): void {
-        if (coin === 'HTR') this.isNeedHTRWarning = true;
-        else this.isNeedHTRWarning = false;
         if (this.isStarting) {
             this.getSettings(coin);
             this.getCredentials();
@@ -96,13 +103,75 @@ export class SettingsComponent implements OnInit {
         }
         this.currentCoin = coin;
         if (DefaultParams.DEFCOINS.includes(coin)) {
-            this.isNeedAddressInfoWarning = true;
-            this.addrFormats = DefaultParams.ADDREXAMPLES[coin];
-        } else this.isNeedAddressInfoWarning = false;
+            this.minPayPlaceholder="minPay= " + DefaultParams.MINIMALPAYMENTS[coin] + ' ' + coin;
+            this.addrFormats = DefaultParams.ADDREXAMPLES[coin] + ' ' + this.minPayPlaceholder;
+            let substringArray = DefaultParams.ADDREXAMPLES[coin][0].split(':');
+            this.addressPlaceholder = substringArray[0].length>10? substringArray[0]:substringArray[1];
+        };
         let index = this.settingsItems.findIndex(el => el.name === coin);
         this.form.patchValue(this.settingsItems[index]);
     }
 
+    clear(): void {
+        this.key2FAReady=false;
+        this.loading = false;
+        this.auth.controls['auth2FAEnabled'].setValue(this.credentials.has2fa);
+    }
+
+    loading = false;
+  
+    clickSwitch2FA(): void {
+        if (!this.loading) {
+            this.loading = true;
+            if (this.credentials.has2fa) {
+                // 2FA Enabled. Disabling
+                this.userApiService.userDeactivate2faInitiate({}).subscribe(
+                    () => {
+                        this.nzModalService.success({
+                            nzContent: this.translateService.instant('actions.otpDeactivateReq.success'),
+                            nzOkText: this.translateService.instant('common.gotIt'),
+                        });
+                    },
+                    () => {
+                        this.nzMessageService.error(
+                            this.translateService.instant('actions.otpDeactivate.error'),
+                        );
+                    },
+                );
+                this.loading = false;
+            } else {
+                // 2FA Disabled. Enabling
+                if (this.credentials.email.length<5) {
+                    // User have no email
+                    this.nzModalService.error({
+                        nzContent: this.translateService.instant('settings.authCodeMailTip'),
+                        nzOkText: this.translateService.instant('common.gotIt'),
+                    });
+                    this.auth.controls['auth2FAEnabled'].setValue(this.credentials.has2fa);
+                    this.loading = false;
+                } else {
+                    this.userApiService.userActivate2faInitiate({}).subscribe(
+                        (resp) => {
+                            this.totpUrl='otpauth://totp/';
+                            let account=this.storageService.userData.login;
+                            if (account==='admin') account=this.storageService.targetUser;
+                            this.totpUrl=this.totpUrl + account + '?issuer=' + DefaultParams.DNSNAME + '&secret=' + resp.key;
+                            this.loading = false;
+                            this.key2FAReady=true;
+                        },
+                        () => {
+                            this.nzMessageService.error(
+                                this.translateService.instant('actions.otpActivate.error'),
+                            );
+                            this.auth.controls['auth2FAEnabled'].setValue(this.credentials.has2fa);
+                            this.loading = false;
+                        }
+                    );
+                }
+            }
+        }
+        //if (!this.loading) return;
+    }
     changeCoin(): void {
         this.form.patchValue(this.settingsItems[this.selectedIndex]);
     }
@@ -112,45 +181,80 @@ export class SettingsComponent implements OnInit {
         //this.onCurrentCoinChange(this.currentCoin);
         this.getCredentials();
     }
+    savePaymentSettings(): void {
+        if (this.form.value.address === null || this.form.value.address === ''){
+            this.nzModalService.error({
+                nzContent: this.translateService.instant('settings.form.errAddress', {
+                    coinName: this.currentCoin,
+                }),
+                nzOkText: this.translateService.instant('common.gotIt'),
+            });
+        }
+        if (this.form.value.payoutThreshold === null || this.form.value.payoutThreshold === ''){
+            this.nzModalService.error({
+                nzContent: this.translateService.instant('settings.form.errPayoutThreshold', {
+                    coinName: this.currentCoin,
+                }),
+                nzOkText: this.translateService.instant('common.gotIt'),
+            });
+        }
+        if (this.form.value.payoutThreshold === null || this.form.value.payoutThreshold === '' || this.form.value.address === null || this.form.value.address === '') return;
 
-    save(): void {
-        if (this.form.value.payoutThreshold === null || this.form.value.address === null) return;
+        if (this.credentials.has2fa) {
+            if (this.form.value.totp === null || this.form.value.totp === "" || this.form.value.totp === 0){
+                this.nzModalService.error({
+                    nzContent: this.translateService.instant('settings.form.errNeedTOTP'),
+                    nzOkText: this.translateService.instant('common.gotIt'),
+                });
+                return;
+            }
+        }
+
         this.isSubmitting = true;
 
         const index = this.settingsItems.findIndex(el => el.name === this.currentCoin);
         let coinName = this.settingsItems[index].name;
         const coinObj = this.storageService.coinsObj[coinName];
         if (coinObj.is.nameSplitted) coinName = coinObj.info.name + '.' + coinObj.info.algorithm;
-        const data = {
+        let data = {
             ...this.form.value,
             coin: coinName,
         };
-
+        if (this.credentials.has2fa) {
+            data.totp=data.totp.toString();
+        }
+        if (not(data.totp)) delete data.totp;
         this.userApiService.userUpdateSettings(data).subscribe(
             () => {
-                this.nzModalService.success({
-                    nzContent: this.translateService.instant('settings.form.success', {
-                        coinName: this.currentCoin,
-                    }),
-                    nzOkText: this.translateService.instant('common.ok'),
-                });
+                this.nzMessageService.success(
+                    this.translateService.instant('settings.form.success', {coinName: this.currentCoin,}),
+                );
+                //this.nzModalService.success({
+                    //nzContent: this.translateService.instant('settings.form.success', {coinName: this.currentCoin,}),
+                    //nzOkText: this.translateService.instant('common.ok'),
+                //});
                 this.isSubmitting = false;
                 this.isStarting = true;
                 this.getSettings(coinName);
             },
-            () => {
+            (err) => { 
+                //debugger;
+                this.nzModalService.error({
+                    nzContent: err.message,
+                    nzOkText: 'Got it!',
+                });
                 this.isSubmitting = false;
             },
         );
     }
 
-    saveUserMail() {
-        return;
-    }
+    //saveUserMail() {
+        //return;
+    //}
 
-    saveUser2FA() {
-        return;
-    }
+    //saveUser2FA() {
+        //return;
+    //}
 
     saveUserData() {
         if (this.formUser.formData.value.name === null || this.formUser.formData.value.name === '') {
@@ -164,12 +268,13 @@ export class SettingsComponent implements OnInit {
 
         this.userApiService.userUpdateCredentials({ name: this.formUser.formData.value.name }).subscribe(
             () => {
-                this.nzModalService.success({
-                    nzContent: this.translateService.instant('settings.form.success', {
-                        coinName: 'public name',
-                    }),
-                    nzOkText: this.translateService.instant('common.ok'),
-                });
+                this.nzMessageService.success(
+                    this.translateService.instant('settings.form.success', {coinName: 'public name',}),
+                );
+//                this.nzModalService.success({
+  //                  nzContent: this.translateService.instant('settings.form.success', {coinName: 'public name',}),
+        //            nzOkText: this.translateService.instant('common.ok'),
+          //      });
                 this.isSubmitting = false;
                 this.isStarting = true;
                 this.getCredentials();
@@ -198,10 +303,23 @@ export class SettingsComponent implements OnInit {
     }
 
     private getCredentials(): void {
-        this.userApiService.userGetCredentials().subscribe(credentials => {
-            this.formUser.formData.controls['name'].setValue(credentials.name);
-            this.email = credentials.email;
-            this.regDate = credentials.registrationDate;
+        this.userApiService.userGetCredentials().subscribe(credent => {
+            this.credentials=credent;
+            this.formUser.formData.controls['name'].setValue(credent.name);
+            //this.formMail.formData.controls['email'].setValue(credentials.email);
+            this.email = credent.email;
+            this.regDate = credent.registrationDate;
+            this.auth.controls['auth2FAEnabled'].setValue(credent.has2fa || false);
+
+            //if (!credent.has2fa) {
+                //this.form.controls['totp'].disable();
+            //}
+            if (this.email=='') {
+                this.emailTip=this.translateService.instant('settings.mailTip');
+            } else {
+                this.emailTip=this.email;
+            } 
+
         });
     }
 
@@ -223,6 +341,7 @@ export class SettingsComponent implements OnInit {
                             address: '',
                             payoutThreshold: null,
                             autoPayoutEnabled: false,
+                            totp: null,
                         });
                         this.disabledCoin = algoCoin;
                     }
@@ -238,6 +357,7 @@ export class SettingsComponent implements OnInit {
                 else this.currentCoin = coin;
                 this.isStarting = false;
                 this.onCurrentCoinChange(this.currentCoin);
+                //this.totpPlaceholder=this.translateService.instant('settings.totpPlaceholder');
             }
         });
     }

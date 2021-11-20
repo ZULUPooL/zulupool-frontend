@@ -5,7 +5,7 @@ import { ZoomSwitchService } from 'services/zoomswitch.service';
 import { UserApiService } from 'api/user.api';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
-import { TargetLoginBadgeComponent } from 'components/target-login-badge/target-login-badge.component';
+//import { TargetLoginBadgeComponent } from 'components/target-login-badge/target-login-badge.component';
 import { DefaultParams } from 'components/defaults.component';
 import { ILiveStatCommon, ICoinParams, ILiveStatWorker } from 'interfaces/common';
 import { AppService } from 'services/app.service';
@@ -15,7 +15,8 @@ import { TCoinName } from 'interfaces/coin';
 import { IUserBalanceItem, IWorkerStatsItem } from 'interfaces/backend-query';
 import { ESuffix } from 'pipes/suffixify.pipe';
 import { FetchPoolDataService } from 'services/fetchdata.service';
-import { NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
+import { NzMessageService } from 'ng-zorro-antd/message';
+//import { NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
 
 enum EWorkerState {
     Normal = 'normal',
@@ -123,6 +124,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         private storageService: StorageService,
         private userApiService: UserApiService,
         private nzModalService: NzModalService,
+        private nzMessageService: NzMessageService,
         private translateService: TranslateService,
         private appService: AppService, //private targetLoginBadgeComponent: TargetLoginBadgeComponent,
     ) {
@@ -289,12 +291,14 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         if (coinObj.is.nameSplitted) coin = coinObj.info.name + '.' + coinObj.info.algorithm;
         this.backendManualApiService.forcePayout({ coin }).subscribe(
             () => {
-                this.nzModalService.success({
-                    nzContent: this.translateService.instant('monitoring.pay.success', {
-                        coinName: this.storageService.currCoin,
-                    }),
-                    nzOkText: this.translateService.instant('common.ok'),
-                });
+
+                this.nzMessageService.success(
+                    this.translateService.instant('monitoring.pay.success', {coinName: this.storageService.currCoin,}),
+                );
+                //this.nzModalService.success({
+                    //nzContent: this.translateService.instant('monitoring.pay.success', {coinName: this.storageService.currCoin,}),
+                    //nzOkText: this.translateService.instant('common.ok'),
+                //});
                 this.isManualPayoutSending = false;
                 this.getBalanceInfo(coin);
             },
@@ -498,6 +502,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
                             address: '',
                             payoutThreshold: null,
                             autoPayoutEnabled: false,
+                            totp: null,
                         });
                         //this.disabledCoin = algoCoin;
                     }

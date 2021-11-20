@@ -21,11 +21,24 @@ export class UserApiService {
         return this.restService.post('/userResendEmail', params);
     }
 
-    userChangePassword(params: IApi.IUserChangePassword): Observable<IApi.IUserActionResponse | null> {
-        return this.restService.post('/userChangePassword', params);
+    //userChangePassword(params: IApi.IUserChangePassword): Observable<IApi.IUserActionResponse | null> {
+        //return this.restService.post('/userChangePassword', params);
+    //}
+
+    userActivate(params: IApi.IUserActionParams = {} as IApi.IUserActionParams): Observable<IApi.IUserActionResponse | null> {
+        return this.restService.post('/userAction', params);
+    }
+    userOtpActivate(params: IApi.IUserActionParams = {} as IApi.IUserActionParams): Observable<IApi.IUserActionResponse | null> {
+        return this.restService.post('/userAction', params);
+    }
+    userOtpDeactivate(params: IApi.IUserActionParams = {} as IApi.IUserActionParams): Observable<IApi.IUserActionResponse | null> {
+        return this.restService.post('/userAction', params);
+    }
+    userNewPasswordActivate(params: IApi.IUserActionParams = {} as IApi.IUserActionParams): Observable<IApi.IUserActionResponse | null> {
+        return this.restService.post('/userAction', params);
     }
 
-    userAction(params: IApi.IUserActionParams = {} as IApi.IUserActionParams): Observable<IApi.IUserActionResponse | null> {
+    userAction(params: {}): Observable<void> {
         return this.restService.post('/userAction', params);
     }
     userGetCredentials(params: IApi.IUserGetCredentialsParms = {} as IApi.IUserGetCredentialsParms): Observable<IApi.IUserGetCredentialsResponse | null> {
@@ -40,6 +53,14 @@ export class UserApiService {
     userUpdateCredentials(params: {}): Observable<IApi.IUserUpdateCredentialsResponse | null> {
         return this.restService.post('/userUpdateCredentials', params);
     }
+
+    userActivate2faInitiate(params: {}): any {
+        return this.restService.post('/userActivate2faInitiate', params);
+    }
+    userDeactivate2faInitiate(params: {}): any {
+        return this.restService.post('/userDeactivate2faInitiate', params);
+    }
+
 
     userChangePasswordForce(params: {}): any {
         return this.restService.post('/userChangePasswordForce', params);

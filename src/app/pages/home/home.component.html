@@ -13,7 +13,7 @@
             <nz-table style="width: 100%;" nzBordered nzSize="small" [nzTemplateMode]="true" [nzLoading]="isLiveStatLoading">
                 <thead>
                     <tr>
-                        <th style="min-width: 80px;text-align: center;">{{ "common.coin" | translate }}</th>
+                       <!-- <th style="min-width: 80px;text-align: center;">{{ "common.coin" | translate }}</th>-->
                         <th style="min-width: 80px;text-align: center;">{{ "common.dictionary.power" | translate }}</th>
                         <th style="min-width: 40px;text-align: center;">{{ "common.dictionary.clients" | translate }}
                         </th>
@@ -23,7 +23,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="text-align: center;">{{ activeCoinName }}</td>
+                        <!--<td style="text-align: center;">{{ activeCoinName }}</td>-->
                         <td style="text-align: center;">
                             {{
                                 liveStats?.power
@@ -34,6 +34,22 @@
                         </td>
                         <td style="text-align: center;">{{ liveStats?.clients }}</td>
                         <td style="text-align: center;">{{ liveStats?.workers }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+        <div class="pool-info-table">
+            <nz-table *ngIf="haveBlocksData" style="width: 100%;" nzBordered nzSize="small" [nzTemplateMode]="true">
+                <thead>
+                    <tr>
+                        <th style="min-width: 80px;text-align: center;">{{ "home.period" | translate }}</th>
+                        <th style="min-width: 80px;text-align: center;">{{ "home.poolLuck" | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of poolLuck">
+                        <td style="text-align: center;"> {{ item.period }}</td>
+                        <td style="text-align: center;"> {{ item.luck }}</td>
                     </tr>
                 </tbody>
             </nz-table>
