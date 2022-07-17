@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, catchError, tap, switchMap, filter, finalize } from 'rxjs/operators';
 import { not } from 'logical-not';
-
+import { BackendQueryApiService } from 'api/backend-query.api';
 import { UserApiService } from 'api/user.api';
 import { AuthApiService } from 'api/auth.api';
 import { IUser } from 'interfaces/user';
@@ -28,20 +28,22 @@ export class AppService {
         private userApiService: UserApiService,
         private authApiService: AuthApiService,
         private storageService: StorageService,
+        private backendQueryApiService: BackendQueryApiService,
     ) {
         this.init();
     }
 
-    private getUsersCredentials(user: string) {}
-
     authorize(sessionId: string): Observable<void> {
+        let  coin='ethhash';
+        this.backendQueryApiService.getPoolCoins().subscribe(
+            resp => {coin=resp.coins[0].algorithm;},
+            () => {},
+        );
+
         return this.userApiService.userGetCredentials({ id: sessionId }).pipe(
             switchMap<IApi.IUserGetCredentialsResponse, Observable<void>>(user => {
-                //this.storageService.sessionId = sessionId;
-                //this.storageService.isReadOnly = isReadOnly;
                 this.storageService.activeUserData = user;
-                //const state = isReadOnly ? EUsersState.ReadOnly : EUsersState.Regular;
-                return this.userApiService.userEnumerateAll({ id: sessionId, sortBy:'averagePower',size: 5000 }).pipe(
+                return this.userApiService.userEnumerateAll({ id: sessionId, sortBy:'averagePower',size: 5000, coin }).pipe(
                     map(({ users }) => {
                         const superUser =
                             users

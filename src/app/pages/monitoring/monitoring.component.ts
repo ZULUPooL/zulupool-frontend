@@ -5,7 +5,6 @@ import { ZoomSwitchService } from 'services/zoomswitch.service';
 import { UserApiService } from 'api/user.api';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
-//import { TargetLoginBadgeComponent } from 'components/target-login-badge/target-login-badge.component';
 import { DefaultParams } from 'components/defaults.component';
 import { ILiveStatCommon, ICoinParams, ILiveStatWorker } from 'interfaces/common';
 import { AppService } from 'services/app.service';
@@ -16,7 +15,8 @@ import { IUserBalanceItem, IWorkerStatsItem } from 'interfaces/backend-query';
 import { ESuffix } from 'pipes/suffixify.pipe';
 import { FetchPoolDataService } from 'services/fetchdata.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-//import { NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
+
+import { en_US, NzI18nService } from 'ng-zorro-antd/i18n';
 
 enum EWorkerState {
     Normal = 'normal',
@@ -126,7 +126,9 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         private nzModalService: NzModalService,
         private nzMessageService: NzMessageService,
         private translateService: TranslateService,
-        private appService: AppService, //private targetLoginBadgeComponent: TargetLoginBadgeComponent,
+        private appService: AppService,
+        private i18n: NzI18nService,
+        //private targetLoginBadgeComponent: TargetLoginBadgeComponent,
     ) {
         super();
         this.listOfColumn = [
@@ -172,6 +174,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     }
 
     ngOnInit(): void {
+        this.i18n.setLocale(en_US);
         this.subs();
         this.startPage();
     }
@@ -228,8 +231,43 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         this.storageService.coinsObj[coin].is.blocksVisible = !this.storageService.coinsObj[coin].is.algo;
         this.haveBalanceData = !this.storageService.coinsObj[coin].is.algo;
         this.activeCoinName = coin;
+        //this.storageService.currAlgo= this.storageService.coinsObj[coin].is.algo ? coin: this.storageService.coinsObj[coin].info.algorithm;
         this.getLiveInfo();
         this.getBalanceInfo(coin);
+
+/*
+        if (this.storageService.userData.login ===  DefaultParams.ADMINNAME ||  DefaultParams.GAZERNAME) {
+
+            this.userApiService.userEnumerateAll({ id: this.storageService.sessionId, sortBy: 'averagePower', size: 5000, coin }).subscribe(({ users }) => {
+                //this.longAgo = false;
+                const nullDate = (new Date().setHours(0, 0, 0, 0).valueOf() / 1000 - 86400) as any;
+                const tNow = parseInt(((new Date().valueOf() / 1000) as any).toFixed(0));
+                users.forEach(item => {
+                  //  if (item.lastShareTime < nullDate) item['longAgo'] = true;
+                    //if (item.login === DefaultParams.ADMINNAME || item.login === DefaultParams.GAZERNAME) {
+                    //    item['longAgo'] = true;
+                    //    item.registrationDate = 1577836800;
+                    //}
+                    item.lastShareTime = tNow - item.lastShareTime;
+                });
+                //let listOfUsers = users;
+                //let listOfTagUsers = [];
+                if (this.storageService.usersList === null) this.storageService.usersList = [];
+                this.storageService.usersList=users;
+                //this.storageService.usersList.forEach(user => {
+                    //listOfTagUsers.push(user.login);
+    
+                //});
+                //if (this.listOfTagUsers.length === 1 && this.listOfTagUsers[0] === null) this.listOfTagUsers = [];
+                //this.isReady = true;
+            });
+
+        }
+*/
+
+
+
+
     }
 
     onWorkerRowClick(workerId: string): void {

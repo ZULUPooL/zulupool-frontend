@@ -311,7 +311,7 @@ export class BookkeepingComponent implements OnInit {
     }
 
     private updateData() {
-        this.userApiService.userEnumerateAll({ id: this.storageService.sessionId, sortBy: 'averagePower', size: 5000 }).subscribe(({ users }) => {
+        this.userApiService.userEnumerateAll({ id: this.storageService.sessionId, sortBy: 'averagePower', size: 5000 , coin: this.storageService.currCoin}).subscribe(({ users }) => {
             this.longAgo = false;
             const nullDate = (new Date().setHours(0, 0, 0, 0).valueOf() / 1000 - 86400) as any;
             const tNow = parseInt(((new Date().valueOf() / 1000) as any).toFixed(0));

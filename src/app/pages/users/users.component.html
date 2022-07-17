@@ -1,4 +1,5 @@
 <div class="main">
+<!--
     <div *ngIf="listOfUsers">
         <nz-select style="display: inline;" nzMode="tags" nzPlaceHolder="HTR Blocks found by"
             [(ngModel)]="listOfTagUsers" (ngModelChange)="onUsersForBlocksChange($event)">
@@ -8,6 +9,12 @@
         <button nz-button nzType="primary" (click)="getBlocks(2)">{{ " HTR blocks Yesterday " }}</button>
         <button nz-button nzType="primary" (click)="getBlocks(3)">{{ " HTR blocks 3-days ago " }}</button>
     </div>
+-->
+
+<div class="coin-select-block">
+    <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
+</div>
+
 
     <div class="info">
         <div class="users-table">
@@ -20,8 +27,11 @@
                 [nzPageIndex]="1" 
                 nzPaginationPosition='both' 
                 nzShowPagination 
-                nzShowSizeChanger 
+                nzPaginationType='small'
+                nzShowSizeChanger
+                [nzPageSizeOptions] ="[30,50,100,250,500]"     
                 [nzData]="listOfUsers"
+                
                 (nzCurrentPageDataChange)="onCurrentPageDataChange($event)">
                 <thead>
                     <tr>

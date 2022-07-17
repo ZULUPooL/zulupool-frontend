@@ -28,10 +28,16 @@ export class AuthComponent implements OnInit {
     readonly signInForm = this.formService.createFormManager<IAuthSignInParams>(
         {
             login: {
-                validators: [Validators.required, Validators.maxLength(64)],
+                validators: [
+                    Validators.required,
+                    Validators.maxLength(64),
+                    Validators.pattern('[-_a-zA-Z0-9]*')
+                ],
+                errors: [, 'unknown'],
+
             },
             totp: {
-                validators: [Validators.maxLength(6)],
+                validators: [Validators.maxLength(10),Validators.minLength(6)],
                 errors: ['2fa_invalid', 'unknown'],
             },
             password: {
@@ -51,7 +57,10 @@ export class AuthComponent implements OnInit {
     readonly lostPassForm = this.formService.createFormManager<{ login: string }>(
         {
             login: {
-                validators: [Validators.required, Validators.maxLength(64)],
+                validators: [
+                    Validators.required,
+                    Validators.maxLength(64),
+                    Validators.pattern('[-_a-zA-Z0-9]*')],
                 errors: [
                     'login_format_invalid',
                     'user_not_active',
@@ -69,8 +78,12 @@ export class AuthComponent implements OnInit {
     readonly signUpForm = this.formService.createFormManager<IUserCreateParams>(
         {
             login: {
-                validators: [Validators.required, Validators.maxLength(64)],
-                errors: ['login_format_invalid', 'duplicate_login'],
+                validators: [
+                    Validators.required,
+                    Validators.maxLength(64),
+                    Validators.pattern('[-_a-zA-Z0-9]*')
+                ],
+                errors: ['login_format_invalid', 'duplicate_login', 'unknown'],
             },
             publicname: {
                 validators: [Validators.required, Validators.maxLength(64)],
@@ -78,7 +91,7 @@ export class AuthComponent implements OnInit {
             password: {
                 validators: [
                     Validators.required,
-                    Validators.minLength(8),
+                    Validators.minLength(10),
                     Validators.maxLength(64),
                 ],
                 errors: ['password_format_invalid'],

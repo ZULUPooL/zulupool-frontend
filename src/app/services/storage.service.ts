@@ -66,11 +66,11 @@ export class StorageService {
         else return '';
     }
     get chartMainCoinObj(): ICoinParams {
-        const resp = Object.entries(this.coinsObj).find(coin => {
-            return coin[1].is.chartMain && coin[1].info.algorithm === this.algo;
+        const resp = Object.entries(this.coinsData).find(coin => {
+            return (coin[1].is.chartMain && coin[1].info.algorithm === this.algo);
         });
         if (resp.length > 0) return resp[1];
-        else return {} as ICoinParams;
+        else return this.coinsData[0];
     }
 
     get currentUser(): string {

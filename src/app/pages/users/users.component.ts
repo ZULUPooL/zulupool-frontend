@@ -12,6 +12,9 @@ import { ETime } from 'enums/time';
 import { IFoundBlock } from 'interfaces/backend-query';
 import { not } from 'logical-not';
 
+
+import { en_US, NzI18nService } from 'ng-zorro-antd/i18n';
+
 @Component({
     selector: 'app-users-page',
     templateUrl: './users.component.html',
@@ -35,6 +38,9 @@ export class UsersComponent implements OnInit {
 
     listOfUsers: IUser[];
     listOfTagUsers: string[] = [];
+
+    coin: string;
+    algo: string;
 
     powerMultLog10: number = 6;
     longAgo: boolean;
@@ -229,6 +235,7 @@ export class UsersComponent implements OnInit {
         private storageService: StorageService,
         private translateService: TranslateService,
         private nzModalService: NzModalService,
+        private i18n: NzI18nService,
     ) {
         this.listOfColumn = [
             {
@@ -310,7 +317,15 @@ export class UsersComponent implements OnInit {
     }
 
     private updateData() {
-        this.userApiService.userEnumerateAll({ id: this.storageService.sessionId, sortBy: 'averagePower', size: 5000 }).subscribe(({ users }) => {
+        
+
+        this.backendQueryApiService.getPoolCoins().subscribe(
+            resp => {
+                let  coin=this.storageService.currAlgo;
+                //debugger;
+                if (coin==='') coin=resp.coins[0].algorithm;
+
+        this.userApiService.userEnumerateAll({ id: this.storageService.sessionId, sortBy: 'averagePower', size: 5000, coin  }).subscribe(({ users }) => {
             this.longAgo = false;
             const nullDate = (new Date().setHours(0, 0, 0, 0).valueOf() / 1000 - 86400) as any;
             const tNow = parseInt(((new Date().valueOf() / 1000) as any).toFixed(0));
@@ -328,21 +343,49 @@ export class UsersComponent implements OnInit {
             if (this.storageService.usersList === null) this.storageService.usersList = [];
             this.storageService.usersList.forEach(user => {
                 this.listOfTagUsers.push(user.login);
-                this.onItemChecked(user.login, true);
+                //this.onItemChecked(user.login, true);
 
             });
             if (this.listOfTagUsers.length === 1 && this.listOfTagUsers[0] === null) this.listOfTagUsers = [];
             this.isReady = true;
         });
+
+    },
+    () => {},
+);
+
+
+
     }
 
     ngOnInit(): void {
+        this.i18n.setLocale(en_US);
+        this.coin='sha256';
+        this.algo='sha256';
         this.isReady = false;
         this.updateData();
         this.getFeePlans();
 
     }
-
+    onCurrentCoinChange(coin: string): void {
+        this.coin=coin;
+        //this.storageService.currAlgo=this.storageService.coinsObj[coin].info.algorithm;
+        if (this.storageService.currAlgo == 'sha256') {
+            this.powerMultLog10=6;
+        }
+        if (this.storageService.currAlgo == 'scrypt') {
+            this.powerMultLog10=3;
+        }
+        if (this.isReady) {
+            this.isReady = false;
+            if (this.algo!=this.storageService.currAlgo){
+                this.algo=this.storageService.currAlgo;
+                this.listOfUsers=[];
+            }
+            this.updateData();
+            this.getFeePlans();
+        };
+    }
     getFeePlans() {
         this.feePlansItems = [];
         this.selectedFeePlan = '';

@@ -94,7 +94,7 @@ export class ChartComponent extends SubscribableComponent implements OnInit, OnC
     }
     private processHistory(coin: string) {
         this.zoom = this.storageService.currentWorker === '';
-        if (this.isStarting || this.chart.labels.length === 0 || this.mainCoin === coin || this.currWorker !== this.storageService.currentWorker || this.currAlgo !== this.storageService.currAlgo) {
+        if (!this.zoom || this.isStarting || this.chart.labels.length === 0 || this.mainCoin === coin || this.currWorker !== this.storageService.currentWorker || this.currAlgo !== this.storageService.currAlgo) {
             this.currWorker = this.storageService.currentWorker;
             this.currAlgo = this.storageService.currAlgo;
             this.createNewChart(coin);

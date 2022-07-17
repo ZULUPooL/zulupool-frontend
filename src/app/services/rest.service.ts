@@ -90,5 +90,5 @@ export class RestService {
 }
 
 export function createAPIUrl(url: string): string {
-    return `/api${url}`;
+    return `./api${url}`;
 }

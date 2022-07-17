@@ -17,6 +17,9 @@
                 [nzErrorTip]="signInForm.errors.login.error | async"
             >
                 <input formControlName="login" nz-input id="login" />
+                <div *ngIf="signInForm.errors.login.error | async">
+                    {{ "common.wrongLogin" | translate }}
+               </div> 
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -86,6 +89,10 @@
                     [nzErrorTip]="signUpForm.errors.login.error | async"
                 >
                     <input formControlName="login" nz-input id="login" />
+                    <div *ngIf="signUpForm.errors.login.error | async">
+                        {{ "common.wrongLogin" | translate }}
+                   </div> 
+    
                 </nz-form-control>
             </nz-form-item>
 
@@ -137,14 +144,12 @@
             <nz-form-item>
                 <nz-form-control>
                     <button
-                    disabled="true"
                         type="submit"
                         nz-button
                         nzType="primary"
                         [nzLoading]="submitting"
                     > 
-                    Still beta. Manual registration. Link to Discord at the homepage.
-<!--                    {{ "auth.signUp.form.submitButton" | translate }}-->
+                    {{ "auth.signUp.form.submitButton" | translate }}
                     </button>
                 </nz-form-control>
             </nz-form-item>
@@ -171,6 +176,9 @@
                     [nzErrorTip]="lostPassForm.errors.login.error | async"
                 >
                     <input formControlName="login" nz-input id="login" />
+                    <div *ngIf="lostPassForm.errors.login.error | async">
+                        {{ "common.wrongLogin" | translate }}
+                   </div> 
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>

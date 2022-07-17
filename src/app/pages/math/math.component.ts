@@ -12,6 +12,7 @@ export class MathComponent {
 
     emailAddr = DefaultParams.SUPPORTMAIL;
     ppdalnReward = DefaultParams.PPDALNREWARD;
+    etcReward = DefaultParams.PPDALNREWARDETC;
     onClick(type: string): void {
         switch (type) {
             case 'wiki':

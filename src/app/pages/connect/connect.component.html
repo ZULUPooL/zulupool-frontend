@@ -1,3 +1,8 @@
+<!--
+    <div class="coin-select-block">
+    <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
+</div>
+-->
 <nz-alert *ngIf="isBeta" style="font-weight: bold; padding: 3px;"  nzType="warning" nzShowIcon
     [nzMessage]="'connect.beta.head'| translate"
     [nzDescription]="'connect.beta'| translate"
@@ -46,6 +51,10 @@
 ></nz-alert>
 <nz-alert *ngIf="algoIsAsicBoost && !canAsicBoost" style="padding: 3px;" nzType="error" nzShowIcon
     [nzMessage]="'connect.asicBoostNo' | translate"
+></nz-alert>
+
+<nz-alert *ngIf="etccoin" style="padding: 3px;" nzType="success" nzShowIcon
+    [nzMessage]="'connect.lolexample' | translate"
 ></nz-alert>
 
 <nz-alert *ngIf="!isPPDA && canNiceHash" style="padding: 3px;" nzType="success" nzShowIcon

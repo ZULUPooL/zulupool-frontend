@@ -4,14 +4,14 @@ import { ETime } from 'enums/time';
 export class DefaultParams {
     static readonly DNSNAME = 'zulupool.com';
 
-    static readonly GUIVERSION = 'v2.06b';
+    static readonly GUIVERSION = 'v2.15b';
     static readonly GUISOURCE = 'https://github.com/';
 
-    static readonly COREVERSION = 'v0.999b';
+    static readonly COREVERSION = 'v0.9999b';
     static readonly CORESOURCE = 'https://github.com/';
 
-    static readonly SUPPORTMAIL = '';
-    static readonly DISCORDSERVER = '';
+    static readonly SUPPORTMAIL = 'pool@some_mail';
+    static readonly DISCORDSERVER = 'https://discord.gg/some_code';
 
     static readonly ADMINNAME: string = 'admin';
     static readonly GAZERNAME: string = 'observer';
@@ -32,11 +32,12 @@ export class DefaultParams {
     static readonly PPDALN = 'https://beta.';
     static readonly PPDAALGO = 'sha256d';
     static readonly STRATUM = 'sha256.';
-    static readonly STRATUMS = { HTR: 'sha256.', DOGE: 'scrypt.', ZEC: 'equihash.' };
+    static readonly STRATUMS = { HTR: 'sha256.', DOGE: 'scrypt.', ZEC: 'equihash.', ETH: 'etchash.', ETC: 'etchash.' };
     static readonly FASTJOBCOINS = ['DGB.sha256', 'DGB.scrypt'];
     static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'XEC', 'BSV', 'DGB', 'XPM', 'FCH', 'HTR', 'DGB.sha256', 'DGB.scrypt', 'LTC', 'DOGE', 'XPM', 'ZEC', 'ZEN', 'ARRR', 'KMD', 'ETC', 'ETH' ];
-    static readonly PPDALNREWARD = '94.12%';
-    static readonly RECOMMENDEDHTR = '1600';
+    static readonly PPDALNREWARD = '96.25%';
+    static readonly PPDALNREWARDETC = '99%';
+    static readonly RECOMMENDEDHTR = '10';
     static readonly ADDREXAMPLES = {
         BTC: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' P2SH:3H28N5WuREZ93CNmhWcRcrnykWrMqkhFyWN', ' Bech32:bc1uf5tdn87k2uz7r2kl5zrfww362ch3746lq5vse7'],
         BCHN: [' P2PKH:13xDZX65TFmeFgowMJsJvutmSxUttwkE3f', ' Bech32:qqsxr824tvsq72tv7x43xa346zn7f78pkqssr5lavh'],
@@ -67,7 +68,7 @@ export class DefaultParams {
         'DGB.sha256': 10,
         'DGB.scrypt': 10,
         FCH: 1,
-        HTR: 5,
+        HTR: 1,
         LTC: 0.01,
         DOGE: 100,
         ZEC: 0.01,
@@ -75,7 +76,7 @@ export class DefaultParams {
         KMD: 0.1,
         ARRR: 0.1,
         ETC: 0.1,
-        ETH: 0.01,
+        ETH: 0.05,
     };
 
     static readonly TARGETLOGINIGNORE = [
@@ -143,7 +144,7 @@ export class DefaultParams {
         XEC: 'https://explorer.bitcoinabc.org/block/',
         BSV: 'https://whatsonchain.com/block/',
         XPM: 'https://chainz.cryptoid.info/xpm/block.dws?',
-        FCH: 'https://ifblock.io/fch/block/',
+        FCH: 'https://explorer.viawallet.com/fch/block/',
         HTR: 'https://explorer.hathor.network/transaction/',
         ARRR: 'https://explorer.pirate.black/block/',
         DGB: 'https://dgb.tokenview.com/en/block/',
@@ -154,8 +155,8 @@ export class DefaultParams {
         BCHN: 'https://bch.tokenview.com/en/block/',
         LTC: 'https://ltc.tokenview.com/en/block/',
         KMD: 'https://kmd.tokenview.com/en/block/',
-        ETH: 'https://eth.tokenview.com/en/block/',
-        ETC: 'https://etc.tokenview.com/en/block/',
+        ETH: 'https://eth.tokenview.com/en/block/0x',
+        ETC: 'https://etc.tokenview.com/en/block/0x',
         ZEC: 'https://zec.tokenview.com/en/block/',
         ZEN: 'https://zen.tokenview.com/en/block/',
         DOGE: 'https://doge.tokenview.com/en/block/',
@@ -178,8 +179,8 @@ export class DefaultParams {
         BCHN: 'https://bch.tokenview.com/en/tx/',
         LTC: 'https://ltc.tokenview.com/en/tx/',
         KMD: 'https://kmd.tokenview.com/en/tx/',
-        ETH: 'https://eth.tokenview.com/en/tx/',
-        ETC: 'https://etc.tokenview.com/en/tx/',
+        ETH: 'https://eth.tokenview.com/en/tx/0x',
+        ETC: 'https://etc.tokenview.com/en/tx/0x',
         ZEC: 'https://zec.tokenview.com/en/tx/',
         ZEN: 'https://zen.tokenview.com/en/tx/',
         DOGE: 'https://doge.tokenview.com/en/tx/',
@@ -201,8 +202,8 @@ export class DefaultParams {
         BSV: 'https://bsv.tokenview.com/en/address/',
         LTC: 'https://ltc.tokenview.com/en/address/',
         KMD: 'https://kmd.tokenview.com/en/address/',
-        ETH: 'https://eth.tokenview.com/en/address/',
-        ETC: 'https://etc.tokenview.com/en/address/',
+        ETH: 'https://eth.tokenview.com/en/address/0x',
+        ETC: 'https://etc.tokenview.com/en/address/0x',
         ZEC: 'https://zec.tokenview.com/en/address/',
         ZEN: 'https://zen.tokenview.com/en/address/',
         DOGE: 'https://doge.tokenview.com/en/address/',

@@ -113,7 +113,8 @@ export class FetchPoolDataService {
                 scrypt: [] as IPoolCoinsItem[],
                 equihash200_9: [] as IPoolCoinsItem[],
                 prime: [] as IPoolCoinsItem[],
-                ethhash: [] as IPoolCoinsItem[],
+                ethash: [] as IPoolCoinsItem[],
+                etchash: [] as IPoolCoinsItem[],
             }
             /*poolCoins.sha256=[];
             poolCoins.scrypt=[];
@@ -134,9 +135,12 @@ export class FetchPoolDataService {
                 } else if (coin.algorithm === 'primecoin') {
                     if (coin.name === 'XPM') poolCoins.prime.unshift(coin);
                     else poolCoins.prime.push(coin)
-                } else if (coin.algorithm === 'ethhash') {
-                    if (coin.name === 'ETH') poolCoins.ethhash.unshift(coin);
-                    else poolCoins.ethhash.push(coin)
+                } else if (coin.algorithm === 'ethash') {
+                    if (coin.name === 'ETH') poolCoins.ethash.unshift(coin);
+                    else poolCoins.ethash.push(coin)
+                } else if (coin.algorithm === 'etchash') {
+                    if (coin.name === 'ETC') poolCoins.etchash.unshift(coin);
+                    else poolCoins.etchash.push(coin)
                 }
             });
 
@@ -178,8 +182,11 @@ export class FetchPoolDataService {
             if (poolCoins.prime.length >0) {
                 add_algo(poolCoins.prime);
             }
-            if (poolCoins.ethhash.length >0) {
-                add_algo(poolCoins.ethhash);
+            if (poolCoins.ethash.length >0) {
+                add_algo(poolCoins.ethash);
+            }
+            if (poolCoins.etchash.length >0) {
+                add_algo(poolCoins.etchash);
             }
 
 
@@ -511,7 +518,23 @@ function add_algo (dt) {
                     }
                 }
                 historyResponce.stats.forEach(el => {
-                    el.power = el.power / Math.pow(10, 15 - historyResponce.powerMultLog10);
+                    //TODO
+                    if (coinObj.info.algorithm == 'ethhash') {
+                        el.power = el.power / Math.pow(10, 9 - historyResponce.powerMultLog10);
+                        //if (el.power *1000 <1) el.power=el.power*1000000;
+
+                    }
+                    if (coinObj.info.algorithm == 'scrypt') {
+                        el.power = el.power / Math.pow(10, 12 - historyResponce.powerMultLog10);
+                        //if (el.power *1000 <1) el.power=el.power*1000000;
+
+                    }
+                    if (coinObj.info.algorithm == 'sha256') {
+                        el.power = el.power / Math.pow(10, 15 - historyResponce.powerMultLog10);
+
+                    }
+
+
                 });
                 coinObj.history.data = historyResponce.stats;
                 coinObj.history.isLoading = false;
@@ -617,6 +640,12 @@ function add_algo (dt) {
         this.backendQueryApiService.getUserBalance(req).subscribe(
             ({ balances }) => {
                 this.storageService.coinsObj[params.coin].user.balance = balances[0];
+                if (params.coin=='XEC') {
+                this.storageService.coinsObj[params.coin].user.balance.paid = this.storageService.coinsObj[params.coin].user.balance.paid.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                this.storageService.coinsObj[params.coin].user.balance.balance = this.storageService.coinsObj[params.coin].user.balance.balance.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                this.storageService.coinsObj[params.coin].user.balance.queued = this.storageService.coinsObj[params.coin].user.balance.queued.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                this.storageService.coinsObj[params.coin].user.balance.requested = this.storageService.coinsObj[params.coin].user.balance.requested.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                }
                 this.storageService.coinsObj[params.coin].user.isBalanceLoading = false;
                 this.apiGetUserBalance.next({ status: true, coin: params.coin, type: params.type });
             },

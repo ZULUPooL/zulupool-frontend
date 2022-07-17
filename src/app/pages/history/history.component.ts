@@ -12,6 +12,9 @@ import { FetchPoolDataService } from 'services/fetchdata.service';
 import { ETime } from 'enums/time';
 import { TranslateService } from '@ngx-translate/core';
 
+import { en_US, NzI18nService } from 'ng-zorro-antd/i18n';
+
+
 @Component({
     selector: 'app-history',
     templateUrl: './history.component.html',
@@ -37,6 +40,8 @@ export class HistoryComponent implements OnInit {
         private storageService: StorageService,
         private fetchPoolDataService: FetchPoolDataService,
         private translateService: TranslateService,
+        private i18n: NzI18nService,
+
     ) {
         this.listOfColumn = [
             {
@@ -81,6 +86,7 @@ export class HistoryComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.i18n.setLocale(en_US);
         this.storageService.currType = 'history';
         this.fetchPoolDataService.coins({ coin: '', type: 'history', forceUpdate: true });
     }
@@ -97,6 +103,7 @@ export class HistoryComponent implements OnInit {
     onCurrentCoinChange(coin: TCoinName): void {
         this.currentCoin = coin;
         if (this.storageService.coinsObj[coin].is.nameSplitted) coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
+        //this.storageService.currAlgo=this.storageService.coinsObj[coin].info.algorithm;
         const groupByInterval = ETime.Day;
         this.appService.user.subscribe(user => {
             this.backendQueryApiService

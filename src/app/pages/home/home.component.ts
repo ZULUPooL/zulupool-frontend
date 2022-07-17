@@ -44,6 +44,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
     liveStats: ILiveStatCommon;
     mainChartCoin: string = '';
     haveBlocksData: boolean = false;
+    haveLuckData: boolean = true;
     isBlocksLoading: boolean;
     showLuck: boolean = false;;
     blocks: IBlockItem[];
@@ -121,6 +122,8 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         this.storageService.coinsObj[coin].is.blocksVisible = !this.storageService.coinsObj[coin].is.algo;
         this.haveBlocksData = !this.storageService.coinsObj[coin].is.algo;
         this.activeCoinName = coin;
+        this.haveLuckData =this.activeCoinName != 'ETC';
+        //this.storageService.currAlgo=this.storageService.coinsObj[coin].info.algorithm;
         this.getLiveInfo();
         this.getBloksInfo();
 
@@ -217,6 +220,7 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
             if (blk.confirmations === -1) blk.confirmations = 'ORPHAN';
             if (blk.confirmations === -2) blk.confirmations = 'node_err';
             if (blk.confirmations === 0) blk.confirmations = 'NEW';
+            //blk.generatedCoins=blk.generatedCoins.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         });
         this.getPoolLuck(coin);
     }

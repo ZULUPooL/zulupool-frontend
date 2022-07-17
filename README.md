@@ -22,7 +22,7 @@ npm i
 
 задать адрес сайта в параметре --base-href в package.json.
 
-Для сборки в темных тонах:
+Для сборки
 
 ```bash
 npm run prod

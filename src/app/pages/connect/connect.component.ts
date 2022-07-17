@@ -27,7 +27,8 @@ export class ConnectComponent implements OnInit {
     isReady: boolean;
     fastJobWarning: boolean;
     fastCoinName: string;
-
+    
+    etccoin:boolean;
     isBeta: boolean;
     isPPDA: boolean;
     //ppdaAlgo: string;
@@ -51,16 +52,35 @@ export class ConnectComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.storageService.currType='connect';
         this.setupStart();
+//        this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
+//            if (data.status && data.type === 'connect') this.getInstances();
+//        });
         this.fetchPoolDataService.apiGetListOfCoins.subscribe(data => {
-            if (data.status && data.type === 'connect') this.getInstances();
-        });
+            if (data.status && data.type === this.storageService.currType) this.getInstances();
+        }),
         this.fetchPoolDataService.coins({ coin: '', type: 'connect', forceUpdate: true });
+
+
+
     }
     /*
     ngOnDestroy(): void {
         this.fetchPoolDataService.apiGetListOfCoins.unsubscribe();
     }*/
+
+
+
+    onCurrentCoinChange(coin: string): void {
+
+        //const resp = Object.entries(this.coinsData).find(coin => {
+        //    return (coin[1].is.chartMain && coin[1].info.algorithm === this.algo) || coin[1].is.chartMain;
+        //});
+        //if (resp.length > 0) return resp[1];
+
+
+    }
 
     private setupStart() {
         this.emailAddr = DefaultParams.SUPPORTMAIL;
@@ -75,6 +95,7 @@ export class ConnectComponent implements OnInit {
         this.canAsicBoost = true;
         this.canMRR = false;
         this.instances = [];
+        this.etccoin=false;
     }
 
     setInstanceParams(item: IInstanceItem): void {
@@ -92,6 +113,8 @@ export class ConnectComponent implements OnInit {
         this.port = item.port;
         this.urlTarget = DefaultParams.STRATUMS[item.type] + DefaultParams.DNSNAME + ':' + item.port;
         this.algoIsAsicBoost = item.type === 'HTR' || item.type === 'BTC';
+        this.canNiceHash = item.type != 'ETH';
+        this.etccoin= item.type === 'ETH';
         this.fastJobWarning = false;
         this.fastCoinName = '';
         item.backends.forEach(coin => {

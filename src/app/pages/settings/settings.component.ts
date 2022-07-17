@@ -102,6 +102,7 @@ export class SettingsComponent implements OnInit {
             return;
         }
         this.currentCoin = coin;
+        //this.storageService.currAlgo=this.storageService.coinsObj[coin].info.algorithm;
         if (DefaultParams.DEFCOINS.includes(coin)) {
             this.minPayPlaceholder="minPay= " + DefaultParams.MINIMALPAYMENTS[coin] + ' ' + coin;
             this.addrFormats = DefaultParams.ADDREXAMPLES[coin] + ' ' + this.minPayPlaceholder;

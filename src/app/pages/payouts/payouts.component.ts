@@ -11,6 +11,9 @@ import { StorageService } from 'services/storage.service';
 import { DefaultParams } from 'components/defaults.component';
 import { FetchPoolDataService } from 'services/fetchdata.service';
 
+import { en_US, NzI18nService } from 'ng-zorro-antd/i18n';
+
+
 @Component({
     selector: 'app-payouts',
     templateUrl: './payouts.component.html',
@@ -33,12 +36,11 @@ export class PayoutsComponent implements OnInit {
     private explorersLinks = DefaultParams.TXLINKS;
 
     constructor(
-        //private userApiService: UserApiService,
         private backendQueryApiService: BackendQueryApiService,
-        //private backendManualApiService: BackendManualApiService,
         private storageService: StorageService,
         private fetchPoolDataService: FetchPoolDataService,
         private translateService: TranslateService,
+        private i18n: NzI18nService,
     ) {
         this.listOfColumn = [
             {
@@ -60,6 +62,7 @@ export class PayoutsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.i18n.setLocale(en_US);
         this.storageService.currType = 'payouts';
         this.fetchPoolDataService.coins({ coin: '', type: 'payouts', forceUpdate: true });
     }
@@ -70,6 +73,7 @@ export class PayoutsComponent implements OnInit {
 
     onCurrentCoinChange(coin: TCoinName): void {
         this.currentCoin = coin;
+        //this.storageService.currAlgo=this.storageService.coinsObj[coin].info.algorithm;
         this.getUserStat(coin);
     }
 
@@ -84,9 +88,9 @@ export class PayoutsComponent implements OnInit {
 
         this.backendQueryApiService.getUserPayouts({ coin, timeFrom: 0, count: 1000 }).subscribe(
             ({ payouts }) => {
-                //if (coin !== 'HTR') {
-                //payouts.forEach(el => (el.value = parseFloat(el.value).toFixed(4)));
-                //}
+                if (coin == 'XEC') {
+                payouts.forEach(el => (el.value = el.value.replace(/\B(?=(\d{3})+(?!\d))/g, " ")));
+                }
                 this.payouts = payouts;
                 this.isPayoutsLoading = false;
             },

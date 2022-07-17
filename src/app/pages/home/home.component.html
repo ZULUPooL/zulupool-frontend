@@ -39,7 +39,7 @@
             </nz-table>
         </div>
         <div class="pool-info-table">
-            <nz-table *ngIf="haveBlocksData" style="width: 100%;" nzBordered nzSize="small" [nzTemplateMode]="true">
+            <nz-table *ngIf="haveBlocksData && haveLuckData" style="width: 100%;" nzBordered nzSize="small" [nzTemplateMode]="true">
                 <thead>
                     <tr>
                         <th style="min-width: 80px;text-align: center;">{{ "home.period" | translate }}</th>

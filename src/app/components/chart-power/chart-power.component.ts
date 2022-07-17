@@ -13,86 +13,12 @@ import { Component, OnChanges } from '@angular/core';
     styles: [':host { display: block }'],
 })
 export class ChartPowerComponent implements OnChanges {
-    // @Input()
-    //mainCoin: string;
-    //powerData: IChartData;
-    /*powerData: {
-        actualData: IPoolStatsHistoryItem[];
-        prevData: IPoolStatsHistoryItem[];
-        powerMultLog10: number;
-        chartName: string;
-    };*/
+
     mainCoinName: string;
-    //chartData: IChartData;
-    /*
-    labels: Label[];
-    data: number[];
-    chartTitle: string;
-*/
-    constructor() {} // private storageService: StorageService, //private langService: LangService,
+    constructor() {} 
 
     ngOnChanges(): void {
-        // if (
-        //this.mainCoin !== undefined &&
-        //this.mainCoin !== null &&
-        //this.mainCoin !== ""
-        //)
-        //this.mainCoinName = this.mainCoin;
-        //}
-        //    onZoomChange(zoom: string) {}
-        /*
-    ngOnChanges(): void {
 
-        /*
-        //let data = {} as IChartData;
-        //data.titleKey = this.powerData.chartName;
-        const t = { any: "HH:mm", last: "HH:mm:ss" };
-        const actualData = [...this.powerData.actualData];
-        const prevData = [...this.powerData.prevData];
-        const store = this.storageService.chartData[this.powerData.chartName],
-            refresh = store.newPushed === 0 && store.oldShifted === 0;
-
-        let data = [],
-            labels = [],
-            count = 0,
-            titleKey = this.powerData.chartName;
-
-        actualData.forEach(item => {
-            count++;
-            data.push(item.power);
-            const date = formatDate(
-                new Date(item.time * 1000),
-                count === actualData.length ? t.last : t.any,
-                this.langService.getCurrentLang(),
-            );
-            labels.push(date);
-        });
-        if (refresh) {
-            this.setData({ data, labels, titleKey, refresh: true });
-        } else {
-            this.setData({ data, labels, titleKey, refresh: false });
-        }
-        //debugger;
     }
 
-    private setNew(): void {
-        const stats = [...this.powerData.actualData];
-        const t = { any: "HH:mm", last: "HH:mm:ss" };
-        let data = [],
-            labels = [],
-            count = 0,
-            titleKey = this.powerData.chartName;
-    }
-
-    private setData(data: IChartData) {
-        this.info = data;
-    }*/
-    }
-
-    //interface IChartData {
-    //actualData: IPoolStatsHistoryItem[];
-    //prevData: IPoolStatsHistoryItem[];
-    //powerMultLog10: number;
-    //chartName: string;
-    //clear?: boolean;
 }
