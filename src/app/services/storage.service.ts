@@ -28,6 +28,7 @@ export class StorageService {
     private coinsData: ICoinsData = {};
     private currentZoom = DefaultParams.ZOOM[this.type];
     private currentZoomList = DefaultParams.ZOOMSLIST[this.type];
+    private mainChartSource: string
     userData: ICredentials;
     trgUserData: IUser[];
 
@@ -58,19 +59,14 @@ export class StorageService {
         if (ts) this.coinListTS = ts;
         else this.coinListTS = 0;
     }
+    set chartMainCoinName(coin: string) {
+        this.mainChartSource = coin
+    }
     get chartMainCoinName(): string {
-        const resp = Object.entries(this.coinsObj).find(coin => {
-            return coin[1].is.chartMain && coin[1].info.algorithm === this.algo;
-        });
-        if (resp.length > 0) return resp[0];
-        else return '';
+        return this.mainChartSource
     }
     get chartMainCoinObj(): ICoinParams {
-        const resp = Object.entries(this.coinsData).find(coin => {
-            return (coin[1].is.chartMain && coin[1].info.algorithm === this.algo);
-        });
-        if (resp.length > 0) return resp[1];
-        else return this.coinsData[0];
+        return this.coinsData[this.mainChartSource]
     }
 
     get currentUser(): string {

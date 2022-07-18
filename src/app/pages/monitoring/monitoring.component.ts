@@ -376,8 +376,9 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         }
 
         const activeCoin = this.activeCoinName;
-        coinsObj[activeCoin].is.chartMain = true;
+        this.storageService.chartMainCoinName = activeCoin
         coinsObj[activeCoin].is.chartRefresh = true;
+
 
         coinsObj[activeCoin].history.timeFrom = newTimefrom - grI;
         coinsObj[activeCoin].history.grByInterval = grI;
@@ -389,7 +390,6 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
 
         coins.forEach(item => {
             coinsObj[item].history.chart.label = [];
-            coinsObj[item].is.chartMain = false;
             coinsObj[item].is.chartRefresh = false;
         });
         this.isLiveLoading = true;
@@ -491,7 +491,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         const coinsObj = this.storageService.coinsObj;
         const mainChartCoin = this.storageService.chartMainCoinName;
 
-        coinsObj[coin].is.chartMain = true;
+        this.storageService.chartMainCoinName = coin;
         coinsObj[coin].is.chartRefresh = true;
 
         coinsObj[coin].history.data = [];
@@ -503,7 +503,6 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
         const coins = this.storageService.coinsList.filter(item => item !== coin);
 
         coins.forEach(item => {
-            coinsObj[item].is.chartMain = false;
             coinsObj[item].is.chartRefresh = false;
             coinsObj[item].history.data = [];
             coinsObj[item].history.chart.data = [];

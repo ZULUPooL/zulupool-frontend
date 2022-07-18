@@ -2,7 +2,7 @@
 <div class="main">
     <div class="info">
         <div class="coin-select-block">
-            <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
+            <app-coin-switcher [needAlgorithmButton]=false (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
         </div>
         <div class="payouts-table">
             <nz-table 

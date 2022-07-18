@@ -4,7 +4,7 @@ import { ETime } from 'enums/time';
 export class DefaultParams {
     static readonly DNSNAME = 'zulupool.com';
 
-    static readonly GUIVERSION = 'v2.15b';
+    static readonly GUIVERSION = 'v2.16b';
     static readonly GUISOURCE = 'https://github.com/';
 
     static readonly COREVERSION = 'v0.9999b';
@@ -35,6 +35,7 @@ export class DefaultParams {
     static readonly STRATUMS = { HTR: 'sha256.', DOGE: 'scrypt.', ZEC: 'equihash.', ETH: 'etchash.', ETC: 'etchash.' };
     static readonly FASTJOBCOINS = ['DGB.sha256', 'DGB.scrypt'];
     static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'XEC', 'BSV', 'DGB', 'XPM', 'FCH', 'HTR', 'DGB.sha256', 'DGB.scrypt', 'LTC', 'DOGE', 'XPM', 'ZEC', 'ZEN', 'ARRR', 'KMD', 'ETC', 'ETH' ];
+    static readonly MAINCOINS = ["BTC", "LTC", "ZEC", "XPM", "ETH", "ETC"];
     static readonly PPDALNREWARD = '96.25%';
     static readonly PPDALNREWARDETC = '99%';
     static readonly RECOMMENDEDHTR = '10';

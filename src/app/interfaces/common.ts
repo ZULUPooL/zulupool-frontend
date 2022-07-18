@@ -121,7 +121,6 @@ export interface ICoinState {
     pool: boolean; // работаем с информацией по пулу
     algo: boolean; // является алгоритмом
     nameSplitted: boolean; // имеет имя алгоритм в названии на бэкенде
-    chartMain: boolean; // является основной для графика, по ней строится временная шкала
     chartRefresh: boolean; // требует обновления исторических данных и перерисовки графика
     //chartSwitching: boolean; // в состоянии переключения с прошлой главной монеты
 }

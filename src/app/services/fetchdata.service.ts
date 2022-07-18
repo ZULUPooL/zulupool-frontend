@@ -99,166 +99,36 @@ export class FetchPoolDataService {
         }
 
         function sort(coins: IPoolCoinsItem[]): void {
-  /*          let sha256Coins = [],
-                scryptCoins = [],
-                ethCoins = [],
-                equihash200-9Coins = [],
-                equihash48-5Coins = [],
-                sha3-shake256-16Coins = [],
-                primeCoins = [];
-
-*/
-            let poolCoins = {
-                sha256: [] as IPoolCoinsItem[],
-                scrypt: [] as IPoolCoinsItem[],
-                equihash200_9: [] as IPoolCoinsItem[],
-                prime: [] as IPoolCoinsItem[],
-                ethash: [] as IPoolCoinsItem[],
-                etchash: [] as IPoolCoinsItem[],
-            }
-            /*poolCoins.sha256=[];
-            poolCoins.scrypt=[];
-            poolCoins.equihash200_9=[];
-            poolCoins.prime=[];
-            poolCoins.ethhash=[];
-*/
+            storage.algoCoinsData = {};
             coins.forEach(coin => {
-                if (coin.algorithm === 'sha256') {
-                    if (coin.name === 'BTC') poolCoins.sha256.unshift(coin);
-                    else poolCoins.sha256.push(coin);
-                } else if (coin.algorithm === 'scrypt') {
-                    if (coin.name === 'LTC') poolCoins.scrypt.unshift(coin);
-                    else poolCoins.scrypt.push(coin);
-                } else if (coin.algorithm === 'equihash.200.9') {
-                    if (coin.name === 'ZEC') poolCoins.equihash200_9.unshift(coin);
-                    else poolCoins.equihash200_9.push(coin)
-                } else if (coin.algorithm === 'primecoin') {
-                    if (coin.name === 'XPM') poolCoins.prime.unshift(coin);
-                    else poolCoins.prime.push(coin)
-                } else if (coin.algorithm === 'ethash') {
-                    if (coin.name === 'ETH') poolCoins.ethash.unshift(coin);
-                    else poolCoins.ethash.push(coin)
-                } else if (coin.algorithm === 'etchash') {
-                    if (coin.name === 'ETC') poolCoins.etchash.unshift(coin);
-                    else poolCoins.etchash.push(coin)
+                if (coin.algorithm in storage.algoCoinsData) {
+                    let isMain = DefaultParams.MAINCOINS.includes(coin.name);
+                    if (isMain)
+                        storage.algoCoinsData[coin.algorithm].unshift(coin);
+                    else
+                        storage.algoCoinsData[coin.algorithm].push(coin);
+                } else {
+                    storage.algoCoinsData[coin.algorithm] = [coin];
                 }
-            });
+            })
 
-/*
-            coins.forEach(coin => {
-                if (coin.algorithm === 'sha256') {
-                    if (coin.name === 'BTC') shaCoins.unshift(coin);
-                    else shaCoins.push(coin);
-                } else if (coin.algorithm === 'scrypt') {
-                    if (coin.name === 'LTC') scryptCoins.unshift(coin);
-                    else scryptCoins.push(coin);
-                } else if (coin.algorithm === 'equihash.200.9') {
-                    if (coin.name === 'ZEC') zecCoins.unshift(coin);
-                    else zecCoins.push(coin)
-                } else if (coin.algorithm === 'equihash.48.5') {
-                    if (coin.name === 'ZEC') zecCoins.unshift(coin);
-                    else zecCoins.push(coin)
-                } else if (coin.algorithm === 'sha3.shake256.16') {
-                    if (coin.name === 'ZEC') zecCoins.unshift(coin);
-                    else zecCoins.push(coin)
-                } else if (coin.algorithm === 'primecoin') {
-                    if (coin.name === 'XPM') primeCoins.unshift(coin);
-                    else primeCoins.push(coin)
-                } else if (coin.algorithm === 'ethhash') {
-                    if (coin.name === 'ETH') ethCoins.unshift(coin);
-                    else ethCoins.push(coin)
-                }
-            }); */
             storage.algosList = [];
-            if (poolCoins.sha256.length >0) {
-                add_algo(poolCoins.sha256);
+            for (let algoName in storage.algoCoinsData) {
+                // Append special algorithm record
+                storage.algoCoinsData[algoName].push({name: algoName, fullName: algoName, algorithm: algoName})
+                // Build algorithms list
+                storage.algosList.push(algoName);
+                // Add all coins to list
+                storage.algoCoinsData[algoName].forEach(coin => {
+                    addCoinToList(coin);
+                })
             }
-            if (poolCoins.scrypt.length >0) {
-                add_algo(poolCoins.scrypt);
-            }
-            if (poolCoins.equihash200_9.length >0) {
-                add_algo(poolCoins.equihash200_9);
-            }
-            if (poolCoins.prime.length >0) {
-                add_algo(poolCoins.prime);
-            }
-            if (poolCoins.ethash.length >0) {
-                add_algo(poolCoins.ethash);
-            }
-            if (poolCoins.etchash.length >0) {
-                add_algo(poolCoins.etchash);
-            }
-
-
-
-function add_algo (dt) {
-    const algo=dt[0].algorithm;
-    dt.push({ name: algo, fullName:algo, algorithm:algo });
-    storage.algoCoinsData[algo] = dt;
-    storage.algosList.push(algo);
-    dt.forEach(coin => {
-        addCoinToList(coin, false);
-    });
-
-}
-
-/*
-            if (shaCoins.length > 0) {
-                shaCoins.push({ name: shaCoins[0].algorithm, fullName: shaCoins[0].algorithm, algorithm: shaCoins[0].algorithm });
-                storage.algoCoinsData[shaCoins[0].algorithm] = shaCoins;
-                storage.algosList.push(shaCoins[0].algorithm);
-                shaCoins.forEach(coin => {
-                    addCoinToList(coin, false);
-                });
-            }
-            if (scryptCoins.length > 0) {
-                scryptCoins.push({ name: scryptCoins[0].algorithm, fullName: scryptCoins[0].algorithm, algorithm: scryptCoins[0].algorithm });
-                storage.algoCoinsData[scryptCoins[0].algorithm] = scryptCoins;
-                storage.algosList.push(scryptCoins[0].algorithm);
-                scryptCoins.forEach(coin => {
-                    addCoinToList(coin, false);
-                });
-            }
-            if (zecCoins.length > 0) {
-                zecCoins.push({ name: zecCoins[0].algorithm, fullName: zecCoins[0].algorithm, algorithm: zecCoins[0].algorithm });
-                storage.algoCoinsData[zecCoins[0].algorithm] = zecCoins;
-                storage.algosList.push(zecCoins[0].algorithm);
-                zecCoins.forEach(coin => {
-                    addCoinToList(coin, false);
-                });
-            }
-            if (ethCoins.length > 0) {
-                ethCoins.push({ name: ethCoins[0].algorithm, fullName: ethCoins[0].algorithm, algorithm: ethCoins[0].algorithm });
-                storage.algoCoinsData[ethCoins[0].algorithm] = ethCoins;
-                storage.algosList.push(ethCoins[0].algorithm);
-                ethCoins.forEach(coin => {
-                    addCoinToList(coin, false);
-                });
-            } */
 
             storage.currAlgo = storage.algosList[storage.algosList.length - 1];
-            /*
-            let algo = true;
-            //const ts = getTs();
-            coins.forEach(coin => {
-                addCoinToList(coin, coin.name === 'BTC');
-                algo ? algo && coins[0].algorithm === coin.algorithm : true;
-            });
-            if (algo && coins.length !== 1) {
-                const a = coins[0].algorithm;
-                addCoinToList({ name: a, fullName: a, algorithm: a }, false);
-            } */
 
-            function addCoinToList(coin: ICoinItem, isBtc: boolean = false): void {
+            function addCoinToList(coin: ICoinItem): void {
                 const isAlgo = coin.name === coin.algorithm;
-                let isSpliName = false;
-                //if (coin.name.split('.').length > 1) {
-                //coin.name = coin.name.split('.')[0];
-                //isSpliName = true;
-                //}
-                //if (!isBtc) storage.coinsList.push(coin.name);
-                //else storage.coinsList.unshift(coin.name);
-                //if (isAlgo) storage.algosList.push(coin.algorithm);
+                let hasSplitName = false;
                 const state = { isLoading: false, cacheTs: 0 };
                 const blocksState = { data: [], ...state };
                 const liveState = { data: {} as any, ...state };
@@ -283,8 +153,7 @@ function add_algo (dt) {
                     balanseVisible: false,
                     worker: params.type === 'worker',
                     algo: isAlgo,
-                    nameSplitted: isSpliName,
-                    chartMain: isAlgo,
+                    nameSplitted: hasSplitName,
                     chartRefresh: false,
                     pool: params.type === 'pool',
                     user: params.type === 'user',

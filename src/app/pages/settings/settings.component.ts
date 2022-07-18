@@ -328,31 +328,6 @@ export class SettingsComponent implements OnInit {
         this.userApiService.userGetSettings().subscribe(({ coins }) => {
             if (coins.length > 0) {
                 const coinObj = this.storageService.coinsObj;
-                if (coins.length > 2) {
-                    const algoCoin = this.storageService.coinsList.find(coin => {
-                        return coinObj[coin].is.algo;
-                    });
-                    const algoData =
-                        coins.find(coin => {
-                            return coin.name === algoCoin;
-                        }) || {};
-                    if (algoCoin.length > 0 && Object.keys(algoData).length === 0) {
-                        coins.push({
-                            name: algoCoin,
-                            address: '',
-                            payoutThreshold: null,
-                            autoPayoutEnabled: false,
-                            totp: null,
-                        });
-                        this.disabledCoin = algoCoin;
-                    }
-                }
-                /*coins.forEach(coin => {
-                   //if (coin.name.split('.').length > 1) {
-                        //coin.name = coin.name.split('.')[0];
-                    //}
-                }); */
-
                 this.settingsItems = coins;
                 if (coin === '') this.currentCoin = coins[coins.length - 1].name;
                 else this.currentCoin = coin;
