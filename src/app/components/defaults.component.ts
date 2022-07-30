@@ -4,7 +4,7 @@ import { ETime } from 'enums/time';
 export class DefaultParams {
     static readonly DNSNAME = 'zulupool.com';
 
-    static readonly GUIVERSION = 'v2.16b';
+    static readonly GUIVERSION = 'v2.17b';
     static readonly GUISOURCE = 'https://github.com/';
 
     static readonly COREVERSION = 'v0.9999b';

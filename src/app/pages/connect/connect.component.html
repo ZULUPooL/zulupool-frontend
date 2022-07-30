@@ -36,7 +36,7 @@
 </nz-table>
  
 <div *ngIf="instancesReady">
-<nz-alert nzType="success" style="padding: 3px;"
+<nz-alert *ngIf="!etccoin" nzType="success" style="padding: 3px;"
     [nzMessage]="'connect.toStart.head' | translate: {mode:modeString}"
     [nzDescription]="'connect.toStart' | translate: {url:urlTarget}"
 ></nz-alert>

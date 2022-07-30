@@ -96,7 +96,7 @@
     "connect.getSupport.smart.head": "Техническая поддержка",
     "connect.getSupport.smart": "Вы можете получить поддержку в нашем канале Дискорда, или по электронной почте:{{mail}}",
     "connect.warning": "Внамание!",
-    "connect.lolexample":"lolMiner -c ETC --ethstratum ETHV1  --pool etchash.zulupoo.com:5014 --user Case_sensitive_login --pass x  --worker myWrorker --tls 0 --apiport 44444 --timeprint 1 --shortstats 10 --longstats 60 --basecolor",
+    "connect.lolexample":"lolMiner -c ETC --ethstratum ETHV1  --pool etchash.zulupool.com:5014 --user Case_sensitive_login --pass x  --worker myWrorker --tls 0 --apiport 44444 --timeprint 1 --shortstats 10 --longstats 60 --basecolor",
     "connect.nicehashYes": "Инстанс совместим с NiceHash.",
     "connect.nicehashNo": "К сожалению, инстанс не совместим с NiceHash.",
     "connect.mrrYes": "Инстанс совместим с Miningrigrentals.",

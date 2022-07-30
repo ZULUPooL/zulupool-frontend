@@ -94,7 +94,7 @@
     "connect.nicehashNo": "Unfortunately, instance is not compatible with NiceHash.",
     "connect.asicBoostYes": "AsicBoost enabled",
     "connect.asicBoostNo": "No AsicBoost",
-    "connect.lolexample":"lolMiner -c ETC --ethstratum ETHV1  --pool etchash.zulupoo.com:5014 --user Case_sensitive_login --pass x  --worker myWrorker --tls 0 --apiport 44444 --timeprint 1 --shortstats 10 --longstats 60 --basecolor",
+    "connect.lolexample":"lolMiner -c ETC --ethstratum ETHV1  --pool etchash.zulupool.com:5014 --user Case_sensitive_login --pass x  --worker myWrorker --tls 0 --apiport 44444 --timeprint 1 --shortstats 10 --longstats 60 --basecolor",
     "connect.mrrYes": "Instance is compatible with Miningrigrentals.",
     "connect.mrrNo": "Unfortunately, instance is not compatible with some Miningrigrentals rigs. You can use them at your own risk.",
     "connect.payments.head": "Payments",
