@@ -110,6 +110,7 @@ import { AgoPipe } from 'pipes/ago.pipe';
 import { MetricPrefixifyPipe } from 'pipes/metric-prefixify.pipe';
 import { SecondsPipe } from 'pipes/seconds.pipe';
 import { SuffixifyPipe } from 'pipes/suffixify.pipe';
+import { SuffixifyPrimePipe } from 'pipes/suffixify.pipe';
 import { ToFixedPipe } from 'pipes/to-fixed.pipe';
 import { AcceptedDifficultyPipe } from 'pipes/accepted-difficulty.pipe';
 import { DatePipe } from 'pipes/date.pipe';
@@ -257,6 +258,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MetricPrefixifyPipe,
         SecondsPipe,
         SuffixifyPipe,
+        SuffixifyPrimePipe,
         ToFixedPipe,
         AcceptedDifficultyPipe,
         DatePipe,

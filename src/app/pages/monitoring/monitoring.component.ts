@@ -70,6 +70,10 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
             this.settingsItems[this.storageService.currCoin].address === null
         );
     }
+    get isPrime():boolean{
+        return (this.storageService.currAlgo === 'PrimePOW')
+    }
+    
     private settingsItems: {
         [coin: string]: {
             name: string;

@@ -212,6 +212,9 @@ export class FetchPoolDataService {
                                     return b.lastShareTime - a.lastShareTime;
                                 });
                             }
+                            if (storage.info.algorithm === "PrimePOW") {
+                                if (total.power <= 1000) total.power = total.power/1000;
+                            }
                             const stats: ILiveStatCommon = {
                                 powerMultLog10: powerMultLog10,
                                 clients: total.clients,
@@ -239,6 +242,9 @@ export class FetchPoolDataService {
                     api.getPoolStats(apiRequest).subscribe(
                         ({ stats }) => {
                             ts = getTs();
+                            if (storage.info.algorithm === "PrimePOW") {
+                                if (stats[0].power <= 1000) stats[0].power = stats[0].power/1000;
+                            }
                             storeAndSend({ coin: params.coin, stats: stats[0], status: true });
                         },
                         () => {
@@ -388,13 +394,18 @@ export class FetchPoolDataService {
                 }
                 historyResponce.stats.forEach(el => {
                     //TODO
-                    if (coinObj.info.algorithm == 'ethhash') {
+                    if (coinObj.info.algorithm == 'ethhash' ) {
                         el.power = el.power / Math.pow(10, 9 - historyResponce.powerMultLog10);
                         //if (el.power *1000 <1) el.power=el.power*1000000;
 
                     }
                     if (coinObj.info.algorithm == 'scrypt') {
                         el.power = el.power / Math.pow(10, 12 - historyResponce.powerMultLog10);
+                        //if (el.power *1000 <1) el.power=el.power*1000000;
+
+                    }
+                    if (coinObj.info.algorithm == 'PrimePOW') {
+                        el.power = el.power / Math.pow(10, 0 - historyResponce.powerMultLog10);
                         //if (el.power *1000 <1) el.power=el.power*1000000;
 
                     }

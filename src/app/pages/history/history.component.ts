@@ -24,6 +24,11 @@ export class HistoryComponent implements OnInit {
     readonly EAppRoutes = EAppRoutes;
     readonly ESuffix = ESuffix;
 
+    get isPrime():boolean{
+        return (this.storageService.currAlgo === 'PrimePOW')
+    }
+
+
     coins: TCoinName[];
     currentCoin: TCoinName;
 

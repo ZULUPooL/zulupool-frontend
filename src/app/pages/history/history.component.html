@@ -17,7 +17,7 @@
                 [nzTemplateMode]="true" 
                 [nzPageSize]="30"
                 nzShowSizeChanger
-                [nzPageSizeOptions] ="[30,50,100,250,500]"     
+                [nzPageSizeOptions] ="[30,50,100,250,500,1000]"     
                 [nzPageIndex]="1"
                 nzPaginationPosition='both'
                 nzShowPagination
@@ -35,12 +35,20 @@
                         <td style="text-align: center;">
                             {{ item.shareRate | suffixify: ESuffix.ShareRate }}
                         </td>
-                        <td style="text-align: center;">
+                        <td *ngIf="!isPrime"  style="text-align: center;">
                             {{
                                 item.power
                                     | metricPrefixify: powerMultLog10
                                     | toFixed
                                     | suffixify: ESuffix.Power
+                            }}
+                        </td>
+                        <td *ngIf="isPrime"  style="text-align: center;">
+                            {{
+                                item.power
+                                    | metricPrefixify: powerMultLog10
+                                    | toFixed
+                                    | suffixify: ESuffix.PrimePower
                             }}
                         </td>
                         <td style="text-align: center;">
@@ -77,12 +85,20 @@
                 <tbody *ngIf="statsHistory">
                     <tr *ngFor="let item of mrowSelectionTable.data">
                         <td style="text-align: center;">{{ item.time | seconds | date: "shortDate" | async }}</td>
-                        <td style="text-align: center;">
+                        <td  *ngIf="!isPrime" style="text-align: center;">
                             {{
                                 item.power
                                     | metricPrefixify: powerMultLog10
                                     | toFixed
                                     | suffixify: ESuffix.Power
+                            }}
+                        </td>
+                        <td  *ngIf="isPrime" style="text-align: center;">
+                            {{
+                                item.power
+                                    | metricPrefixify: powerMultLog10
+                                    | toFixed
+                                    | suffixify: ESuffix.PrimePower
                             }}
                         </td>
                         <td style="text-align: center;">

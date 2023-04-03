@@ -24,6 +24,10 @@ export class HistoryPoolComponent implements OnInit {
     readonly EAppRoutes = EAppRoutes;
     readonly ESuffix = ESuffix;
 
+    get isPrime():boolean{
+        return (this.storageService.currAlgo === 'PrimePOW')
+    }
+
     coins: TCoinName[];
     currentCoin: TCoinName;
 
@@ -101,7 +105,8 @@ export class HistoryPoolComponent implements OnInit {
         if (this.storageService.coinsObj[coin].is.nameSplitted) coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
         //this.storageService.currAlgo=this.storageService.coinsObj[coin].info.algorithm;
         const groupByInterval = ETime.Day;
-        const timeFrom = (new Date().setHours(0, 0, 0, 0).valueOf() / 1000 - 300 * 86400) as any;
+//        const timeFrom = (new Date().setHours(0, 0, 0, 0).valueOf() / 1000 - 300 * 86400) as any;
+        const timeFrom = 1606424400;
         this.appService.user.subscribe(user => {
             this.backendQueryApiService
                 .getPoolStatsHistory({

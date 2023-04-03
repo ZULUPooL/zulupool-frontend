@@ -40,6 +40,10 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         return this.isBlocksLoading;
     }
 
+    get isPrime():boolean{
+        return (this.storageService.currAlgo === 'PrimePOW')
+    }
+
     isLiveLoading: boolean = true;
     liveStats: ILiveStatCommon;
     mainChartCoin: string = '';

@@ -24,12 +24,20 @@
                 <tbody>
                     <tr>
                         <!--<td style="text-align: center;">{{ activeCoinName }}</td>-->
-                        <td style="text-align: center;">
+                        <td *ngIf="!isPrime" style="text-align: center;">
                             {{
                                 liveStats?.power
                                     | metricPrefixify: liveStats?.powerMultLog10
                                     | toFixed
                                     | suffixify: ESuffix.Power
+                            }}
+                        </td>
+                        <td *ngIf="isPrime" style="text-align: center;">
+                            {{
+                                liveStats?.power
+                                    | metricPrefixify: liveStats?.powerMultLog10
+                                    | toFixed
+                                    | suffixify: ESuffix.PrimePower
                             }}
                         </td>
                         <td style="text-align: center;">{{ liveStats?.clients }}</td>

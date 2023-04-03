@@ -1,10 +1,10 @@
-import { IZoomList, IZoom, IExplorerLink, IHistoryItem2, IZoomSettings, ILiveStatWorker, IFetchResponce, ILocalTimeDelta, ILiveStatCommon } from 'interfaces/common';
+import { IZoomList, IZoom, IExplorerLink, IBlockExplorerProviders, IHistoryItem2, IZoomSettings, ILiveStatWorker, IFetchResponce, ILocalTimeDelta, ILiveStatCommon } from 'interfaces/common';
 import { ETime } from 'enums/time';
 
 export class DefaultParams {
     static readonly DNSNAME = 'zulupool.com';
 
-    static readonly GUIVERSION = 'v2.17b';
+    static readonly GUIVERSION = 'v2.172b';
     static readonly GUISOURCE = 'https://github.com/';
 
     static readonly COREVERSION = 'v0.9999b';
@@ -32,7 +32,7 @@ export class DefaultParams {
     static readonly PPDALN = 'https://beta.';
     static readonly PPDAALGO = 'sha256d';
     static readonly STRATUM = 'sha256.';
-    static readonly STRATUMS = { HTR: 'sha256.', DOGE: 'scrypt.', ZEC: 'equihash.', ETH: 'etchash.', ETC: 'etchash.' };
+    static readonly STRATUMS = { BTC: 'sha256.', HTR: 'sha256.', DOGE: 'scrypt.', ZEC: 'equihash.', ETH: 'etchash.', ETC: 'etchash.' };
     static readonly FASTJOBCOINS = ['DGB.sha256', 'DGB.scrypt'];
     static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'XEC', 'BSV', 'DGB', 'XPM', 'FCH', 'HTR', 'DGB.sha256', 'DGB.scrypt', 'LTC', 'DOGE', 'XPM', 'ZEC', 'ZEN', 'ARRR', 'KMD', 'ETC', 'ETH' ];
     static readonly MAINCOINS = ["BTC", "LTC", "ZEC", "XPM", "ETH", "ETC"];
@@ -140,6 +140,83 @@ export class DefaultParams {
         miners: [],
         workers: 0,
     };
+    static readonly EXPLORERS: IBlockExplorerProviders = {
+        'bitcoinabc': {
+            link:'explorer.bitcoinabc.org/',
+            txSuffix:'tx/',
+            blockSuffix:'block/',
+            addressSuffix:'address/',
+            coinSuffix: false,
+            coinPreffix: false,
+            proto: 'https://'
+            
+        },
+        'whatsonchain': {
+            link:'whatsonchain.com/',
+            txSuffix:'tx/',
+            blockSuffix:'block/',
+            addressSuffix:'address/',
+            coinSuffix: false,
+            coinPreffix: false,
+            proto: 'https://'
+        },
+        'cryptoid': {
+            link:'chainz.cryptoid.info/',
+            txSuffix:'tx.dws?',
+            blockSuffix:'block.dws?',
+            addressSuffix:'address.dws?',
+            coinSuffix: true,
+            coinPreffix: false,
+            proto: 'https://'
+        },
+        'viawallet': {
+            link:'explorer.viawallet.com/',
+            txSuffix:'tx/',
+            blockSuffix:'block/',
+            addressSuffix:'address/',
+            coinSuffix: true,
+            coinPreffix: false,
+            proto: 'https://'
+        },
+        'hathor': {
+            link:'explorer.hathor.network/',
+            txSuffix:'transaction/',
+            blockSuffix:'transaction/',
+            addressSuffix:'address/',
+            coinSuffix: false,
+            coinPreffix: false,
+            proto: 'https://'
+        },
+        'pirate': {
+            link:'explorer.pirate.black/',
+            txSuffix:'tx/',
+            blockSuffix:'block/',
+            addressSuffix:'address/',
+            coinSuffix: false,
+            coinPreffix: false,
+            proto: 'https://'
+        },
+        'tokenview': {
+            link:'tokenview.com/',
+            txSuffix:'tx/',
+            blockSuffix:'block/',
+            addressSuffix:'address/',
+            coinSuffix: false,
+            coinPreffix: true,
+            proto: 'https://'
+        },
+        'blockscout': {
+            link:'tokenview.com/',
+            txSuffix:'mainnet/tx/0x',
+            blockSuffix:'mainnet/block/0x',
+            addressSuffix:'mainnet/address/0x',
+            coinSuffix: true,
+            coinPreffix: false,
+            proto: 'https://'
+        },
+
+
+    }
     static readonly BLOCKSLINKS: IExplorerLink = {
         BCHABC: 'https://explorer.bitcoinabc.org/block/',
         XEC: 'https://explorer.bitcoinabc.org/block/',
@@ -148,19 +225,20 @@ export class DefaultParams {
         FCH: 'https://explorer.viawallet.com/fch/block/',
         HTR: 'https://explorer.hathor.network/transaction/',
         ARRR: 'https://explorer.pirate.black/block/',
-        DGB: 'https://dgb.tokenview.com/en/block/',
-        'DGB.sha256': 'https://dgb.tokenview.com/en/block/',
-        'DGB.scrypt': 'https://dgb.tokenview.com/en/block/',
-        BTC: 'https://btc.tokenview.com/en/block/',
-        BCH: 'https://bch.tokenview.com/en/block/',
-        BCHN: 'https://bch.tokenview.com/en/block/',
-        LTC: 'https://ltc.tokenview.com/en/block/',
+        DGB: 'https://chainz.cryptoid.info/dgb/block.dws?',
+        'DGB.sha256': 'https://chainz.cryptoid.info/dgb/block.dws?',
+        'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/block.dws?',
+        BTC: 'https://blockchair.com/bitcoin/block/',
+        BCH: 'https://blockchair.com/bitcoin-cash/block/',
+        BCHN: 'https://blockchair.com/bitcoin-cash/block/',
+        LTC: 'https://blockchair.com/litecoin/block/',
         KMD: 'https://kmd.tokenview.com/en/block/',
         ETH: 'https://eth.tokenview.com/en/block/0x',
-        ETC: 'https://etc.tokenview.com/en/block/0x',
+        //ETC: 'https://etc.tokenview.com/en/block/0x',
+        ETC: 'https://blockscout.com/etc/mainnet/block/0x',
         ZEC: 'https://zec.tokenview.com/en/block/',
         ZEN: 'https://zen.tokenview.com/en/block/',
-        DOGE: 'https://doge.tokenview.com/en/block/',
+        DOGE: 'https://blockchair.com/dogecoin/block/',
 
 
     };
@@ -172,19 +250,19 @@ export class DefaultParams {
         FCH: 'https://ifblock.io/fch/tx/',
         HTR: 'https://explorer.hathor.network/transaction/',
         ARRR: 'https://explorer.pirate.black/tx/',
-        DGB: 'https://dgb.tokenview.com/en/tx/',
-        'DGB.sha256': 'https://dgb.tokenview.com/en/tx/',
-        'DGB.scrypt': 'https://dgb.tokenview.com/en/tx/',
-        BTC: 'https://btc.tokenview.com/en/tx/',
-        BCH: 'https://bch.tokenview.com/en/tx/',
-        BCHN: 'https://bch.tokenview.com/en/tx/',
-        LTC: 'https://ltc.tokenview.com/en/tx/',
+        DGB: 'https://chainz.cryptoid.info/dgb/tx.dws?',
+        'DGB.sha256': 'https://chainz.cryptoid.info/dgb/tx.dws?',
+        'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/tx.dws?',
+        BTC: 'https://blockchair.com/bitcoin/transaction/',
+        BCH: 'https://blockchair.com/bitcoin-cash/transaction/',
+        BCHN: 'https://blockchair.com/bitcoin-cash/transaction/',
+        LTC: 'https://blockchair.com/litecoin/transaction/',
         KMD: 'https://kmd.tokenview.com/en/tx/',
         ETH: 'https://eth.tokenview.com/en/tx/0x',
-        ETC: 'https://etc.tokenview.com/en/tx/0x',
+        ETC: 'https://blockscout.com/etc/mainnet/tx/0x',
         ZEC: 'https://zec.tokenview.com/en/tx/',
         ZEN: 'https://zen.tokenview.com/en/tx/',
-        DOGE: 'https://doge.tokenview.com/en/tx/',
+        DOGE: 'https://blockchair.com/dogecoin/transaction/',
 
     };
     static readonly ADDRLINKS: IExplorerLink = {
@@ -194,12 +272,12 @@ export class DefaultParams {
         FCH: 'https://ifblock.io/fch/address/',
         HTR: 'https://explorer.hathor.network/address/',
         ARRR: 'https://explorer.pirate.black/address/',
-        DGB: 'https://dgb.tokenview.com/en/address/',
-        'DGB.sha256': 'https://dgb.tokenview.com/en/address/',
-        'DGB.scrypt': 'https://dgb.tokenview.com/en/address/',
-        BTC: 'https://btc.tokenview.com/en/address/',
-        BCH: 'https://bch.tokenview.com/en/address/',
-        BCHN: 'https://bch.tokenview.com/en/address/',
+        DGB: 'https://chainz.cryptoid.info/dgb/address.dws?',
+        'DGB.sha256': 'https://chainz.cryptoid.info/dgb/address.dws?',
+        'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/address.dws?',
+        BTC: 'https://blockchair.com/bitcoin/address/',
+        BCH: 'https://blockchair.com/bitcoin-cash/address/',
+        BCHN: 'https://blockchair.com/bitcoin-cash/address/',
         BSV: 'https://bsv.tokenview.com/en/address/',
         LTC: 'https://ltc.tokenview.com/en/address/',
         KMD: 'https://kmd.tokenview.com/en/address/',

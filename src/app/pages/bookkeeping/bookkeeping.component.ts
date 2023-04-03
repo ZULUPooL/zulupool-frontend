@@ -63,6 +63,10 @@ export class BookkeepingComponent implements OnInit {
         return this.storageService.targetUser;
     }
 
+    get isPrime():boolean{
+        return (this.storageService.currAlgo === 'PrimePOW')
+    }
+
     onExpandChange(login: string, checked: boolean): void {
         if (login !== this.targetLogin) this.storageService.targetUser = login;
         this.delSet();

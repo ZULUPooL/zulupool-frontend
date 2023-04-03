@@ -15,6 +15,18 @@ export interface IZoom {
 export interface IZoomList {
     [type: string]: string[];
 }
+export interface IBlockExplorerProviders {
+    [provider: string]: {
+        link: string;
+        txSuffix: string;
+        blockSuffix: string;
+        addressSuffix:string;
+        coinSuffix: boolean;
+        coinPreffix: boolean;
+        proto: string;
+    };
+}
+
 export interface IExplorerLink {
     [coin: string]: string;
 }

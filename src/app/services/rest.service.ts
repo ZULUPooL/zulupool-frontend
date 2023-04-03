@@ -40,10 +40,15 @@ export class RestService {
     ) {}
 
     post<T>(url: string, params: any = {}): Observable<T> {
-        const options = { headers: this.headers };
         const tmpUrl = url;
+        //debugger;
+        let options = { headers: this.headers };
+        if (tmpUrl === '/userEnumerateAll'){
+            options.headers={accept:'text/html'};
+            //options.headers.Content-Type='text/html'
+
+        }
         params = { id: this.storageService.sessionId, sessionId: this.storageService.sessionId, ...params };
-//debugger;
         if (not(params.id) || DefaultParams.SESSIONIDIGNORE.includes(url)) {
             delete params.id;
             //delete params.sessionId;
@@ -67,6 +72,8 @@ export class RestService {
                 if (tmpUrl === '/backendQueryProfitSwitchCoeff' && Array.isArray(response)) {
                     response['coins'] = response;
                     response['status'] = 'ok';
+//} else if (tmpUrl === '/userEnumerateAll'){
+                    //debugger;
                 } else if (status === unknownId){
                     this.storageService.sessionId = null;
                     this.storageService.usersList = null;

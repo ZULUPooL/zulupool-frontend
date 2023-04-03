@@ -32,15 +32,23 @@
                                     | suffixify: ESuffix.ShareRate
                             }}
                         </td>
-                        <td style="padding: 1px 4px 0px; text-align: center;">
+                        <td *ngIf="!isPrime" style="text-align: center;">
                             {{
                                 liveStats?.power
-                                    | metricPrefixify
-                                        : liveStats?.powerMultLog10
+                                    | metricPrefixify: liveStats?.powerMultLog10
                                     | toFixed
                                     | suffixify: ESuffix.Power
                             }}
                         </td>
+                        <td *ngIf="isPrime" style="text-align: center;">
+                            {{
+                                liveStats?.power
+                                    | metricPrefixify: liveStats?.powerMultLog10
+                                    | toFixed
+                                    | suffixify: ESuffix.PrimePower
+                            }}
+                        </td>
+
                     </tr>
                 </tbody>
             </nz-table>
@@ -74,13 +82,22 @@
                                 | suffixify: ESuffix.ShareRate
                         }}
                     </td>
-                    <td style="padding: 1px 4px 0px; text-align: center;">
+                    <td *ngIf="!isPrime" style="padding: 1px 4px 0px; text-align: center;">
                         {{
                             liveStats?.power
                                 | metricPrefixify
                                     : liveStats?.powerMultLog10
                                 | toFixed
                                 | suffixify: ESuffix.Power
+                        }}
+                    </td>
+                    <td *ngIf="isPrime" style="padding: 1px 4px 0px; text-align: center;">
+                        {{
+                            liveStats?.power
+                                | metricPrefixify
+                                    : liveStats?.powerMultLog10
+                                | toFixed
+                                | suffixify: ESuffix.PrimePower
                         }}
                     </td>
                 </tr>
@@ -198,12 +215,20 @@
             <td>
                 {{ item.shareRate | suffixify: ESuffix.ShareRate }}
             </td>
-            <td>
+            <td *ngIf="!isPrime">
                 {{
                     item.power
                         | metricPrefixify: liveStats?.powerMultLog10
                         | toFixed
                         | suffixify: ESuffix.Power
+                }}
+            </td>
+            <td *ngIf="isPrime">
+                {{
+                    item.power
+                        | metricPrefixify: liveStats?.powerMultLog10
+                        | toFixed
+                        | suffixify: ESuffix.PrimePower
                 }}
             </td>
             <td>{{ item.lastShareTime | ago | async }}</td>
@@ -247,7 +272,7 @@
 
             <td>
                 {{ item.name }}</td>
-            <td>
+            <td *ngIf="!isPrime">
                 {{
                     item.power
                         | metricPrefixify: liveStats?.powerMultLog10
@@ -255,6 +280,15 @@
                         | suffixify: ESuffix.Power
                 }}
             </td>
+            <td *ngIf="isPrime">
+                {{
+                    item.power
+                        | metricPrefixify: liveStats?.powerMultLog10
+                        | toFixed
+                        | suffixify: ESuffix.PrimePower
+                }}
+            </td>
+
             <td>{{ item.lastShareTime | ago | async }}</td>
         </tr>
     </tbody>
