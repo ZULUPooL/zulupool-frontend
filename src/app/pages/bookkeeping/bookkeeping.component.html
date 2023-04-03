@@ -57,15 +57,10 @@
                             <td style="text-align: center;" (click)=onFeePlanClick(user?.feePlanId)> {{ user.feePlanId
                                 }}
                             </td>
-                            <td *ngIf="!isPrime" style="text-align: center;"> {{ user.power
+                            <td style="text-align: center;"> {{ user.power
                                 | metricPrefixify: powerMultLog10
                                 | toFixed
-                                | suffixify: ESuffix.Power
-                                }} / {{ user.shareRate}} </td>
-                            <td *ngIf="isPrime" style="text-align: center;"> {{ user.power
-                                | metricPrefixify: powerMultLog10
-                                | toFixed
-                                | suffixify: ESuffix.PrimePower
+                                | suffixify: isPrime? ESuffix.PrimePower : ESuffix.Power
                                 }} / {{ user.shareRate}} </td>
                             <td style="text-align: center;">
                                 <div *ngIf="user.longAgo">
@@ -112,15 +107,10 @@
                     <tr *ngFor="let user of mrowSelectionTable.data">
                         <td style="text-align: center;"> {{ user.login }}</td>
                         <td style="text-align: center;"> {{ user.workers }} </td>
-                        <td  *ngIf="!isPrime" style="text-align: center;"> {{ user.power
+                        <td style="text-align: center;"> {{ user.power
                             | metricPrefixify: powerMultLog10
                             | toFixed
-                            | suffixify: ESuffix.Power
-                            }}</td>
-                        <td  *ngIf="isPrime" style="text-align: center;"> {{ user.power
-                            | metricPrefixify: powerMultLog10
-                            | toFixed
-                            | suffixify: ESuffix.PrimePower
+                            | suffixify: isPrime? ESuffix.PrimePower : ESuffix.Power
                             }}</td>
                         <td style="text-align: center;">
                             <div *ngIf="user.longAgo">
