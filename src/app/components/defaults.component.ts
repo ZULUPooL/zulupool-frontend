@@ -4,14 +4,14 @@ import { ETime } from 'enums/time';
 export class DefaultParams {
     static readonly DNSNAME = 'zulupool.com';
 
-    static readonly GUIVERSION = 'v2.173b';
-    static readonly GUISOURCE = 'https://github.com/';
+    static readonly GUIVERSION = 'v2.179b';
+    static readonly GUISOURCE = 'https://github.com/ZULUPooL/zulupool-frontend';
 
     static readonly COREVERSION = 'v0.9999b';
-    static readonly CORESOURCE = 'https://github.com/';
+    static readonly CORESOURCE = 'https://github.com/eXtremal-ik7/poolcore';
 
-    static readonly SUPPORTMAIL = 'pool@some_mail';
-    static readonly DISCORDSERVER = 'https://discord.gg/some_code';
+    static readonly SUPPORTMAIL = 'pool@jsoncrypto.com';
+    static readonly DISCORDSERVER = 'https://discord.gg/ugsST2BptA';
 
     static readonly ADMINNAME: string = 'admin';
     static readonly GAZERNAME: string = 'observer';
@@ -32,9 +32,16 @@ export class DefaultParams {
     static readonly PPDALN = 'https://beta.';
     static readonly PPDAALGO = 'sha256d';
     static readonly STRATUM = 'sha256.';
-    static readonly STRATUMS = { BTC: 'sha256.', HTR: 'sha256.', DOGE: 'scrypt.', ZEC: 'equihash.', ETH: 'etchash.', ETC: 'etchash.' };
+    static readonly STRATUMS = { BTC: 'sha256.', HTR: 'sha256.', DOGE: 'scrypt.', ZEC: 'equihash.', ETH: 'etchash.', ETC: 'etchash.',
+    'DGB.qubit':'startum.',
+    'DGB.skein':'startum.',
+    'DGB.odo':'startum.'
+};
     static readonly FASTJOBCOINS = ['DGB.sha256', 'DGB.scrypt'];
-    static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'XEC', 'BSV', 'DGB', 'XPM', 'FCH', 'HTR', 'DGB.sha256', 'DGB.scrypt', 'LTC', 'DOGE', 'XPM', 'ZEC', 'ZEN', 'ARRR', 'KMD', 'ETC', 'ETH' ];
+    static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'XEC', 'BSV', 'DGB', 'XPM', 'FCH', 'HTR', 
+    'DGB.sha256', 'DGB.scrypt', 'DGB.skein', 'DGB.odo', 'DGB.qubit',
+    'DGB.sha256.tetsnet', 'DGB.scrypt.tetsnet', 'DGB.skein.tetsnet', 'DGB.odo.tetsnet', 'DGB.qubit.tetsnet',
+    'LTC', 'DOGE', 'XPM', 'ZEC', 'ZEN', 'ARRR', 'KMD', 'ETC', 'ETH' ];
     static readonly MAINCOINS = ["BTC", "LTC", "ZEC", "XPM", "ETH", "ETC"];
     static readonly PPDALNREWARD = '96.25%';
     static readonly PPDALNREWARDETC = '99%';
@@ -48,6 +55,14 @@ export class DefaultParams {
         XPM: [' P2PKH:AZ6QziuQaHDZkwWr125jSJcs23s7PjgzRb'],
         'DGB.sha256': [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9'],
         'DGB.scrypt': [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9'],
+        'DGB.skein': [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9'],
+        'DGB.qubit': [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9'],
+        'DGB.odo': [' P2PKH:DSMvc9BbM8vtrjPSpMaXmQVXWZsgA92Wxc', ' P2SH:SRsJzf5XL19LDff1paPzRB6p6Va6NmW8Pc', ' Bech32:dgb1q5d0dypakqz326jhuqzsspdkys0dxs5ztckrtl9'],
+        'DGB.sha256.tetsnet': [' P2PKH:dgbt1qsvna689znc684qgkd0a64rm4avv20x2ktqy7gn'],
+        'DGB.scrypt.tetsnet': [' P2PKH:dgbt1qsvna689znc684qgkd0a64rm4avv20x2ktqy7gn'],
+        'DGB.odo.tetsnet': [' P2PKH:dgbt1qsvna689znc684qgkd0a64rm4avv20x2ktqy7gn'],
+        'DGB.skein.tetsnet': [' P2PKH:dgbt1qsvna689znc684qgkd0a64rm4avv20x2ktqy7gn'],
+        'DGB.qubit.tetsnet': [' P2PKH:dgbt1qsvna689znc684qgkd0a64rm4avv20x2ktqy7gn'],
         FCH: [' P2PKH:FV4WF4rRUvqD3ekQudccGGCFHqTTHnpMhu'],
         HTR: [' P2PKH:HTjxTEAUSwZf34nK4YuicfDPocT7JsQwJi'],
         LTC: [' P2PKH:LcgdQuT7TPbo5X2qSfTi4Kbvov3p1uzeAK', ' P2SH:MKYXKMckKUgYX1tTPuEjLtGQ6jiBXhpf39'],
@@ -68,6 +83,14 @@ export class DefaultParams {
         XPM: 10,
         'DGB.sha256': 10,
         'DGB.scrypt': 10,
+        'DGB.odo': 10,
+        'DGB.skein': 10,
+        'DGB.qubit': 10,
+        'DGB.sha256.testnet': 10,
+        'DGB.scrypt.testnet': 10,
+        'DGB.odo.testnet': 10,
+        'DGB.skein.testnet': 10,
+        'DGB.qubit.testnet': 10,
         FCH: 1,
         HTR: 1,
         LTC: 0.01,
@@ -228,6 +251,14 @@ export class DefaultParams {
         DGB: 'https://chainz.cryptoid.info/dgb/block.dws?',
         'DGB.sha256': 'https://chainz.cryptoid.info/dgb/block.dws?',
         'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/block.dws?',
+        'DGB.odo': 'https://chainz.cryptoid.info/dgb/block.dws?',
+        'DGB.skein': 'https://chainz.cryptoid.info/dgb/block.dws?',
+        'DGB.qubit': 'https://chainz.cryptoid.info/dgb/block.dws?',
+        'DGB.sha256.testnet': 'https://testnetexplorer.digibyteservers.io/block/',
+        'DGB.scrypt.testnet': 'https://testnetexplorer.digibyteservers.io/block/',
+        'DGB.odo.testnet': 'https://testnetexplorer.digibyteservers.io/block/',
+        'DGB.skein.testnet': 'https://testnetexplorer.digibyteservers.io/block/',
+        'DGB.qubit.testnet': 'https://testnetexplorer.digibyteservers.io/block/',
         BTC: 'https://blockchair.com/bitcoin/block/',
         BCH: 'https://blockchair.com/bitcoin-cash/block/',
         BCHN: 'https://blockchair.com/bitcoin-cash/block/',
@@ -253,6 +284,14 @@ export class DefaultParams {
         DGB: 'https://chainz.cryptoid.info/dgb/tx.dws?',
         'DGB.sha256': 'https://chainz.cryptoid.info/dgb/tx.dws?',
         'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/tx.dws?',
+        'DGB.odo': 'https://chainz.cryptoid.info/dgb/tx.dws?',
+        'DGB.skein': 'https://chainz.cryptoid.info/dgb/tx.dws?',
+        'DGB.qubit': 'https://chainz.cryptoid.info/dgb/tx.dws?',
+        'DGB.sha256.testnet': 'https://testnetexplorer.digibyteservers.io/tx/',
+        'DGB.scrypt.testnet': 'https://testnetexplorer.digibyteservers.io/tx/',
+        'DGB.odo.testnet': 'https://testnetexplorer.digibyteservers.io/tx/',
+        'DGB.skein.testnet': 'https://testnetexplorer.digibyteservers.io/tx/',
+        'DGB.qubit.testnet': 'https://testnetexplorer.digibyteservers.io/tx/',
         BTC: 'https://blockchair.com/bitcoin/transaction/',
         BCH: 'https://blockchair.com/bitcoin-cash/transaction/',
         BCHN: 'https://blockchair.com/bitcoin-cash/transaction/',
@@ -275,6 +314,14 @@ export class DefaultParams {
         DGB: 'https://chainz.cryptoid.info/dgb/address.dws?',
         'DGB.sha256': 'https://chainz.cryptoid.info/dgb/address.dws?',
         'DGB.scrypt': 'https://chainz.cryptoid.info/dgb/address.dws?',
+        'DGB.odo': 'https://chainz.cryptoid.info/dgb/address.dws?',
+        'DGB.skein': 'https://chainz.cryptoid.info/dgb/address.dws?',
+        'DGB.qubit': 'https://chainz.cryptoid.info/dgb/address.dws?',
+        'DGB.sha256.testnet': 'https://testnetexplorer.digibyteservers.io/address/',
+        'DGB.scrypt.testnet': 'https://testnetexplorer.digibyteservers.io/address/',
+        'DGB.odo.testnet': 'https://testnetexplorer.digibyteservers.io/address/',
+        'DGB.skein.testnet': 'https://testnetexplorer.digibyteservers.io/address/',
+        'DGB.qubit.testnet': 'https://testnetexplorer.digibyteservers.io/address/',
         BTC: 'https://blockchair.com/bitcoin/address/',
         BCH: 'https://blockchair.com/bitcoin-cash/address/',
         BCHN: 'https://blockchair.com/bitcoin-cash/address/',

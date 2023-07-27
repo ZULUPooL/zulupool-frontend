@@ -2,41 +2,31 @@
 
 ## Installation
 
-### Установить NodeJS 16
+### Install NodeJS 16
 https://github.com/nodesource/distributions/blob/master/README.md#deb
 
-### Получить исходный код
 
 ```bash
-git clone https://github.com/EternityTula/zulupool-frontend
+git clone https://github.com/ZULUPooL/zulupool-frontend
 cd zulupool-frontend
-```
-
-### Загрузка зависимостей
-
-```bash
 npm i
 ```
+### Compile
 
-### Сборка
-
-задать адрес сайта в параметре --base-href в package.json.
-
-Для сборки
+check --base-href in package.json.
 
 ```bash
-npm run prod
+npm run beta
 ```
 
-### Скопировать скомпилированный код
+### Copy compiled code 
 
 ```bash
 cp -r dist/zulupool-frontend/* target_path
 ```
 
-### Отладка
+### Debug
 
 ```bash
 npm run start
-
 ```

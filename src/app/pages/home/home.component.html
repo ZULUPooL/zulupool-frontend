@@ -3,6 +3,12 @@
         {{ "home.signUpButton" | translate }}
     </a>
 </div> -->
+<!--
+<nz-alert *ngIf="true" style="font-weight: bold; padding: 3px;"  nzType="warning" nzShowIcon
+nzMessage="DGB (Digibyte) testnet!"
+nzDescription="This is the Digibyte v8.22.0-RC2 testnet! For sha256 and scrypt this is merged with mainnet Hathor and Dogecoin as well."
+></nz-alert>
+<a nzType="link" href="https://beta.zulupool.com/">Mainnet coins pool here</a> -->
 
 <div class="main">
     <div class="coins-block">
@@ -60,6 +66,36 @@
 
     <app-chart class="coin-chart" [mainCoinForChart]="mainChartCoin"></app-chart>
 </div>
+
+<div *ngIf="!haveBlocksData">
+    <thead style="text-align: center;">
+        <span style="padding: 2px; text-align: center; font-size: 22px; font-weight: bold;">
+            {{ "welcome.head" | translate }}
+        </span>
+    </thead>
+<tbody>
+    <br>
+
+    <div style="font-size: 14px;">
+        {{ "welcome.text1" | translate }}
+    <br>
+        {{ "welcome.text2" | translate }}
+        <br>
+        {{ "welcome.text3" | translate }}
+        <br>
+        {{ "welcome.text4" | translate }}
+        <br>
+        {{ "welcome.text5" | translate }}
+        <br>
+        <br>
+        {{ "welcome.text6" | translate }}
+
+    </div>
+
+</tbody>
+
+</div>
+
 
 <nz-table *ngIf="haveBlocksData" class="found-blocks-table" nzBordered
     [nzTemplateMode]="true" [nzLoading]="isLoadingBlocks">

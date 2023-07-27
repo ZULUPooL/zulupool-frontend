@@ -2,8 +2,10 @@
     "name": "zulupool-frontend",
     "version": "1.0.0",
     "scripts": {
-        "build": "ng build --prod --build-optimizer --configuration=production,themes",
-        "prod": "ng build --prod --build-optimizer --configuration=production,themes --base-href http://www.pool.com",
+        "build": "ng build --prod --build-optimizer --configuration=production,themes ",
+        "beta": "ng build --prod --build-optimizer --configuration=production,themes --base-href https://beta.zulupool.com",
+        "dev": "ng build --prod --build-optimizer --configuration=production,themes --base-href https://dev-gui.zulupool.com",
+        "dgb": "ng build --prod --build-optimizer --configuration=production,themes --base-href https://dgb-t.zulupool.com",
         "start": "ng serve --port=4201 --configuration=production,themes",
         "test": "ng test"
     },

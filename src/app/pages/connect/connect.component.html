@@ -1,8 +1,8 @@
-<!--
-    <div class="coin-select-block">
-    <app-coin-switcher (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
+<div class="coin-select-block">
+    <app-coin-switcher [needAlgorithmButton]=false (onChange)="onCurrentCoinChange($event)"></app-coin-switcher>
 </div>
--->
+
+
 <nz-alert *ngIf="isBeta" style="font-weight: bold; padding: 3px;"  nzType="warning" nzShowIcon
     [nzMessage]="'connect.beta.head'| translate"
     [nzDescription]="'connect.beta'| translate"
@@ -38,7 +38,7 @@
 <div *ngIf="instancesReady">
 <nz-alert *ngIf="!etccoin" nzType="success" style="padding: 3px;"
     [nzMessage]="'connect.toStart.head' | translate: {mode:modeString}"
-    [nzDescription]="'connect.toStart' | translate: {url:urlTarget}"
+    [nzDescription]="'connect.toStart' | translate: {url:urlTarget,user:userName}"
 ></nz-alert>
 
 <nz-alert *ngIf="fastJobWarning" style="padding: 3px;" nzType="warning" nzShowIcon

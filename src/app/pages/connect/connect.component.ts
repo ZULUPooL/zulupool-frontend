@@ -9,6 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { BackendQueryApiService } from 'api/backend-query.api';
 import { FetchPoolDataService } from 'services/fetchdata.service';
 import { DefaultParams } from 'components/defaults.component';
+import { TCoinName } from 'interfaces/coin';
+import { UserApiService } from 'api/user.api';
 
 @Component({
     selector: 'app-connect',
@@ -16,11 +18,12 @@ import { DefaultParams } from 'components/defaults.component';
     styleUrls: ['./connect.component.less'],
 })
 export class ConnectComponent implements OnInit {
+    currentCoin: TCoinName;
     instances: IInstanceItem[];
     instanceItem: IInstanceItem;
     instancesReady: boolean;
     //ppdaMode: boolean;
-    //userName: string;
+    userName: string;
     instancesKeys: (keyof IInstanceItem)[] = ['protocol', 'type', 'port', 'backends', 'shareDiff'];
     //modeString: boolean;
 
@@ -49,6 +52,7 @@ export class ConnectComponent implements OnInit {
         private storageService: StorageService,
         private translateService: TranslateService,
         private fetchPoolDataService: FetchPoolDataService,
+        private userApiService: UserApiService,
     ) {}
 
     ngOnInit(): void {
@@ -73,17 +77,23 @@ export class ConnectComponent implements OnInit {
 
 
     onCurrentCoinChange(coin: string): void {
-
+        this.currentCoin = coin;
+        this.getInstances();
         //const resp = Object.entries(this.coinsData).find(coin => {
         //    return (coin[1].is.chartMain && coin[1].info.algorithm === this.algo) || coin[1].is.chartMain;
         //});
         //if (resp.length > 0) return resp[1];
+    }
 
-
+    private getCredentials(): void {
+        this.userApiService.userGetCredentials().subscribe(credent => {
+            this.userName=credent.login;
+        });
     }
 
     private setupStart() {
         this.emailAddr = DefaultParams.SUPPORTMAIL;
+        this.getCredentials();
         this.fastJobWarning = false;
         this.isBeta = true;
         this.isPPDA = false;
@@ -113,7 +123,7 @@ export class ConnectComponent implements OnInit {
         this.port = item.port;
         this.urlTarget = DefaultParams.STRATUMS[item.type] + DefaultParams.DNSNAME + ':' + item.port;
         this.algoIsAsicBoost = item.type === 'HTR' || item.type === 'BTC';
-        this.canNiceHash = item.type != 'ETH';
+        this.canNiceHash = item.type != 'ETH' && item.type != 'DGB.qubit' && item.type != 'DGB.skein' && item.type != 'DGB.odo';
         this.etccoin= item.type === 'ETH';
         this.fastJobWarning = false;
         this.fastCoinName = '';
@@ -152,6 +162,11 @@ export class ConnectComponent implements OnInit {
                 this.instances = [this.instances[0]];
             } else */ this.instances = instances;
 
+            const filteredInstances = this.instances.filter((instance) => {
+                return instance.backends.includes(this.currentCoin);
+              });
+              this.instances = filteredInstances;
+              //debugger;
             this.setInstanceParams(this.instances[0]);
         });
     }

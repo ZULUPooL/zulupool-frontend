@@ -34,7 +34,7 @@ export class AppService {
     }
 
     authorize(sessionId: string): Observable<void> {
-        let  coin='ethhash';
+        let  coin='sha256';
         this.backendQueryApiService.getPoolCoins().subscribe(
             resp => {coin=resp.coins[0].algorithm;},
             () => {},
