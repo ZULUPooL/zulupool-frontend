@@ -28,9 +28,25 @@
                     </tr>
                 </thead>
                 <tbody *ngIf="payouts">
-                    <tr *ngFor="let payout of rowSelectionTable.data">
-                        <td style="text-align: center;">{{ payout.time * 1000 | date: "dd MMM HH:mm" | async }}</td>
-                        <td style="text-align: center;" className="_clickable" (click)="onTxClick(payout)">{{ payout.txid }}</td>
+                    <tr *ngFor="let payout of rowSelectionTable.data" 
+                        [ngClass]="{ 
+                            'strike-through': payout.status === 4 && payout.status !== null,
+                            'light-red-row': payout.status === 4 && payout.status !== null && currentTheme === 'light',
+                            'light-green-row': payout.status === 3 && payout.status !== null && currentTheme === 'light',
+                            'light-yellow-row': payout.status < 3 && payout.status !== null && currentTheme === 'light',
+                            'dark-red-row': payout.status === 4 && payout.status !== null && currentTheme === 'dark',
+                            'dark-green-row': payout.status === 3 && payout.status !== null && currentTheme === 'dark',
+                            'dark-yellow-row': payout.status < 3 && payout.status !== null && currentTheme === 'dark'
+                         }" >
+                        <td style="text-align: center;">{{ payout.time * 1000 | date: "HH:mm dd MMM yyyy" | async }}</td>
+                        <td style="text-align: center;">
+                            <span *ngIf="payout.status === 0 && payout.status !== null">
+                                {{ "common.dictionary.processing" | translate }}
+                            </span>
+                            <span *ngIf="payout.status !== 0 || payout.status === null" class="_clickable" (click)="onTxClick(payout)">
+                                {{ payout.txid }}
+                            </span>
+                        </td>
                         <td style="text-align: center;">{{ payout.value }}</td>
                     </tr>
                 </tbody>
@@ -59,11 +75,31 @@
                 </tr>
             </thead>
             <tbody *ngIf="payouts">
-                <tr *ngFor="let payout of mrowSelectionTable.data">
-                    <td style="text-align: center;">{{ payout.time * 1000 | date: "dd MMM HH:mm" | async }}</td>
-                    <td style="text-align: center;" className="_clickable" (click)="onTxClick(payout)" >{{ truncate(payout.txid) }}</td>
-                    <td style="text-align: center;">{{ payout.value | toFixed }}</td>
-                </tr>
+                <tr *ngFor="let payout of mrowSelectionTable.data" 
+                [ngClass]="{ 
+                    'strike-through': payout.status === 4 && payout.status !== null,
+                    'light-red-row': payout.status === 4 && payout.status !== null && currentTheme === 'light',
+                    'light-green-row': payout.status === 3 && payout.status !== null && currentTheme === 'light',
+                    'light-yellow-row': payout.status < 3 && payout.status !== null && currentTheme === 'light',
+                    'dark-red-row': payout.status === 4 && payout.status !== null && currentTheme === 'dark',
+                    'dark-green-row': payout.status === 3 && payout.status !== null && currentTheme === 'dark',
+                    'dark-yellow-row': payout.status < 3 && payout.status !== null && currentTheme === 'dark'
+                 }" >
+                <td style="text-align: center;">{{ payout.time * 1000 | date: "HH:mm dd MMM yyyy" | async }}</td>
+                <td style="text-align: center;">
+                    <span *ngIf="payout.status === 0 && payout.status !== null">
+                        {{ "common.dictionary.processing" | translate }}
+                    </span>
+                    <span *ngIf="payout.status !== 0 || payout.status === null" class="_clickable" (click)="onTxClick(payout)">
+                        {{ truncate(payout.txid) }}
+                    </span>
+                </td>
+                <td style="text-align: center;">{{ payout.value | toFixed }}</td>
+            </tr>
+
+
+
+
             </tbody>
         </nz-table>
         

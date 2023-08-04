@@ -22,6 +22,7 @@ export interface IUserPayouts {
     time: number;
     txid: string;
     value: string;
+    status: number;
 }
 
 export interface IPoolCoinsItem {

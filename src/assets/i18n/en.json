@@ -28,6 +28,7 @@
     "common.dictionary.date": "Date",
     "common.dictionary.time": "Time",
     "common.dictionary.amount": "Amount",
+    "common.dictionary.processing": "Processing....",
     "common.dictionary.": "",
     "common.lang": "Language",
     "common.theme": "Theme",

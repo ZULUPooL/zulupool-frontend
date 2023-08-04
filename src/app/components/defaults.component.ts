@@ -4,7 +4,7 @@ import { ETime } from 'enums/time';
 export class DefaultParams {
     static readonly DNSNAME = 'zulupool.com';
 
-    static readonly GUIVERSION = 'v2.179b';
+    static readonly GUIVERSION = 'v2.181b';
     static readonly GUISOURCE = 'https://github.com/ZULUPooL/zulupool-frontend';
 
     static readonly COREVERSION = 'v0.9999b';
@@ -35,7 +35,9 @@ export class DefaultParams {
     static readonly STRATUMS = { BTC: 'sha256.', HTR: 'sha256.', DOGE: 'scrypt.', ZEC: 'equihash.', ETH: 'etchash.', ETC: 'etchash.',
     'DGB.qubit':'startum.',
     'DGB.skein':'startum.',
-    'DGB.odo':'startum.'
+    'DGB.odo':'startum.',
+    'XPM':'startum.',
+    
 };
     static readonly FASTJOBCOINS = ['DGB.sha256', 'DGB.scrypt'];
     static readonly DEFCOINS = ['BTC', 'BCHN', 'BCHABC', 'XEC', 'BSV', 'DGB', 'XPM', 'FCH', 'HTR', 

@@ -537,7 +537,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
                         coins.find(coin => {
                             return coin.name === algoCoin;
                         }) || {};
-                    if (algoCoin.length > 0 && Object.keys(algoData).length === 0) {
+                    if (algoCoin?.length > 0 && Object.keys(algoData).length === 0) {
                         coins.push({
                             name: algoCoin,
                             address: '',

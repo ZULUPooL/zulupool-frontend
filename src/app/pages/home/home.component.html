@@ -8,8 +8,8 @@
 nzMessage="DGB (Digibyte) testnet!"
 nzDescription="This is the Digibyte v8.22.0-RC2 testnet! For sha256 and scrypt this is merged with mainnet Hathor and Dogecoin as well."
 ></nz-alert>
-<a nzType="link" href="https://beta.zulupool.com/">Mainnet coins pool here</a> -->
-
+<a nzType="link" href="https://beta.zulupool.com/">Mainnet coins pool here</a> 
+-->
 <div class="main">
     <div class="coins-block">
         <div class="coin-select-block">
@@ -161,7 +161,7 @@ nzDescription="This is the Digibyte v8.22.0-RC2 testnet! For sha256 and scrypt t
         </ng-container>
     -->
         <ng-container *ngSwitchCase="'time'">
-            {{ value * 1000 | date: "dd MMM HH:mm" | async }}
+            {{ value * 1000 | date: "HH:mm dd MMM yyyy " | async }}
         </ng-container>
 
         <ng-container *ngSwitchDefault>
@@ -174,7 +174,7 @@ nzDescription="This is the Digibyte v8.22.0-RC2 testnet! For sha256 and scrypt t
 <ng-template #foundBlockDataTemplateMobile let-key="key" let-value="value">
     <ng-container [ngSwitch]="key">
         <ng-container *ngSwitchCase="'time'">
-            {{ value * 1000 | date: "dd MMM HH:mm" | async }}
+            {{ value * 1000 | date: "HH:mm dd MMM yyyy " | async }}
         </ng-container>
 
         <ng-container *ngSwitchCase="'hash'">

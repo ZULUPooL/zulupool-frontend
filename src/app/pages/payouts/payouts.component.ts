@@ -32,6 +32,7 @@ export class PayoutsComponent implements OnInit {
     currentCoin: TCoinName;
     listOfData: IUserPayouts[] = [];
     listOfCurrentPageData: IUserPayouts[] = [];
+    currentTheme: string;
 
     private explorersLinks = DefaultParams.TXLINKS;
 
@@ -83,6 +84,8 @@ export class PayoutsComponent implements OnInit {
     }
     getUserStat(coin: TCoinName): void {
         this.isPayoutsLoading = true;
+
+        this.currentTheme=window.localStorage.getItem("zp-theme"); //TODO Find another way to understand what theme is currently enabled
 
         if (this.storageService.coinsObj[coin].is.nameSplitted) coin = coin + '.' + this.storageService.coinsObj[coin].info.algorithm;
 
