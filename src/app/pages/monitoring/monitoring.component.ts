@@ -527,7 +527,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
 
     private getSettings(coin: string = ''): void {
         this.userApiService.userGetSettings().subscribe(({ coins }) => {
-            if (coins.length > 0) {
+            if (coins && coins.length > 0) {
                 const coinObj = this.storageService.coinsObj;
                 if (coins.length > 2) {
                     const algoCoin = this.storageService.coinsList.find(coin => {

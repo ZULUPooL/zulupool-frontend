@@ -218,14 +218,16 @@ export class HomeComponent extends SubscribableComponent implements OnInit {
         this.isBlocksLoading = false;
         const coinObj = this.storageService.coinsObj[coin];
         if (!coinObj.is.blocksVisible) return;
-        this.blocks = coinObj.blocks.data;
-        this.blocks.forEach(blk => {
+        coinObj.blocks.data.forEach(blk => {
             if (blk.confirmations === -1) blk.confirmations = 'ORPHAN';
             if (blk.confirmations === -2) blk.confirmations = 'node_err';
             if (blk.confirmations === 0) blk.confirmations = 'NEW';
             //blk.generatedCoins=blk.generatedCoins.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         });
-        this.getPoolLuck(coin);
+        if (coin == this.storageService.currCoin) {
+            this.blocks = coinObj.blocks.data;
+            this.getPoolLuck(coin);
+        }
     }
 
     //
