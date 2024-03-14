@@ -58,7 +58,7 @@ export class MonitoringComponent extends SubscribableComponent implements OnInit
     get isPayBttnActive(): boolean {
         if (this.storageService.isReadOnly || this.isBalanceDataLoading) return false;
         if (Object.keys(this.settingsItems).length === 0 || this.settingsItems[this.storageService.currCoin].address === null) return false;
-        if (this.currentBalance?.balance !== '0' && this.currentBalance?.balance !== '0.00' && (this.currentBalance?.requested === '0.00' || this.currentBalance?.requested === '0')) return true;
+        if (this.currentBalance?.balance !== '0' && parseFloat(this.currentBalance?.balance) >= DefaultParams.MINIMALPAYMENTS[this.activeCoinName] && this.currentBalance?.balance !== '0.00' && (this.currentBalance?.requested === '0.00' || this.currentBalance?.requested === '0')) return true;
         return false;
     }
     get isNeedInfoActive(): boolean {

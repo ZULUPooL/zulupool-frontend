@@ -191,7 +191,7 @@ export class SettingsComponent implements OnInit {
                 nzOkText: this.translateService.instant('common.gotIt'),
             });
         }
-        if (this.form.value.payoutThreshold === null || this.form.value.payoutThreshold === ''){
+        if (this.form.value.payoutThreshold === null || this.form.value.payoutThreshold === '' || parseFloat(this.form.value.payoutThreshold) < DefaultParams.MINIMALPAYMENTS[this.currentCoin]){
             this.nzModalService.error({
                 nzContent: this.translateService.instant('settings.form.errPayoutThreshold', {
                     coinName: this.currentCoin,

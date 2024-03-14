@@ -464,6 +464,9 @@ export class FetchPoolDataService {
             if (params.count) req.count = params.count;
             if (params.hashFrom) req.hashFrom = params.hashFrom;
 
+            ///if (req.coin === "HTR") req.count=100;
+            if (req.coin === "HTR") req.count=100;
+
             this.backendQueryApiService.getFoundBlocks(req).subscribe(
                 ({ blocks }) => {
                     if (params.type === 'user') {

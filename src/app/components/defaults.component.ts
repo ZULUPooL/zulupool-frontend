@@ -4,7 +4,7 @@ import { ETime } from 'enums/time';
 export class DefaultParams {
     static readonly DNSNAME = 'zulupool.com';
 
-    static readonly GUIVERSION = 'v2.18.3b';
+    static readonly GUIVERSION = 'v2.18.34b';
     static readonly GUISOURCE = 'https://github.com/ZULUPooL/zulupool-frontend';
 
     static readonly COREVERSION = 'v0.9999b';
@@ -94,7 +94,7 @@ export class DefaultParams {
         'DGB.skein.testnet': 10,
         'DGB.qubit.testnet': 10,
         FCH: 1,
-        HTR: 1,
+        HTR: 8,
         LTC: 0.01,
         DOGE: 100,
         ZEC: 0.01,
